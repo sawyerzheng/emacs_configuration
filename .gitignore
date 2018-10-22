@@ -1,0 +1,10 @@
+# git ignore file
+
+# ignore backup files 
+*~
+
+# ignore vim undo files
+*.un~
+
+# ignore emacs recover files
+\#*\#
