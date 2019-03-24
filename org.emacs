@@ -1,13 +1,14 @@
+;; -*- coding: utf-8-unix; -*-
 (require 'org)
 
-;; Source Code ÎÄ±¾¸ßÁÁ
+;; Source Code æ–‡æœ¬é«˜äº®
 (setq org-src-fontify-natively t)
 
 ;;================ org agenda ====================
-;; Ä¬ÈÏ Org Agenda ÎÄ¼şÄ¿Â¼
+;; é»˜è®¤ Org Agenda æ–‡ä»¶ç›®å½•
 (setq org-agenda-files '("~/org"))
 
-;; org agenda ¿ì½İ¼ü
+;; org agenda å¿«æ·é”®
 (global-set-key "\C-ca" 'org-agenda)
 
 ;; =============== org capture ====================
@@ -15,7 +16,7 @@
 (define-key global-map "\C-cc" 'org-capture)
 
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/org/gtd.org" "¹¤×÷°²ÅÅ")
+      '(("t" "Todo" entry (file+headline "~/org/gtd.org" "å·¥ä½œå®‰æ’")
 	 "* TODO  %t\n %?\n %i\n"
 	 :empty-lines 1)))
 

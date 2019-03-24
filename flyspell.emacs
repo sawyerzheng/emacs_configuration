@@ -2,9 +2,9 @@
 ;;==================== Spelling -- Aspell --- Flyspell ==================
 ;;(if (equal system-type 'windows-nt) 
 ;;    (set-default 'ispell-program-name "hunspell")
-;;  (set-default 'ispell-program-name "aspell"))
-
-(set-default 'ispell-program-name "hunspell")
+;;  (set-default 'ispell-program-name "aspell")
+(set-default 'ispell-program-name "ispell")
+;;  (set-default 'ispell-program-name "hunspell")
 
 ;;for text mode
 (dolist (hook '(text-mode-hook))

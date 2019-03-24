@@ -21,10 +21,10 @@
   (list ".." "../include" "../inc" "../common" "../public"
         "../.." "../../include" "../../inc" "../../common" "../../public"))
 (defconst cedet-win32-include-dirs
-  (list "C:/MinGW/include"
-        "C:/MinGW/lib/gcc/mingw32/6.3.0/include"
-	"C:/MinGW/lib/gcc/mingw32/6.3.0/include/c++"
-	"C:/MinGW/lib/gcc/mingw32/6.3.0/include/ssp"
+  (list "d:/soft/MinGW/include"
+        "d:/soft/MinGW/lib/gcc/mingw32/6.3.0/include"
+	"d:/soft/MinGW/lib/gcc/mingw32/6.3.0/include/c++"
+	"d:/soft/MinGW/lib/gcc/mingw32/6.3.0/include/ssp"
         "C:/Program Files/Microsoft Visual Studio/VC98/MFC/Include"))
 
 
