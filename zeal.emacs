@@ -1,6 +1,6 @@
 ;;=================== zeal-at-poin ======================
 ;; and plugin of zeal
-;; ȫ�ֵ��ÿ�ݼ�
+;; 全局调用快捷键
 (global-set-key "\C-cd" 'zeal-at-point)
 
 ;; for python
