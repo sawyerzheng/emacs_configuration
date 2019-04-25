@@ -10,9 +10,9 @@
 ;;(elpy-clean-modeline)
 
 ;; use flycheck instead of flymake
-(when (load "flycheck" t t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
+;; (when (load "flycheck" t t)
+;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;   (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 
 ;; emacs 26 flymake indicator
@@ -23,6 +23,14 @@
 ;;                       (unless (eq (car args) 'flymake-mode)
 ;;                         (apply fun args))))
 
+;;============== disable flymake and flycheck for python-mode
+(defun disable-flymake()
+  "for disable flymake-mode"
+  (interactive)
+  (flymake-mode -1)
+  (flycheck-mode -1))
+(add-hook 'python-mode-hook 'disable-flymake)
+(add-hook 'elpy-mode-hook 'disable-flymake)
 
 ;; ==================  Navigation =========================
 ;; https://elpy.readthedocs.io/en/latest/ide.html#command-elpy-goto-definition

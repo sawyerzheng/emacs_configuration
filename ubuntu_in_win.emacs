@@ -2,7 +2,7 @@
 ;;=============== emacs init files ========================
 ;; init files directory  ---> ~/.conf.d/
 (load-file "~/.conf.d/default.emacs")
-;;(load-file "~/.conf.d/cedet.emacs")
+(load-file "~/.conf.d/cedet.emacs")
 ;;(load-file "~/.conf.d/font.emacs")
 ;;(load-file "~/.conf.d/coding.emacs")
 (load-file "~/.conf.d/flyspell.emacs")

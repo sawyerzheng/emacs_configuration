@@ -11,16 +11,17 @@
   (add-hook hook (lambda () (flyspell-mode 1))))
 (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
         (add-hook hook (lambda () (flyspell-mode -1))))
+
 ;; for c++ mode
 (add-hook 'c++-mode-hook
 	  (lambda ()
 	    (flyspell-prog-mode t)))
 ;; key binding for flyspell
 ;; easy spell check
-(global-set-key (kbd "<f8>") 'ispell-word)
-(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
-(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
-(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
+;;(global-set-key (kbd "<f8>") 'ispell-word)
+;;(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+;;(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+;;(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
 ;; for gui popup
 (eval-after-load "flyspell"
   '(progn

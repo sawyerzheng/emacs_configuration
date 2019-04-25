@@ -81,11 +81,29 @@
 	"D:/Qt/Qt5.10.1/5.10.1/mingw53_32/include/QtXmlPatterns"
 	))
 
+
+(setq qt5-headers '("/usr/include/x86_64-linux-gnu/qt5/QtConcurrent" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtCore" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtDBus" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtGui" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtNetwork" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtOpenGL" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtOpenGLExtensions" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtPlatformHeaders" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtSql" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtTest" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtWidgets" 
+		    "/usr/include/x86_64-linux-gnu/qt5/QtXml"))
+
+
 (require 'semantic-c nil 'noerror)
 ;; add include file ---> using semantic
 (let ((include-dirs nil))
   (when (eq system-type 'windows-nt)
     (setq include-dirs (append include-dirs qt-win-inclue-dirs)))
+  (when (eq system-type 'gnu/linux)
+    (setq include-dirs (append include-dirs qt5-headers)))
   (mapc (lambda (dir)
           (semantic-add-system-include dir 'c++-mode)
           (semantic-add-system-include dir 'c-mode))

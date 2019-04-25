@@ -1,7 +1,7 @@
 ;;=================== zeal-at-poin ======================
 ;; and plugin of zeal
 ;; 全局调用快捷键
-(global-set-key "\C-cd" 'zeal-at-point)
+(global-set-key "\C-cz" 'zeal-at-point)2
 
 ;; for python
 ;;(add-to-list 'zeal-at-point-mode-alist '(latex-mode . "latex"))

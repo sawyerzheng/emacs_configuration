@@ -1,7 +1,5 @@
 ;; -*- coding: utf-8-unix; -*-
 
-
-
 (add-hook 'dired-load-hook
 	  (lambda ()
 	    (load "dired-x")
