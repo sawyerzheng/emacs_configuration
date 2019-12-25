@@ -3,20 +3,20 @@
 ;;(if (equal system-type 'windows-nt) 
 ;;    (set-default 'ispell-program-name "hunspell")
 ;;  (set-default 'ispell-program-name "aspell")
-(set-default 'ispell-program-name "ispell")
-;;  (set-default 'ispell-program-name "hunspell")
+;;(set-default 'ispell-program-name "ispell")
+(set-default 'ispell-program-name "hunspell")
 
 ;;for text mode
-(dolist (hook '(text-mode-hook))
-  (add-hook hook (lambda () (flyspell-mode 1))))
+;;(dolist (hook '(text-mode-hook))
+;;  (add-hook hook (lambda () (flyspell-mode 1))))
 (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
         (add-hook hook (lambda () (flyspell-mode -1))))
 
 ;; for c++ mode
-(add-hook 'c++-mode-hook
-	  (lambda ()
-	    (flyspell-prog-mode t)))
-;; key binding for flyspell
+;; (add-hook 'c++-mode-hook
+;; 	  (lambda ()
+;; 	    (flyspell-prog-mode t)))
+;; ;; key binding for flyspell
 ;; easy spell check
 ;;(global-set-key (kbd "<f8>") 'ispell-word)
 ;;(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)

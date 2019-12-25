@@ -30,3 +30,10 @@
 	      (lambda()
 		(set-language-environment 'Chinese-GB))))
 ;;==================================================================
+
+(add-hook
+ 'eshell-mode-hook
+ (lambda ()
+   (setq pcomplete-cycle-completions nil)))
+
+(setq eshell-cmpl-cycle-completions nil)

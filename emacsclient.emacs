@@ -1,4 +1,5 @@
 ;; -*- coding: utf-8; -*-
+
 ;;(server-start)
 ;; 这一句必不可少，不然报错
 ;; 找不到server-running-p function
@@ -105,7 +106,27 @@ nil are ignored."
     )
   )
 
+;;============ customize theme for daemon ==============
+(setq theme 'tsdh-dark)
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+        (lambda (frame)
+            (with-selected-frame frame
+                (load-theme theme t))))
+    (load-theme theme t))
 
+;;============== variables  ============================
+(if (daemonp)
+    (custom-set-variables
+     '(lsp-ui-doc-enable t)
+     '(lsp-ui-doc-max-height 20)
+     '(lsp-ui-doc-max-width 80)
+     '(lsp-ui-doc-position (quote at-point))
+     '(lsp-ui-imenu-enable t)
+     '(lsp-ui-peek-enable t)
+     '(lsp-ui-sideline-enable t)
+     '(magit-diff-use-overlays t)
+     ))
 
 ;;================= for windows system ====================
 ;; http://jixiuf.github.io/blog/windows%E4%B8%8Aemacs%E7%9A%84%E5%AE%89%E8%A3%85%E5%8F%8Aemacsclient%E8%BF%9B%E8%A1%8Cc-s%E8%BF%9E%E6%8E%A5/

@@ -1,5 +1,7 @@
 ;;======================= my cedet init file --- zhenglei ===============
 
+
+ (setq-default c-basic-offset 4)
 ;;====================== semantic ==========================
 ;; semantic MAJOR mode
 (semantic-mode t)
@@ -55,32 +57,6 @@
                                                    (semantic-current-tag))
                         (setq first (cdr (car (cdr alist)))))
                     (semantic-mrub-switch-tags first))))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ;;====================== start of        cedet   =========================

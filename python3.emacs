@@ -1,13 +1,10 @@
+;; -*- coding: utf-8; -*-
+
 (load-file "~/.conf.d/elpy.emacs")
+;; (load-file "~/.conf.d/jedi.emacs")
 ;;(load-file "~/.conf.d/anaconda.emacs")
 
-;; ================== for company-jedi =========================
-(defun my/python-mode-hook ()
-  (add-to-list 'company-backends 'company-jedi))
-
-(add-hook 'python-mode-hook 'my/python-mode-hook)
-;;===================== end ====================================
-
+(define-key python-mode-map  [(tab)] 'company-indent-or-complete-common)
 ;;================== for company-mode
 ;;http://company-mode.github.io/
 (add-hook 'after-init-hook 'global-company-mode)
@@ -29,32 +26,30 @@
 	     company-active-map)))
 ;;=============================================================
 
+;;======================== indent
+;; (add-hook 'python-mode-hook
+;; 		  (lambda ()
+;; 		    (setq-default indent-tabs-mode t)
+;; 		    (setq-default tab-width 4)
+;; 		    (setq-default py-indent-tabs-mode t)
+;; 			(add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+;;===================================================================
 ;; for pdg
 (setq gud-pdb-command-name "python -m pdb")
 
-
-;;=================== for jedi =================================
-
-(setq jedi:complete-on-dot t)                 ; optional
-;;(when (fboundp 'jedi:setup) (jedi:setup))
-
-;; my add
-;;http://tkf.github.io/emacs-jedi/latest/
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)                 ; optional
-;; setup
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:setup-keys t)                      ; optional
-;; for keybindings
-;;http://tkf.github.io/emacs-jedi/latest/index.html#keybinds
-;;==============================================================
-
-
 ;;======================= virtualenvwrapper ====================
+(use-package virtualenvwrapper
+  :ensure t)
 (require 'virtualenvwrapper)
 (venv-initialize-eshell)
 (venv-initialize-eshell)
-;;(setq venv-location '("/home/sawyer/.virtualenvs.d/"
+;;(setq venv-location '("/home/sawyer/.virtualenvs"
 ;;		     "/home/sawyer/anaconda3/envs/"))
-(setq venv-location "/home/sawyer/.virtualenvs.d/")
+(if (eq system-type 'windows-nt)
+    (setq venv-location "d:/soft/.virtualenvs.d/")
+  (setq venv-location "/home/sawyer/.virtualenvs"))
 ;;=====================  end virtualenvwrapper ==================
+
+;;========= virtual env  ==================
+;; (pyvenv-workon "env36")
+;; (pyvenv-activate "/home/sawyer/miniconda3/envs/py36")

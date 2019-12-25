@@ -1,5 +1,7 @@
 ;; -*- coding: utf-8-unix; -*-
 
+;; (use-package direx
+  ;; :ensure t)
 (add-hook 'dired-load-hook
 	  (lambda ()
 	    (load "dired-x")

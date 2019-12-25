@@ -1,3 +1,4 @@
+;; -*- coding: utf-8; -*-
 
 ;;=================== Key binding =======================
 ;; Ctr-c v ---> save html and browse it.

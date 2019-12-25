@@ -1,7 +1,10 @@
+;; -*- coding: utf-8; -*-
 
+(use-package youdao-dictionary
+  :ensure t)
 ;;=================== global key biding ====================
 (global-set-key "\C-c\C-d" 'dictionary-search)
-(global-set-key "\C-cd" 'dictionary-search)
+;; (global-set-key "\C-cd" 'dictionary-search)
 (global-set-key "\C-c\C-s" 'youdao-dictionary-search-at-point+)
 (global-set-key "\C-cs" 'youdao-dictionary-search-at-point+)
 

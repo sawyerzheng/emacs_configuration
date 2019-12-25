@@ -10,6 +10,11 @@
 (load-file "~/.conf.d/eshell.emacs")
 ;;=============== end of init files =======================
 
+
+;;=============== cnfont ==================================
+(setq cnfonts-directory "~/.conf.d/custom.d/cnfonts/macos/")
+;;=========================================================
+
 ;; ============== testing
 ;;(load "preview-latex.el" nil t t)
 

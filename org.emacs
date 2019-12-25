@@ -23,9 +23,30 @@
 (provide 'init-org)
 
 ;;==============  for auto completion ========================
+(use-package org-ac
+  :ensure t)
 (require 'org-ac)
 
 ;; Make config suit for you. About the config item, eval the following sexp.
 ;; (customize-group "org-ac")
 (org-ac/config-default)
 ;;============================================================
+
+
+;;=========== for source block execution =============
+;;https://emacs.stackexchange.com/questions/17673/no-org-babel-execute-function-for-c-and-no-org-babel-execute-function-for-c
+;; Here C --> for C, C++
+(org-babel-do-load-languages
+ 'org-babel-load-languages 
+ '((python . t) (C . t) )
+ )
+
+;;========= for auto fill mode =============================
+;; 当达到fill-column 后，自动换行（auto-fill-mode）
+(add-hook 'org-mode-hook '(lambda ()
+			    "enable auto-fill-mode"
+			    (auto-fill-mode 1)))
+
+
+;;============= org table mode =========================
+(add-hook 'message-mode-hook 'turn-on-orgtbl)

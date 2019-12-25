@@ -1,3 +1,5 @@
+;; -*- coding: utf-8-unix; -*-
+
 ;; 外部软件打开文件
 (defun xah-open-in-external-app (&optional @fname)
   "Open the current file or dired marked files in external app.
