@@ -10,6 +10,9 @@
 ;;(load-file "~/.conf.d/tex.emacs")
 ;;(load-file "~/.conf.d/zeal.emacs")
 ;;(load-file "~/.conf.d/eshell.emacs")
+(load-file "~/.conf.d/java.emacs")
+(load-file "~/.conf.d/cpp.emacs")
+(setq comint-completion-addsuffix (quote ("\\" . " ")))
 
 ;;=============== end of init files =======================
 (setq inhibit-startup-screen t)
@@ -62,7 +65,7 @@
  '(jdecomp-decompiler-type (quote fernflower))
  '(package-selected-packages
    (quote
-    (cyberpunk-2019-theme cyberpunk-theme org-beautify-theme org-ac yasnippet-snippets popup use-package pyim sqlite helm-dash better-defaults company py-autopep8 flymake flycheck anaconda-mode jedi zeal-at-point youdao-dictionary vbasense solarized-theme silkworm-theme powershell htmlize geeknote dictionary color-theme cmake-mode avk-emacs-themes auto-complete-clang auto-complete-auctex auctex)))
+    (cnfonts imenus imenu-anywhere imenu-list clang-format+ eldoc-cmake flycheck-clang-analyzer flycheck-clang-tidy company-c-headers cmake-ide dockerfile-mode devdocs whitespace-cleanup-mode cyberpunk-2019-theme cyberpunk-theme org-beautify-theme org-ac yasnippet-snippets popup use-package pyim sqlite helm-dash better-defaults company py-autopep8 flymake flycheck anaconda-mode jedi zeal-at-point youdao-dictionary vbasense solarized-theme silkworm-theme powershell htmlize geeknote dictionary color-theme cmake-mode avk-emacs-themes auto-complete-clang auto-complete-auctex auctex)))
  '(pyim-dicts
    (quote
     ((:name "dictA" :file "~/.emacs.d/pyim/pyim-bigdict.pyim")))))

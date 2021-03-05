@@ -76,14 +76,20 @@
 (defun disable-flymake()
   "for disable flymake-mode"
   (interactive)
-  (flymake-mode -1)
-  (flymake-mode 1)
+  ;; (flymake-mode -1)
+  ;; (flymake-mode 1)
   (flycheck-mode -1))
-(add-hook 'python-mode-hook 'disable-flymake)
-(add-hook 'elpy-mode-hook 'disable-flymake)
+;; (add-hook 'python-mode-hook 'disable-flymake)
+;; (add-hook 'elpy-mode-hook 'disable-flymake)
 (add-hook 'python-mode-hook
 	  (lambda ()
 	     (auto-complete-mode -1))) ;; disable auto-complete-mode
+
+(define-key elpy-mode-map (kbd "C-c C-v") '(lambda ()
+					     (interactive)
+					     (flymake-mode 1)
+					     (elpy-check)
+					     ))
 ;; ==================  Navigation =========================
 ;; https://elpy.readthedocs.io/en/latest/ide.html#command-elpy-goto-definition
 ;; jedi and company-jedi can only install one of them, they are exclusive.
@@ -133,76 +139,12 @@
 ;; 自动选择相同的单词
 (define-key global-map (kbd "C-c o") 'iedit-mode)
 
-;;====================== exec current buffer =============
-(defun my-elpy/execute-buffer ()
-  "Execute the buffer with python -m path.module.current.
-If there is elpy-project-root can't be found, use xah lee's function"
-  (interactive)
-  (setq root (elpy-project-root))
-  (setq file (buffer-file-name))
-  (if (and root file)
-      (my-elpy/execute-from-project-root file root)
-    (progn
-      (unless root
-	(message "Not find project root, use elpy to set it"))
-      (if root
-	(message "Not valid file %s" file))))
-  )
-
-(defun my-elpy/execute-from-project-root (file root)
-  "execute current file with `python -m' command"
-  ;; save file
-  (when (not (buffer-file-name)) (save-buffer))
-  (when (buffer-modified-p) (save-buffer))
-  (save-some-buffers)
-  (let ((command "python -m")
-	(module-name)
-	newBuffName
-	newBuff
-	output
-	program
-	relative-name)
-    (setq file (expand-file-name file))
-    (setq root (expand-file-name root))
-    (setq relative-name (file-relative-name file root))
-    (setq module-name (replace-regexp-in-string "/" "." (file-name-sans-extension relative-name)))
-    ;; (message "Error:")
-    ;; (message  module-name)
-    ;; (message file)
-    ;; (message root)
-    ;; (message relative-name)
-    (setq newBuffName "*Run Python*")
-    (setq newBuff (get-buffer-create newBuffName))
-
-
-    ;; file in the project root
-    ;; (if (equal (cl-search "/" module-name) nil)
-    ;; 	(setq program (concat "python" " " relative-name))
-    ;;   (setq program (concat command " " module-name)))
-
-    ;; clear previous content
-    (with-current-buffer newBuff
-      (ignore-errors
-	(compilation-mode 1)
-	(read-only-mode -1))
-      (local-set-key (kbd "q") 'quit-window))
-
-    (pop-to-buffer newBuff)
-    (setf (buffer-string) "")
-    
-    (princ (concat "-*- command: "command " " module-name " -*- " "\n\n")
-	   newBuff)
-
-    (setq program (concat command " " module-name))
-    (cd root)
-    (call-process "python" nil newBuff nil "-m" module-name)
-    ;; (start-process "python-run-module" newBuff "python" "-m" module-name)
-    (cd (file-name-directory file))
-    ))
-
-(define-key elpy-mode-map (kbd "C-c r") 'my-elpy/execute-buffer)
-;;========================================================
 
 ;;=========== elpy-rpc-path
-(if (equal system-type 'gnu/linux)
-    (setq elpy-rpc-virtualenv-path "/home/sawyer/.virtualenvs/env36/"))
+;; (if (equal system-type 'gnu/linux)
+    ;; (setq elpy-rpc-virtualenv-path "/home/sawyer/miniconda3/envs/py36/"))
+(if (equal system-type 'windows-nt)
+    (setq elpy-rpc-virtualenv-path "d:/soft/miniconda3/envs/rpc"))
+
+
+

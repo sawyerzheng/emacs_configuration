@@ -54,7 +54,13 @@
       (`(t . t)
        (treemacs-git-mode 'deferred))
       (`(t . _)
-       (treemacs-git-mode 'simple))))
+       (treemacs-git-mode 'simple)))
+    (add-hook 'treemacs-mode-hook '(lambda ()
+				     ;; (local-unset-key (kbd "n"))
+				     ;; (local-set-key (kbd "n") 'treemacs-next-line)
+				     (evil-local-mode -1)
+				     )))
+  
   :bind
   (:map global-map
         ("M-0"       . treemacs-select-window)

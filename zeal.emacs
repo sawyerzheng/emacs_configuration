@@ -12,6 +12,9 @@
 ;;(add-to-list 'zeal-at-point-mode-alist '(python-mode . ("python" "django")))
 (add-hook 'python-mode-hook
 	  (lambda () (setq zeal-at-point-docset '("python" "django"))))
+(add-hook 'c++-mode-hook
+	  (lambda () (setq zeal-at-point-docset '("c" "c++" "python"))))
+
 (add-hook 'latex-mode
 	  (lambda ()
 	    ((setq zeal-at-point-docset '("latex")))))

@@ -1,6 +1,19 @@
 ;; for run or compile the code
 ;; http://ergoemacs.org/emacs/elisp_run_current_file.html
 
+(define-minor-mode my-qexit-mode
+  "Minor mode to keymap `q' to quit-window"
+  :init-value nil
+  ;; (interactive (list (or current-prefix-arg 'toggle)))
+  ;; (let ((enable
+  ;; 	 (if (eq arg 'toggle)
+  ;; 	     (not foo-mode) ; this is the mode’s mode variable
+  ;; 	   (> (prefix-numeric-value arg) 0))))
+  ;;   ))
+  :keymap
+  '(("q" . quit-window)))
+
+
 (defvar xah-run-current-file-before-hook nil "Hook for `xah-run-current-file'. Before the file is run.")
 
 (defvar xah-run-current-file-after-hook nil "Hook for `xah-run-current-file'. After the file is run.")
@@ -32,7 +45,8 @@ Version 2018-10-12"
       (message "%s" $cmd-str)
       (shell-command $cmd-str $outputb )
       ;;
-      )))
+      )
+    ))
 
 (defun xah-run-current-file ()
   "Execute the current file.
@@ -56,7 +70,8 @@ Version 2018-10-12"
            ("php" . "php")
            ("pl" . "perl")
            ("py" . "python")
-           ("py3" . ,(if (string-equal system-type "windows-nt") "c:/Python32/python.exe" "python3"))
+           ;; ("py3" . ,(if (string-equal system-type "windows-nt") "c:/Python32/python.exe" "python3"))
+	   ("py3". "python3")
            ("rb" . "ruby")
            ("go" . "go run")
            ("hs" . "runhaskell")
@@ -85,6 +100,11 @@ Version 2018-10-12"
     (setq $prog-name (cdr (assoc $fSuffix $suffix-map)))
     (setq $cmd-str (concat $prog-name " \""   $fname "\" &"))
     (run-hooks 'xah-run-current-file-before-hook)
+
+    (setq $outputbBuff (get-buffer-create $outputb))
+    (with-current-buffer $outputb
+      (my-qexit-mode 1))
+
     (cond
      ((string-equal $fSuffix "el")
       (load $fname))
@@ -107,9 +127,43 @@ Version 2018-10-12"
               (message "Running")
               (shell-command $cmd-str $outputb ))
           (error "No recognized program file suffix for this file."))))
-    (run-hooks 'xah-run-current-file-after-hook)))
+    (run-hooks 'xah-run-current-file-after-hook)
+    ;; (with-current-buffer $outputb
+    ;;   (my-qexit-mode 1))
+
+    ;; (with-current-buffer $outputb
+    ;;   (ignore-errors
+    ;; 	(shell-mode -1)
+    ;; 	;; (compilation-mode)
+    ;; 	;; (read-only-mode -1)
+    ;; 	)
+    ;;   (local-set-key (kbd "q") 'quit-window))
+
+    ;; (with-current-buffer $outputb
+    ;;   (if (equal (buffer-name) "*xah-run output*")
+    ;;   	  (progn
+    ;;   	    ;; (message (buffer-name))
+    ;;   	    (local-unset-key (kbd "q"))
+    ;;   	    (local-set-key (kbd "q") 'quit-window)
+    ;;   	    )
+    ;;   	(progn
+    ;;   	  (local-unset-key (kbd "q"))
+    ;;   	  (local-set-key (kbd "q") 'self-insert-command))
+    ;;   	)
+    ;;   )
+    ))
 
 ;;(global-key-binding "<")
 
 ;; key binding
-(global-set-key (kbd "<f5>") 'xah-run-current-file)
+(global-set-key (kbd "<f6>") 'xah-run-current-file)
+
+
+(add-hook 'xah-run-current-file-after-hook
+	  (lambda ()
+	    (if (equal (buffer-name) "*xah-run output*")
+		(local-set-key (kbd "q") 'quit-window)
+	      (progn
+		(local-unset-key (kbd "q"))
+		(local-set-key (kbd "q") 'self-insert-command)))))
+

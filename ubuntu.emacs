@@ -1,3 +1,4 @@
+;; -*- coding: utf-8; -*-
 (package-initialize)
 ;;=============== emacs init files ========================
 ;; init files directory  ---> ~/.conf.d/
@@ -10,12 +11,22 @@
 ;;(load-file "~/.conf.d/zeal.emacs")
 (load-file "~/.conf.d/eshell.emacs")
 ;; (load-file "~/.conf.d/easyfont.emacs")
-(load-file "~/.conf.d/cnfonts.emacs")
 (load-file "~/.conf.d/ace-window.emacs")
-(load-file "~/.conf.d/cpp.emacs")
+
+;; input method
+(load-file "~/.conf.d/cns-mode.emacs")
+(load-file "~/.conf.d/pyim.emacs")
+(load-file "~/.conf.d/liberime.emacs")
+
+;; language
+(load-file "~/.conf.d/java.emacs")
+(load-file "~/.conf.d/go.emacs")
+;; (load-file "~/.conf.d/cpp.emacs")
+;; (load-file "~/.conf.d/rime.emacs")
 ;;=============== end of init files =======================
 
 ;;=============== cnfont ==================================
+(load-file "~/.conf.d/cnfonts.emacs")
 (setq cnfonts-directory "~/.conf.d/custom.d/cnfonts/ubuntu/")
 ;;=========================================================
 
@@ -88,14 +99,18 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#f4eedb" "#cc1f24" "#778c00" "#a67c00" "#007ec4" "#c42475" "#11948b" "#88999b"])
+ '(column-number-mode t)
  '(compilation-message-face (quote default))
  '(cua-global-mark-cursor-color "#11948b")
  '(cua-normal-cursor-color "#596e76")
  '(cua-overwrite-cursor-color "#a67c00")
  '(cua-read-only-cursor-color "#778c00")
+ '(custom-enabled-themes (quote (tsdh-dark)))
  '(custom-safe-themes
    (quote
-    ("c433c87bd4b64b8ba9890e8ed64597ea0f8eb0396f4c9a9e01bd20a04d15d358" "00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "6096a2f93610f29bf0f6fe34307587edd21edec95073cbfcfb9d7a3b9206b399" "6bc387a588201caf31151205e4e468f382ecc0b888bac98b2b525006f7cb3307" "e11880d349e5b3f3d47e5bd6f7d9ff773ab6301e124ec7dbbbfbba5fb8482390" "33e37cd55e9ee63a8fafedb09007d2f36756abff8d551eed965a08d015f36005" "8b73cfb1b5e312c021de063ab4b194ed228b8f0414e996aa5256350cd78c3e1d" "fa2af0c40576f3bde32290d7f4e7aa865eb6bf7ebe31eb9e37c32aa6f4ae8d10" "0aefd26847666798da4ad8cd1aa6038ef1b0db92f94c24dc48d06ea445831207" "2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3" default)))
+    ("13a8eaddb003fd0d561096e11e1a91b029d3c9d64554f8e897b2513dbf14b277" "015ed1c4e94502568b7c671ced6fe132bec9edf72fd732aa59780cfbe4b7927c" "0fffa9669425ff140ff2ae8568c7719705ef33b7a927a0ba7c5e2ffcfac09b75" "7f1d414afda803f3244c6fb4c2c64bea44dac040ed3731ec9d75275b9e831fe5" "3f5f69bfa958dcf04066ab2661eb2698252c0e40b8e61104e3162e341cee1eb9" "c433c87bd4b64b8ba9890e8ed64597ea0f8eb0396f4c9a9e01bd20a04d15d358" "00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "830877f4aab227556548dc0a28bf395d0abe0e3a0ab95455731c9ea5ab5fe4e1" "6096a2f93610f29bf0f6fe34307587edd21edec95073cbfcfb9d7a3b9206b399" "6bc387a588201caf31151205e4e468f382ecc0b888bac98b2b525006f7cb3307" "e11880d349e5b3f3d47e5bd6f7d9ff773ab6301e124ec7dbbbfbba5fb8482390" "33e37cd55e9ee63a8fafedb09007d2f36756abff8d551eed965a08d015f36005" "8b73cfb1b5e312c021de063ab4b194ed228b8f0414e996aa5256350cd78c3e1d" "fa2af0c40576f3bde32290d7f4e7aa865eb6bf7ebe31eb9e37c32aa6f4ae8d10" "0aefd26847666798da4ad8cd1aa6038ef1b0db92f94c24dc48d06ea445831207" "2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3" default)))
+ '(default-input-method "rime")
+ '(doom-modeline-mode t)
  '(elpy-test-runner (quote elpy-test-pytest-runner))
  '(fci-rule-color "#f4eedb")
  '(highlight-changes-colors (quote ("#c42475" "#5e65b6")))
@@ -131,19 +146,33 @@
      (fernflower . "~/.emacs.d/decompiler/fernflower.jar")
      (procyon . "~/.emacs.d/decompiler/procyon-decompiler-0.5.36.jar"))))
  '(jdecomp-decompiler-type (quote fernflower))
+ '(lsp-pyls-plugins-pycodestyle-ignore (quote ("W191")))
+ '(lsp-ui-doc-border "#586e75")
+ '(lsp-ui-doc-enable t)
+ '(lsp-ui-doc-max-height 20)
+ '(lsp-ui-doc-max-width 80)
+ '(lsp-ui-doc-position (quote at-point))
+ '(lsp-ui-imenu-enable t)
+ '(lsp-ui-peek-enable t)
+ '(lsp-ui-sideline-enable t)
+ '(mini-modeline-enhance-visual t)
+ '(mini-modeline-frame t)
+ '(mini-modeline-mode nil)
  '(nrepl-message-colors
    (quote
     ("#cc1f24" "#bb3e06" "#a67c00" "#4f6600" "#a8b84b" "#005797" "#11948b" "#c42475" "#5e65b6")))
+ '(org-export-with-sub-superscripts (quote {}))
+ '(org-use-sub-superscripts (quote {}))
  '(package-selected-packages
    (quote
-    (e2wm edbi eziam-theme cnfonts zeal-at-point youdao-dictionary yasnippet-snippets whitespace-cleanup-mode web-mode virtualenvwrapper use-package treemacs-projectile treemacs-magit treemacs-icons-dired treemacs-evil solarized-theme smartparens silkworm-theme realgud rainbow-delimiters pyim org-ac meghanada lsp-ui lsp-treemacs lsp-java leuven-theme jdecomp ivy-rtags irony highlight-symbol helm-lsp groovy-mode google-c-style flycheck-rtags elpy dockerfile-mode devdocs dap-mode cyberpunk-theme company-rtags company-lsp company-c-headers cmake-mode cmake-ide autodisass-java-bytecode)))
+    (lsp-python-ms org-mind-map company-tabnine http lsp-ui-slideline-mode lsp-ui evil go-eldoc go-autocomplete go-errcheck flycheck-golangci-lint go-snippets go-mode liberime rime yaml-mode mini-modeline cnfonts logview diminish all-the-icons-ivy all-the-icons-ivy-rich all-the-icons-dired all-the-icons doom-modeline imenus imenu-anywhere imenu-list linum-relative nlinum linum-off htmlize clang-format+ clang-format format-all e2wm edbi eziam-theme zeal-at-point youdao-dictionary yasnippet-snippets whitespace-cleanup-mode web-mode virtualenvwrapper use-package treemacs-projectile treemacs-magit treemacs-icons-dired treemacs-evil solarized-theme smartparens silkworm-theme realgud rainbow-delimiters pyim org-ac meghanada lsp-treemacs lsp-java leuven-theme jdecomp ivy-rtags irony highlight-symbol helm-lsp groovy-mode google-c-style flycheck-rtags elpy dockerfile-mode devdocs dap-mode cyberpunk-theme company-rtags company-c-headers cmake-mode cmake-ide autodisass-java-bytecode)))
  '(pdf-view-midnight-colors (quote ("#eeeeee" . "#000000")))
  '(pos-tip-background-color "#f4eedb")
  '(pos-tip-foreground-color "#5d737a")
- '(rtags-path "/home/sawyer/backup.d/rtags/rtags/build/bin")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#778c00" "#f4eedb" 0.2))
  '(term-default-bg-color "#fffce9")
  '(term-default-fg-color "#596e76")
+ '(tool-bar-mode nil)
  '(vc-annotate-background nil)
  '(vc-annotate-background-mode nil)
  '(vc-annotate-color-map

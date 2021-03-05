@@ -3,10 +3,16 @@
   :ensure t)
 (use-package company-rtags
   :ensure t)
-(use-package flycheck-rtags
-  :ensure t)
+;; (use-package flycheck-rtags
+  ;; :ensure t)
 (use-package ivy-rtags
   :ensure t)
+
+;; rtags
+(rtags-enable-standard-keybindings)
+(setq rtags-autostart-diagnostics t)
+(rtags-diagnostics)
+
 
 (require 'rtags)
 (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
@@ -14,6 +20,8 @@
 (add-hook 'objc-mode-hook 'rtags-start-process-unless-running)
 
 (rtags-start-process-unless-running)
+;; (if (eq system-type 'darwin)
+    ;; (rtags-restart-process))
 
 ;; ================ fallback to gtags if rtags not installed
 (defun use-rtags (&optional useFileManager)
@@ -50,10 +58,10 @@
 (define-key c-mode-base-map (kbd "M-.") (function tags-find-symbol-at-point))
 (define-key c-mode-base-map (kbd "M-,") (function tags-find-references-at-point))
 (define-key c-mode-base-map (kbd "M-;") (function tags-find-file))
-(define-key c-mode-base-map (kbd "C-.") (function tags-find-symbol))
+;; (define-key c-mode-base-map (kbd "C-.") (function tags-find-symbol))
 (define-key c-mode-base-map (kbd "C-,") (function tags-find-references))
 (define-key c-mode-base-map (kbd "C-<") (function rtags-find-virtuals-at-point))
-(define-key c-mode-base-map (kbd "M-i") (function tags-imenu))
+;; (define-key c-mode-base-map (kbd "M-i") (function tags-imenu))
 
 ;; (define-key global-map (kbd "M-.") (function tags-find-symbol-at-point))
 ;; (define-key global-map (kbd "M-,") (function tags-find-references-at-point))
@@ -67,6 +75,16 @@
 
 ;; ============ rtags for completion
 (setq rtags-completions-enabled t)
-(push 'company-rtags company-backends)
+;; (push 'company-rtags company-backends)
+(defun company-rtags-setup ()
+  "Configure company-backends for company-rtags."
+  (delete 'company-semantic company-backends)
+  (setq rtags-completions-enabled t)
+  (push '(company-rtags :with company-yasnippet) company-backends))
+
+(add-hook 'c++-mode-hook 'company-rtags-setup)
+(add-hook 'c-mode-hook 'company-rtags-setup)
+
+
 ;; ============= for flycheck
-(require 'flycheck-rtags)
+;; (require 'flycheck-rtags)

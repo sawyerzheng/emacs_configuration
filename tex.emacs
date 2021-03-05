@@ -1,4 +1,9 @@
 ;;==================== AucTeX ==========================
+(use-package auctex
+  :ensure t)
+(use-package auto-complete-auctex
+  :ensure t)
+
 ;; for parse
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)

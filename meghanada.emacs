@@ -62,8 +62,8 @@
   :config
 
 
-  (use-package realgud
-    :ensure t)
+;;  (use-package realgud
+;;    :ensure t)
   (setq indent-tabs-mode nil)
   (setq tab-width 4)
   (setq c-basic-offset 4)

@@ -20,7 +20,7 @@
 (setq projectile-mode-line-function
       '(lambda () (format " Proj[%s]" (projectile-project-name))))
 
-
+(setq projectile-completion-system 'ido)
 
 ;;================= helm-projectile =======================
 ;; (use-package helm-projectile
@@ -29,3 +29,9 @@
 ;; (setq helm-projectile-fuzzy-match nil)
 ;; (require 'helm-projectile)
 ;; (helm-projectile-on)
+
+
+(defun projectile-shell-open-at-project-root ()
+  (interactive)
+  (setq default-directory (projectile-project-root))
+  (shell (format "*Shell[%s]*" (projectile-project-name))))

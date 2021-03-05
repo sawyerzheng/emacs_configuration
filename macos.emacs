@@ -1,18 +1,37 @@
 (package-initialize)
+;; for macos gui emacs to load .bashrc
+(defun set-exec-path-from-shell-PATH ()
+  (let ((path-from-shell (replace-regexp-in-string
+                          "[ \t\n]*$"
+                          ""
+                          (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
+    (setenv "PATH" path-from-shell)
+    (setq eshell-path-env path-from-shell) ; for eshell users
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(when window-system (set-exec-path-from-shell-PATH))
 ;;=============== emacs init files ========================
 ;; init files directory  ---> ~/.conf.d/
 (load-file "~/.conf.d/default.emacs")
-(load-file "~/.conf.d/tex.emacs")
-;;(load-file "~/.conf.d/cedet.emacs")
+;; (load-file "~/.conf.d/cedet.emacs")
 ;;(load-file "~/.conf.d/font.emacs")
 ;;(load-file "~/.conf.d/coding.emacs")
-(load-file "~/.conf.d/flyspell.emacs")
+;; (load-file "~/.conf.d/flyspell.emacs")
+;;(load-file "~/.conf.d/tex.emacs")
+;;(load-file "~/.conf.d/zeal.emacs")
 (load-file "~/.conf.d/eshell.emacs")
+;; (load-file "~/.conf.d/easyfont.emacs")
+(load-file "~/.conf.d/ace-window.emacs")
+(load-file "~/.conf.d/cpp-macos.emacs")
+(load-file "~/.conf.d/cns-mode.emacs")
+(load-file "~/.conf.d/pyim.emacs")
+(load-file "~/.conf.d/liberime.emacs")
+;; (load-file "~/.conf.d/rime.emacs")
 ;;=============== end of init files =======================
-
 
 ;;=============== cnfont ==================================
 (setq cnfonts-directory "~/.conf.d/custom.d/cnfonts/macos/")
+(load-file "~/.conf.d/cnfonts.emacs")
 ;;=========================================================
 
 ;; ============== testing
@@ -22,15 +41,15 @@
 ;; maximized Starup
 ;;(toggle-frame-maximized )
 ;; for Fonts
-(custom-set-faces
- '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 180 :width normal)))))
+;; (custom-set-faces
+ ;; '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 180 :width normal)))))
 ;;  key binding
 ;; binding Control-Super-f to fullscreen
 (global-set-key (kbd "<C-s-268632070>") 'toggle-frame-fullscreen)
 
 ;; set frame size
-(add-to-list 'default-frame-alist '(width  . 85))
-(add-to-list 'default-frame-alist '(height . 43))
+(add-to-list 'default-frame-alist '(width  . 120))
+(add-to-list 'default-frame-alist '(height . 120))
 
 
 ;;=============== key global binding =====================
@@ -69,13 +88,23 @@ with utf-8, utf-8"
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(column-number-mode t)
- '(custom-enabled-themes (quote (silkworm)))
+ '(custom-enabled-themes (quote (tsdh-dark)))
  '(custom-safe-themes
    (quote
     ("5a17bc57f77719cf3bf1d260c88364d87e4632cc506c1c9a5998a684cca1fa07" "b747fb36e99bc7f497248eafd6e32b45613ee086da74d1d92a8da59d37b9a829" default)))
+ '(jdecomp-decompiler-options
+   (quote
+    ((cfr "--comments false" "--removeboilerplate false")
+     (fernflower "-hes=0" "-hdc=0"))))
+ '(jdecomp-decompiler-paths
+   (quote
+    ((cfr . "~/.emacs.d/decompiler/cfr-0.146.jar")
+     (fernflower . "~/.emacs.d/decompiler/fernflower.jar")
+     (procyon . "~/.emacs.d/decompiler/procyon-decompiler-0.5.36.jar"))))
+ '(jdecomp-decompiler-type (quote fernflower))
  '(package-selected-packages
    (quote
-    (vbasense auto-complete-auctex auctex youdao-dictionary solarized-theme silkworm-theme powershell htmlize geeknote dictionary color-theme avk-emacs-themes auto-complete-clang)))
+    (cpputils-cmake ggtags eglot ivy-rtags company-rtags rtags vbasense auto-complete-auctex auctex youdao-dictionary solarized-theme silkworm-theme powershell htmlize geeknote dictionary color-theme avk-emacs-themes auto-complete-clang)))
  '(tool-bar-mode nil))
 ;(custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -83,3 +112,9 @@ with utf-8, utf-8"
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
 ; '(default ((t (:family "Consolas" :foundry "outline" :slant normal :weight normal :height 130 :width normal)))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

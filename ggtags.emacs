@@ -1,5 +1,7 @@
 ;; -*- coding: utf-8-unix; -*-
-(require 'ggtags)
+(use-package ggtags
+  :ensure t)
+;; (require 'ggtags)
 (add-hook 'c-mode-common-hook
           '(lambda ()
             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
@@ -16,4 +18,6 @@
 
 (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
 
-(setq path-to-ctags "/ming64/bin/ctags") 
+;; (setq path-to-ctags "d:/soft/bin/") 
+(setq ggtags-executable-directory "d:/soft/global/bin/")
+;; (setq ggtags-executable-directory "d:/soft/ctags/")

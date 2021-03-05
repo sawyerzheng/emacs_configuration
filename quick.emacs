@@ -1,5 +1,6 @@
-;; load path
-(package-initialize)
+;; -*- coding: utf-8; -*-
+;; load path  
+;; (package-initialize)
 ;; (add-to-list 'load-path "~/.emacs.d/elpa/")
 ;; ================= use-package ====================
 ;; (condition-case nil
@@ -13,16 +14,38 @@
 
 ;; ================= boost.python ================
 ;; (load-file "~/.conf.d/jam-mode.emacs")
-(if (equal system-type 'gnu/linux)
-    (progn
-      (add-to-list 'load-path "~/.conf.d/extra.d/")
-      (require 'jam-mode)
-      (add-to-list 'auto-mode-alist '("[Jj]amfile\\'" . jam-mode))
-      (add-to-list 'auto-mode-alist '("\\.jam\\'" . jam-mode))
-      ))
+;; (if (equal system-type 'gnu/linux)
+;;     (progn
+;;       (add-to-list 'load-path "~/.conf.d/extra.d/")
+;;       (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/")
+;;       (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/auto-complete/")
+;;       (require 'jam-mode)
+;;       (add-to-list 'auto-mode-alist '("[Jj]amfile\\'" . jam-mode))
+;;       (add-to-list 'auto-mode-alist '("\\.jam\\'" . jam-mode))
+;;       ))
+
+;; ================ elpa adn use-package ================
+;; (ignore-errors
+;;   (load-file "~/.conf.d/packages.emacs")
+;;   (load-file "/home/sawyer/.conf.d/packages.emacs")
+;;   )
+
+
 ;; ================= auto-complete mode ============
 (if (equal system-type 'gnu/linux)
     (progn
+
+      ;; (use-package popup
+      ;; 	:ensure t)
+      ;; (use-package auto-complete
+      ;; 	:ensure t)
+
+      ;; * old backup, for speed
+      (add-to-list 'load-path "~/.conf.d/extra.d/popup/")      
+      (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/popup")
+      (add-to-list 'load-path "~/.conf.d/extra.d/popup/auto-complete/")
+      (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/popup/auto-complete/")
+
       (require 'auto-complete)
       ;; global
       (global-auto-complete-mode t)
@@ -84,9 +107,12 @@
     (progn
       (menu-bar-mode 0))
   (progn
-    (tool-bar-mode 0)
-    (scroll-bar-mode 0)
+    (if (boundp 'tool-bar-mode)
+	(tool-bar-mode 0))
+    (if (boundp 'scroll-bar-mode)
+	(scroll-bar-mode 0))
     ))
+
 
 ;; (scroll-bar-mode 0)
 ;; (column-number-mode t)
@@ -138,12 +164,18 @@
 		    :size 16.5)))))
 
 ;; for windows and cygwin, msys2
-(if (or (equal system-type 'windows-nt)
-	(equal system-type 'cygwin))
-    (custom-set-faces
-     '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 120 :width normal))))))
+;; (if (or (equal system-type 'windows-nt)
+;; 	(equal system-type 'cygwin))
+;;     (custom-set-faces
+;;      '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 120 :width normal))))))
+;; (custom-set-faces
+     ;; '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 120 :width normal)))))
+
+  
 
 
+
+(column-number-mode t)
 ;; ========== splash screen *GNU Emacs* buffer ============
 (setq inhibit-startup-screen t)
 
@@ -157,3 +189,18 @@
        '(custom-enabled-themes (quote (tsdh-dark))))
       ))
 
+
+(if (eq system-type 'windows-nt)
+    (progn
+      (set-face-attribute 'default nil :family "Consolas" :height 120)
+      (set-face-attribute 'mode-line nil :family "Consolas" :height 120))
+  )
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(default ((t (:family "Consolas" :foundry "outline" :slant normal :weight normal :height 120 :width normal))))
+;;  '(mode-line ((t (:background "gray30" :box (:line-width 1 :color "red") :family "Consolas")))))
+
+(put 'upcase-region 'disabled nil)

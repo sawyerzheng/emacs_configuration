@@ -1,32 +1,17 @@
 ;; -*- coding: utf-8-unix; -*-
 (require 'cc-mode)
 
-
-(use-package projectile :ensure t)
-(use-package treemacs :ensure t)
-(use-package yasnippet :ensure t)
-(use-package lsp-mode :ensure t)
-(use-package hydra :ensure t)
-(use-package company-lsp :ensure t)
-(use-package lsp-ui :ensure t)
-
+(load-file "~/.conf.d/lsp.emacs")
 (use-package lsp-java
   :ensure t
   :after lsp
-  :config (add-hook 'java-mode-hook 'lsp))
-
+  )
+(add-hook 'java-mode-hook 'lsp)
 
 ;; (use-package lsp-mode
 ;;   :hook (XXX-mode . lsp)
 ;;   :commands lsp)
 
-;; optionally
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-(use-package company-lsp
-  :ensure t
-  :commands company-lsp)
 
 ;; helm-lsp-workspace-symbol
 ;; help-lsp-global-workspace-symbol
@@ -34,49 +19,44 @@
   :ensure t
   :commands helm-lsp-workspace-symbol)
 
-;; https://github.com/emacs-lsp/lsp-treemacs#summary
-(use-package lsp-treemacs
-  :ensure t
-  :commands lsp-treemacs-errors-list)
-;; optionally if you want to use debugger
 
-;; (use-package dap-LANGUAGE) to load the dap adapter for your language
-(use-package dap-mode
-  :ensure t
-  :after lsp-mode
-  :config
-  (dap-mode t)
-  (dap-ui-mode t))
-
-(use-package dap-java :after (lsp-java))
 
 ;;===== sts4,  Spring Tools 4 ===============
-(require 'lsp-java-boot)
+;; (require 'lsp-java-boot)
+;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+;; living application info hovers
+;; (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
 
 ;; to enable the lenses
 (add-hook 'lsp-mode-hook #'lsp-lens-mode)
-(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
 
-;; living application info hovers
-(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
 
 ;; inhibit annoying debug notices
 (setq lsp-inhibit-message t)
 
+;; ========= document ====================
+;; (add-hook 'java-mode-hook '(lambda ()
+;; 			    (if lsp-ui-doc-enable
+;; 				(progn
+;; 				  (lsp-ui-doc-mode t)
+;; 				  ))))
+			    
 ;;=========== indentation ================
 (add-hook 'java-mode-hook (lambda ()
                             (setq c-basic-offset 4
                                   tab-width 4
                                   indent-tabs-mode t)))
 
-(add-hook 'lsp-mode-hook (lambda ()
-                            (setq c-basic-offset 4
-                                  tab-width 4
-                                  indent-tabs-mode t)))
+;; (add-hook 'lsp-mode-hook (lambda ()
+;;                             (setq c-basic-offset 4
+;;                                   tab-width 4
+;;                                   indent-tabs-mode t)))
 
 ;;=== flycheck
-(add-hook 'java-mode '(lambda ()
-		       (flycheck-mode)))
+(add-hook 'java-mode-hook '(lambda ()
+		       (flycheck-mode 1)))
 
 
 ;;=========== key mapping ==============================
@@ -91,7 +71,8 @@ _s_: lsp-treemacs-symbols        _h_: helm-lsp-workspace-symbol
 _i_: lsp-ui-imenu                _q_: exit 
 _t_: treemacs                    _r_: run-with-gradlew
 _f_: helm-find                   _m_: More detail documents
-"
+_v_: toggle-show-slideline
+nnn"
   ("c" meghanada-compile-file)
   ("b" lsp-java-build-project)
 
@@ -102,6 +83,7 @@ _f_: helm-find                   _m_: More detail documents
   ("d" lsp-treemacs-java-deps-list)
 
   ("m" toggle-show-doc)
+  ("v" toggle-show-slideline)
   ("f" helm-find)
   ("h" helm-lsp-workspace-symbol)
   ("s" lsp-treemacs-symbols)
@@ -198,40 +180,6 @@ _f_: helm-find                   _m_: More detail documents
 ;; (ido-completing-read "gradlew command: " choices)
 
 
-;;========== lsp-ui-imenu
-(add-hook 'lsp-ui-imenu-mode-hook
-	  '(lambda ()
-	     (local-set-key (kbd "n") 'next-line)
-	     (local-set-key (kbd "p") 'previous-line)))
-
-;;=========== toggle document tip
-(defun toggle-show-doc ()
-  "toggle if show the java doc"
-  (interactive)
-  (if (not lsp-ui-doc-enable)
-      (progn
-	(custom-set-variables
-	 '(lsp-ui-doc-enable t)
-	 '(lsp-ui-doc-max-height 20)
-	 '(lsp-ui-doc-max-width 80)
-	 '(lsp-ui-doc-position (quote at-point))
-	 '(lsp-ui-imenu-enable t)
-	 '(lsp-ui-peek-enable t)
-	 '(lsp-ui-sideline-enable t))
-	(lsp-ui-doc-mode t)
-	(lsp-ui-sideline-mode t))
-    (progn
-      (custom-set-variables
-       '(lsp-ui-doc-enable nil)
-       '(lsp-ui-doc-max-height 20)
-       '(lsp-ui-doc-max-width 80)
-       '(lsp-ui-doc-position (quote at-point))
-       '(lsp-ui-imenu-enable nil)
-       '(lsp-ui-peek-enable nil)
-       '(lsp-ui-sideline-enable nil))
-      (lsp-ui-doc-mode -1)
-      (lsp-ui-sideline-mode -1))
-    ))
 
 ;;=============== pseudo terminal (pty) ==============
 ;; (with-temp-buffer
@@ -242,3 +190,17 @@ _f_: helm-find                   _m_: More detail documents
   (let (args))
     (setq args (read-string "Your gradlew args: "))
     (gradlew args))
+
+;;================= debug , dap ============================
+;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+(use-package dap-mode
+  :ensure t
+  :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t))
+(use-package dap-java
+  :after (lsp-java dap-mode))
+
+;; (require 'dap-java)
+;; (use-package dap-java :after (lsp-java))

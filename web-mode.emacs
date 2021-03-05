@@ -31,6 +31,13 @@
 ;; js, xml
 (add-to-list 'auto-mode-alist '("\\.api\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("/some/react/path/.*\\.js[x]?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))
+
+;; ts
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
+
+;; vue
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
 
 (setq web-mode-content-types-alist
   '(("json" . "/some/path/.*\\.api\\'")

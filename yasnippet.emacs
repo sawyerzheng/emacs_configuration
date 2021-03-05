@@ -1,10 +1,12 @@
 ;; load snippet tables  -*- coding: utf-8; -*-
 
 (use-package yasnippet
-  :ensure t)
+  :ensure t
+  )
 (use-package yasnippet-snippets
   :ensure t)
 
+(add-to-list 'yas-snippet-dirs "~/.conf.d/custom.d/snippets")
 
 (yas-reload-all)
 ;; add hook to every buffer , yas-minor-mode

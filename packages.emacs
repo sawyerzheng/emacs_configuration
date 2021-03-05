@@ -1,7 +1,8 @@
 ;; -*- coding: utf-8-unix; -*-
 ;; filename: packages.emacs
 
-
+(if (< (string-to-number emacs-version) 27)
+    (package-initialize))
 
 (when (>= emacs-major-version 24)
   (require 'package)
@@ -45,8 +46,3 @@
    (package-refresh-contents)
    (package-install 'use-package)
    (require 'use-package)))
-
-
-;; install some packages
-(use-package whitespace-cleanup-mode
-  :ensure t)

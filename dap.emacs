@@ -2,6 +2,14 @@
 
 (use-package dap-mode
   :ensure t)
+(require 'evil)
+(setq dap-print-io t)
+
+ (use-package dap-ui
+    :ensure nil
+    :config
+    (dap-ui-mode 1)
+    )
 
 (dap-mode 1)
 (dap-ui-mode 1)
@@ -11,11 +19,14 @@
 ;; if it is not enabled `dap-mode' will use the minibuffer.
 (tooltip-mode 1)
 
-(require 'dap-java)
 
 (add-hook 'dap-stopped-hook
           (lambda (arg) (call-interactively #'dap-hydra)))
 
+(add-hook 'dap-mode-hook
+	  (lambda ()
+	    (local-unset-key (kbd "<f7>"))
+	    (local-set-key (kbd "<f7>") 'dap-hydra)))
 ;;============ windows
 (defun my/window-visible (b-name)
   "Return whether B-NAME is visible."
@@ -65,15 +76,15 @@
                     (+dap-running-session-mode -1)))))))
 
 ;; Activate this minor mode when dap is initialized
-(add-hook 'dap-session-created-hook '+dap-running-session-mode)
+;; (add-hook 'dap-session-created-hook '+dap-running-session-mode)
 
 ;; Activate this minor mode when hitting a breakpoint in another file
-(add-hook 'dap-stopped-hook '+dap-running-session-mode)
+;; (add-hook 'dap-stopped-hook '+dap-running-session-mode)
 
 ;; Activate this minor mode when stepping into code in another file
-(add-hook 'dap-stack-frame-changed-hook (lambda (session)
-                                          (when (dap--session-running session)
-                                            (+dap-running-session-mode 1))))
+;; (add-hook 'dap-stack-frame-changed-hook (lambda (session)
+;;                                           (when (dap--session-running session)
+;;                                             (+dap-running-session-mode 1))))
 
 ;;=====  java options
 (setenv "JAVA_OPTS" "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044")

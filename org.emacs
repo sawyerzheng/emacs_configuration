@@ -50,3 +50,7 @@
 
 ;;============= org table mode =========================
 (add-hook 'message-mode-hook 'turn-on-orgtbl)
+
+;;============= jump back ==================
+(add-hook 'org-mode-hook (lambda ()
+			   (local-set-key (kbd "C-c C-S-o") 'org-mark-ring-goto)))
