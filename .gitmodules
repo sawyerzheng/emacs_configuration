@@ -1,0 +1,3 @@
+[submodule "extra.d/jieba.el"]
+	path = extra.d/jieba.el
+	url = https://github.com/cireu/jieba.el
