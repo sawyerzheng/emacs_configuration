@@ -1,3 +1,9 @@
 [submodule "extra.d/jieba.el"]
 	path = extra.d/jieba.el
 	url = https://github.com/cireu/jieba.el
+[submodule "extra.d/benchmark-init-el"]
+	path = extra.d/benchmark-init-el
+	url = https://github.com/dholm/benchmark-init-el
+[submodule "extra.d/esup"]
+	path = extra.d/esup
+	url = https://github.com/jschaf/esup

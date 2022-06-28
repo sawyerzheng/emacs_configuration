@@ -32,38 +32,43 @@
 
 
 ;; ================= auto-complete mode ============
-(if (equal system-type 'gnu/linux)
-    (progn
+;; (if (equal system-type 'gnu/linux)
+;;     (progn
 
-      ;; (use-package popup
-      ;; 	:ensure t)
-      ;; (use-package auto-complete
-      ;; 	:ensure t)
+;;       ;; (use-package popup
+;;       ;; 	:ensure t)
+;;       ;; (use-package auto-complete
+;;       ;; 	:ensure t)
 
-      ;; * old backup, for speed
-      (add-to-list 'load-path "~/.conf.d/extra.d/popup/")      
-      (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/popup")
-      (add-to-list 'load-path "~/.conf.d/extra.d/popup/auto-complete/")
-      (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/popup/auto-complete/")
+;;       ;; * old backup, for speed
+;;       (add-to-list 'load-path "~/.conf.d/extra.d/popup/")      
+;;       (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/popup")
+;;       (add-to-list 'load-path "~/.conf.d/extra.d/popup/auto-complete/")
+;;       (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/popup/auto-complete/")
 
-      (require 'auto-complete)
-      ;; global
-      (global-auto-complete-mode t)
-      (require 'auto-complete-config)
+;;       (require 'auto-complete)
+;;       ;; global
+;;       (global-auto-complete-mode t)
+;;       (require 'auto-complete-config)
 
-      (ac-config-default)
+;;       (ac-config-default)
 
-      ;; popup
-      (require 'pos-tip)
-      (setq ac-quick-help-prefer-pos-tip t)
+;;       ;; popup
+;;       (require 'pos-tip)
+;;       (setq ac-quick-help-prefer-pos-tip t)
 
-      ;; 设置tab键的使用模式--??
-      (setq ac-dwim t)
+;;       ;; 设置tab键的使用模式--??
+;;       (setq ac-dwim t)
 
 
-      ;;使用fuzzy功能
-      (setq ac-fuzzy-enable t)
-      ))
+;;       ;;使用fuzzy功能
+;;       (setq ac-fuzzy-enable t)
+;;       ))
+
+
+;;====================== search ===============
+(global-set-key (kbd "C-S-s") 'isearch-forward-symbol-at-point)
+
 
 ;; ;;======================================
 ;; ;; (load-file "~/.conf.d/font.emacs")
@@ -91,17 +96,17 @@
 
 ;;================ code line number mode ================
 ;;(global-linum-mode 1) ; always show line numbers 
-(setq linum-format "%2d| ")  ;set format
+(setq linum-format "%2d")  ;set format
 
 ;;=============== program-mode =====================
 ;; add line mode hook for program-mode
-(add-hook 'prog-mode-hook '(lambda ()
-			     "enable line number mode"
-;;			     (local-set-key (kbd "C-S-o") 'open-newline-forword)
-			     (linum-mode 1)
-			     (subword-mode 1)
-			     ;; (whitespace-cleanup-mode 1)
-			     ))
+(add-hook 'prog-mode-hook (lambda ()
+			    "enable line number mode"
+			    ;;			     (local-set-key (kbd "C-S-o") 'open-newline-forword)
+			    (linum-mode 1)
+			    (subword-mode 1)
+			    ;; (whitespace-cleanup-mode 1)
+			    ))
 
 (if (eq system-type 'cygwin)
     (progn
@@ -113,13 +118,20 @@
 	(scroll-bar-mode 0))
     ))
 
+;;=============== org mode =======================
+(setq org-edit-src-content-indentation 0)
+(setq org-src-preserve-indentation nil)
+(add-hook 'org-mode-hook #'org-indent-mode)
+(with-eval-after-load "org"
+  (require 'org-indent))
 
 ;; (scroll-bar-mode 0)
 ;; (column-number-mode t)
 
 ;;(set-language-environment 'Chinese-GB)
-(set-language-environment 'UTF-8)
+;; (set-language-environment 'UTF-8)
 ;; (setq locale-coding-system 'gbk)
+
 
 
 (custom-set-variables
@@ -146,22 +158,22 @@
 
 ;; ============ font =============
 ;; for linux
-(if (equal system-type 'gnu/linux)
-    (set-face-attribute
-     'default nil
-     :font (font-spec :name "-DAMA-Ubuntu Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"
-                      :weight 'normal
-                      :slant 'normal
-                      :size 16.0))
-  (if (boundp 'setfontset-font)
-      (dolist (charset '(kana han symbol cjk-misc bopomofo))
-	(set-fontset-font
-	 (frame-parameter nil 'font)
-	 charset
-	 (font-spec :name "-MS  -Microsoft YaHei-normal-normal-normal-*-*-*-*-*-*-0-iso10646-1"
-		    :weight 'normal
-		    :slant 'normal
-		    :size 16.5)))))
+;; (if (equal system-type 'gnu/linux)
+;;     (set-face-attribute
+;;      'default nil
+;;      :font (font-spec :name "-DAMA-Ubuntu Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"
+;;                       :weight 'normal
+;;                       :slant 'normal
+;;                       :size 16.0))
+;;   (if (boundp 'setfontset-font)
+;;       (dolist (charset '(kana han symbol cjk-misc bopomofo))
+;; 	(set-fontset-font
+;; 	 (frame-parameter nil 'font)
+;; 	 charset
+;; 	 (font-spec :name "-MS  -Microsoft YaHei-normal-normal-normal-*-*-*-*-*-*-0-iso10646-1"
+;; 		    :weight 'normal
+;; 		    :slant 'normal
+;; 		    :size 16.5)))))
 
 ;; for windows and cygwin, msys2
 ;; (if (or (equal system-type 'windows-nt)
@@ -174,7 +186,7 @@
   
 
 
-
+(global-set-key (kbd "M-o") #'other-window)
 (column-number-mode t)
 ;; ========== splash screen *GNU Emacs* buffer ============
 (setq inhibit-startup-screen t)
@@ -195,6 +207,20 @@
       (set-face-attribute 'default nil :family "Consolas" :height 120)
       (set-face-attribute 'mode-line nil :family "Consolas" :height 120))
   )
+(defun duplicate-line()
+  (interactive)
+  (move-beginning-of-line 1)
+  (kill-line)
+  (yank)
+  (open-line 1)
+  (next-line 1)
+  (yank)
+  (back-to-indentation)
+)
+(global-set-key (kbd "M-Y") #'duplicate-line)
+
+(fido-vertical-mode +1)
+
 ;; (custom-set-faces
 ;;  ;; custom-set-faces was added by Custom.
 ;;  ;; If you edit it by hand, you could mess it up, so be careful.

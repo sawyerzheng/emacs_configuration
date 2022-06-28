@@ -2,5 +2,5 @@
 # name: println
 # key: sout
 # --
-System.out.println("${1:text}");
+System.out.println(${1:text});
 $0

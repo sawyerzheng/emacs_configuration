@@ -1,0 +1,7 @@
+(use-package display-line-numbers
+  :straight t
+  :hook ((prog-mode markdown-mode gfm-mode) . display-line-numbers-mode)
+  :config
+  (setq display-line-numbers-width 2))
+
+(provide 'init-line-number)

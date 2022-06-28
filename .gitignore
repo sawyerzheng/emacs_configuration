@@ -1,5 +1,4 @@
-
-# -*- mode: gitignore; -*-
+# -*- mode: gitignore; coding: utf-8; -*-
 *~
 \#*\#
 /.emacs.desktop
@@ -46,3 +45,7 @@ flycheck_*.el
 .dir-locals.el
 
 perl.exe.*
+\#*
+
+#----------------------------
+custom.d/
