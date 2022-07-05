@@ -10,4 +10,8 @@
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
   )
 
+(with-eval-after-load 'info
+  (require 'info+))
+
+
 (provide 'init-helpful)

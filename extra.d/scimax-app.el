@@ -7,15 +7,16 @@
 (defun explorer (&optional path)
   "Open Finder or Windows Explorer in the current directory."
   (interactive)
+  (message path)
   (let* ((folder (if (null path)
                      (if (buffer-file-name)
                          (setq folder (file-name-directory (buffer-file-name)))
-                       (pwd))
+                       default-directory)
                    (if (file-directory-p path)
                        path
                      (if (file-exists-p path)
                          (file-name-directory path)
-                       (pwd))))))
+                       default-directory)))))
     (cond
      ((eq system-type 'gnu/linux)
       (shell-command (format "nautilus \"%s\" " folder))
@@ -26,11 +27,14 @@
                                                 (file-name-directory
                                                  (expand-file-name folder))) ""))))
      ((eq system-type 'windows-nt)
-      (message "windows")
-      (shell-command (format "explorer %s"
-                             (replace-regexp-in-string
-                              "/" "\\\\"
-                              folder)))))))
+      (message "windows: %s" folder)
+      ;; (shell-command (format "explorer.exe %s"
+      ;;                        (replace-regexp-in-string
+      ;;                         "/" "\\\\"
+      ;;                         folder)))
+      (let ((default-directory folder))
+        (shell-command "explorer . "))
+      ))))
 
 (defalias 'finder 'explorer "Alias for `explorer'.")
 

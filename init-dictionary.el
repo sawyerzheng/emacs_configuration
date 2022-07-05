@@ -100,6 +100,9 @@ This command switches to browser."
   :config
   (require 'popweb-dict-bing)
   (require 'popweb-dict-youdao)
-  (require 'popweb-latex))
+  (require 'popweb-latex)
+  (setq popweb-python-command (if my/windows-p
+                                  "d:/soft/miniconda3/envs/tools/python"
+                                "~/miniconda3/envs/tools/bin/python")))
 
 (provide 'init-dictionary)

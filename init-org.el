@@ -39,12 +39,12 @@
   :straight t
   :after org
   :hook ((org-mode dired-mode) . org-download-enable)
-  :bind (
-         ;; download image object from clipboard
-         ("C-c l i i" . org-download-clipboard)
-         ("C-c l i c" . org-download-screenshot)
-         ;; input link by hand
-         ("C-c l i h" . org-download-image))
+  :bind (:map org-mode-map
+              ;; download image object from clipboard
+              ("C-c l i i" . org-download-clipboard)
+              ("C-c l i c" . org-download-screenshot)
+              ;; input link by hand
+              ("C-c l i h" . org-download-image))
   :config
   ;; (add-hook 'dired-mode-hook 'org-download-enable)
   (setq-default org-download-image-org-width 0)

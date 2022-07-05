@@ -107,7 +107,7 @@
   (setq doom-modeline-vcs-max-length 12)
 
   ;; Whether display the perspective name. Non-nil to display in the mode-line.
-  (setq doom-modeline-persp-name t)
+  (setq doom-modeline-persp-name nil)
   (setq doom-modeline-persp-icon t)
 
   ;; If non nil the default perspective name is displayed in the mode-line.

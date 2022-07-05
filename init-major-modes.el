@@ -1,3 +1,5 @@
+(provide 'init-major-modes)
+
 (straight-use-package 'cmake-mode)
 (straight-use-package 'yaml-mode)
 (straight-use-package 'web-mode)
@@ -37,5 +39,3 @@
   :straight t
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.yaml\\'" . yaml-mode)))
-
-(provide 'init-major-modes)

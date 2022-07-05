@@ -26,6 +26,7 @@
                   pyim-probe-punctuation-after-punctuation))
 
   ;; 开启拼音搜索功能
+  (require 'pyim-cregexp-utils)
   (pyim-isearch-mode 1)
 
   ;; 使用 pupup-el 来绘制选词框, 如果用 emacs26, 建议设置
@@ -89,9 +90,16 @@
   ;; activate pyim forword for specific modes
   ;; (add-hook 'org-mode-hook 'my-pyim-forward-mode)
 
+
+  ;; 使 vertico consult 等支持 pyim-isearch-mode 类似的中文搜索
+  (defun my-orderless-regexp (orig-func component)
+    (let ((result (funcall orig-func component)))
+      (pyim-cregexp-build result)))
+
+  (advice-add 'orderless-regexp :around #'my-orderless-regexp)
+
   :bind
   (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
-   ("C-;" . pyim-delete-word-from-personal-buffer)
    ))
 
 

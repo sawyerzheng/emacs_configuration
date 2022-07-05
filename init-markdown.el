@@ -40,13 +40,19 @@
 
   (setq markdown-max-image-size '(900 . 800))
 
+  ;; code block font-lock
+  (setq markdown-fontify-code-blocks-natively t)
 
   ;; * extra packages -------------------------------------------------------
 
   (use-package markdown-toc
     :hook ((markdown-mode gfm-mode) . markdown-toc-mode)
-    :after markdown
+    :after markdown-mode
     :straight t)
+
+  (use-package edit-indirect
+    :straight t
+    :after markdown-mode)
 
   ;; https://stackoverflow.com/questions/36183071/how-can-i-preview-markdown-in-emacs-in-real-time/36189456?noredirect=1#comment104784050_36189456
   (require 'init-grip)

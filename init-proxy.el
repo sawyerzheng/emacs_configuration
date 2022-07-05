@@ -54,8 +54,15 @@
     (setenv "http_proxy" proxy)
     (setenv "https_proxy" proxy)
     (message "env http_proxy is %s now" proxy))
+  )
 
-
+(defun enable-proxy-remote ()
+  (interactive)
+  (let ((proxy))
+    (setq proxy "http://home.zhenglei.site:17890")
+    (setenv "http_proxy" proxy)
+    (setenv "https_proxy" proxy)
+    (message "env http_proxy is %s now" proxy))
   )
 
 (defun enable-proxy-eaf ()

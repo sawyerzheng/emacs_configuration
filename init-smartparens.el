@@ -13,7 +13,7 @@
         ("C-M-n" . sp-forward-sexp)
         ("C-M-p" . sp-backward-sexp)
         ("C-M-d" . sp-down-sexp)
-        ("C-M-u" . sp-up-sexp)
+        ;; ("C-M-u" . sp-up-sexp)
         ("C-M-S-n" . sp-select-next-thing)
         ("C-M-S-p" . sp-select-previous-thing-exchange))
   :config

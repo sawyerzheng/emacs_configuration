@@ -64,7 +64,10 @@
      '("lsp-bridge" . "ddfe463cf6ed2dc5c8528b18529a55ea0174b71f")
      )
     (my-straight-pin '("xah-fly-keys" . "5347be6e3165c74d9edc2a84010c2099f0620388"))
-    (my-straight-pin '("pyim" . "6b4cea1b541f5efd18067d4cafa1ca4b059a0c63"))
+    (my-straight-pin '("pyim" .
+                       ;; "6b4cea1b541f5efd18067d4cafa1ca4b059a0c63"
+                       "35315cf9fd554bb652961e5a8a8ebbafc3566d2e"
+                       ))
     (my-straight-pin '("lispy" . "df1b7e614fb0f73646755343e8892ddda310f427")))
   (straight-x-freeze-pinned-versions)
   (straight-x-thaw-pinned-versions))

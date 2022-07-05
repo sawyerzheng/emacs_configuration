@@ -2,8 +2,10 @@
 (if (eq system-type 'windows-nt)
     (progn (setq eaf-path-prefix "d:/programs/eaf/")
            (setq eaf-python-command "d:/soft/miniconda3/envs/tools/python.exe"))
-  (setq eaf-path-prefix "~/programs/eaf/"))
+  (progn (setq eaf-path-prefix "~/programs/eaf/")
+         (setq eaf-python-command "~/miniconda3/envs/tools/bin/python")))
 (add-to-list 'load-path eaf-path-prefix)
+(add-subdirs-to-load-path eaf-path-prefix)
 ;; ---------------------- my automatic load apps ------------------
 ;; (require 'eaf)
 
@@ -77,7 +79,7 @@
   (require 'eaf-org-previewer)
   (require 'eaf-jupyter)
   (require 'eaf-file-manager)
-  (require 'eaf-rss-reader)
+  ;; (require 'eaf-rss-reader)
   (require 'eaf-terminal)
   (require 'eaf-system-monitor)
   (require 'eaf-file-browser)
@@ -132,7 +134,7 @@
   (require 'eaf-file-browser)
   (require 'eaf-demo)
   (require 'eaf-vue-demo)
-  (require 'eaf-rss-reader)
+  ;; (require 'eaf-rss-reader)
   (require 'eaf-git)
 
   (require 'popweb)

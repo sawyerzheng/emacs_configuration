@@ -4,10 +4,11 @@
 (use-package projectile
   :straight t
   :commands projectile-mode
-  :bind (("C-c p" . projectile-command-map)
+  :bind (
+         ("C-c p" . projectile-command-map)
          ;; find file in other project
          ("C-c f o" . projectile-switch-project))
-		 
+
   :hook (after-init . projectile-mode)
   :config
   (projectile-mode +1)  
@@ -19,7 +20,8 @@
 
   ;; projectile itself(`.projectile') is not good
   ;; use `.gitignore' file and `hybrid' is better
-  (setq projectile-indexing-method 'hybrid)
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-enable-caching nil)
 
   (defun projectile-shell-open-at-project-root ()
     (interactive)

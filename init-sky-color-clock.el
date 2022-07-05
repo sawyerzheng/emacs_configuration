@@ -11,7 +11,8 @@
   ;; City's ID to search weather
   (sky-color-clock-initialize-openweathermap-client
    "df5e1f2dffb1fb7d006a89dfe00e2905" ;; api key
-   1808722			      ;; city id
+   "1808722" 			      ;; city id
+   ;; "Hefei,CN"
    )
 
 
@@ -20,9 +21,10 @@
   (setq sky-color-clock-format "%d %H:%M")
 
   ;; Moon phase
-  (setq sky-color-clock-enable-emoji-icon t)
+  ;; (setq sky-color-clock-enable-emoji-icon t)
 
   ;; temperature indicator
-  (setq sky-color-clock-enable-temperature-indicator t))
+  ;; (setq sky-color-clock-enable-temperature-indicator t)
+  )
 
 (provide 'init-sky-color-clock)
