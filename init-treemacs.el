@@ -13,10 +13,13 @@
   (defun doom-project-root (&optional dir)
     "Return the project root of DIR (defaults to `default-directory').
 Returns nil if not in a project."
-    (let ((projectile-project-root
-           (unless dir (bound-and-true-p projectile-project-root)))
-          projectile-require-project-root)
-      (projectile-project-root dir)))
+    (if (featurep 'projectile)
+        (let ((projectile-project-root
+               (unless dir (bound-and-true-p projectile-project-root)))
+              projectile-require-project-root)
+          (projectile-project-root dir))
+      (project-root (project-current)))
+    )
 
   (defun +treemacs/toggle ()
     "Initialize or toggle treemacs.

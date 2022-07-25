@@ -43,6 +43,9 @@
   ;; code block font-lock
   (setq markdown-fontify-code-blocks-natively t)
 
+  ;; markdown list level indent
+  (setq markdown-list-indent-width 2)
+
   ;; * extra packages -------------------------------------------------------
 
   (use-package markdown-toc

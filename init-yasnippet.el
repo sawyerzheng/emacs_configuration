@@ -6,6 +6,8 @@
          ;; (after-init-hook . yas-global-mode)
          )
   :config
+  (use-package yasnippet-snippets
+    :straight t)
   (require 'yasnippet-snippets)
   (add-to-list 'yas-snippet-dirs "~/.conf.d/custom.d/snippets")
   (yas-reload-all))

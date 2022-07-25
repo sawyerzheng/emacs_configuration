@@ -1,8 +1,11 @@
 ;; -*- coding: utf-8; -*-
+
+
 (use-package pyim
   :straight t
   :delight
   (pyim-isearch-mode)
+  :commands (my-pyim-forward-mode)
   :config
   (setq default-input-method "pyim")
   (setq pyim-default-scheme 'xiaohe-shuangpin)
@@ -26,8 +29,9 @@
                   pyim-probe-punctuation-after-punctuation))
 
   ;; 开启拼音搜索功能
+  (require 'pyim-cregexp)
   (require 'pyim-cregexp-utils)
-  (pyim-isearch-mode 1)
+  ;; (pyim-isearch-mode 1)
 
   ;; 使用 pupup-el 来绘制选词框, 如果用 emacs26, 建议设置
   ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
@@ -68,7 +72,7 @@
   ;;   (lambda ()
   ;;     (interactive)
   ;;     (pyim-page-select-word-by-number 2)))
-
+  (require 'pyim-cstring-utils)
   (define-minor-mode my-pyim-forward-mode
     "Minor mode to keymap `M-f' to `pyim-forward-word'"
     :init-value nil
@@ -91,12 +95,7 @@
   ;; (add-hook 'org-mode-hook 'my-pyim-forward-mode)
 
 
-  ;; 使 vertico consult 等支持 pyim-isearch-mode 类似的中文搜索
-  (defun my-orderless-regexp (orig-func component)
-    (let ((result (funcall orig-func component)))
-      (pyim-cregexp-build result)))
 
-  (advice-add 'orderless-regexp :around #'my-orderless-regexp)
 
   :bind
   (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
@@ -124,6 +123,31 @@
                      :dict-type pinyin-dict
                      :elpa t))
           (message "pyim 没有安装，pyim-greatdict 启用失败。"))))))
+
+
+
+;; 使 vertico consult 等支持 pyim-isearch-mode 类似的中文搜索
+(with-eval-after-load 'orderless
+  (require 'pyim)
+  (defun my-orderless-regexp (orig-func component)
+    (let ((result (funcall orig-func component)))
+      (pyim-cregexp-build result)))
+
+  (advice-add 'orderless-regexp :around #'my-orderless-regexp))
+
+;; avy + pyim cregexp
+(with-eval-after-load 'avy
+  (require 'pyim)
+  (defun my-avy--regex-candidates (fun regex &optional beg end pred group)
+    (let ((regex (pyim-cregexp-build regex)))
+      (funcall fun regex beg end pred group)))
+  (advice-add 'avy--regex-candidates :around #'my-avy--regex-candidates))
+
+;; ivy + pyim cregexp
+(with-eval-after-load 'ivy
+  (require 'pyim)
+  (setq ivy-re-builders-alist
+        '((t . pyim-cregexp-ivy))))
 
 
 (provide 'init-pyim)

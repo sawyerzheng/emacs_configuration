@@ -4,7 +4,13 @@
          ("C-h v" . helpful-variable)
          ("C-h k" . helpful-key)
          ("C-h o" . helpful-symbol)
-         ("C-h F" . helpful-function))
+         ;; ("C-h F" . helpful-function)
+         ([remap describe-function] . helpful-function)
+         ([remap describe-variable] . helpful-variable)
+         ([remap describe-key] . helpful-key)
+         ([remap describe-symbol] . helpful-symbol)
+
+         )
   :config
   (require 'elisp-demos)
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)

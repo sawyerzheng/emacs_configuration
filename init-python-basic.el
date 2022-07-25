@@ -4,26 +4,37 @@
   "Execute the buffer with python -m path.module.current.
 If there is not function elpy-project-root, use xah lee's function"
   (interactive)
-  (setq file (buffer-file-name))
-  (setq default-directory (file-name-directory file))
-  (message default-directory)
-  ;; (setq root (elpy-project-root))
-  (if (boundp 'elpy-project-root)
-      (setq root (elpy-project-root))
+  (let* ((root (my/get-project-root))
+         (file (buffer-file-name))
+         (default-directory (file-name-directory file)))
 
-    (unless (setq root (vc-root-dir))
-      (setq root (projectile-project-root))))
+    (if (and root file)
+        (my-elpy/execute-from-project-root file root)
+      (progn
+        (unless root
+          (if (featurep 'elpy)
+              (message "Not find project root. Use elpy to set it or create file .dir-locals.el in project root.")
+            (message "Not find project root. Create file .dir-locals.el in project root or use `git init' at project root.")))
 
-  (if (and root file)
-      (my-elpy/execute-from-project-root file root)
-    (progn
-      (unless root
-        (if (featurep 'elpy)
-            (message "Not find project root. Use elpy to set it or create file .dir-locals.el in project root.")
-          (message "Not find project root. Create file .dir-locals.el in project root or use `git init' at project root.")))
+        (if root
+            (message "Not valid file %s" file))))))
 
-      (if root
-          (message "Not valid file %s" file)))))
+(defun my/python-get-module-name (file root)
+  (let* ((file (expand-file-name file))
+         (root (expand-file-name root))
+         (default-directory root)
+         (relative-name (file-relative-name file root))
+         (module-name (replace-regexp-in-string "/" "." (file-name-sans-extension relative-name)))
+         )
+    module-name))
+
+(defun my/python-get-module-name-cmd ()
+  (let* ((file (buffer-file-name))
+         (root (my/get-project-root)))
+    (if (and root file)
+        (my/python-get-module-name file root)
+      nil)))
+
 
 (defun my-elpy/execute-from-project-root (file root)
   "execute current file with `python -m' command"
@@ -89,7 +100,7 @@ If there is not function elpy-project-root, use xah lee's function"
 If there is elpy-project-root can't be found, use xah lee's function"
   (interactive)
   ;; (setq root (elpy-project-root))
-  (setq root (projectile-project-root))
+  (setq root (my/get-project-root))
   (setq file (buffer-file-name))
   (if (and root file)
       (my-elpy/test-from-project-root file root "pytest")
@@ -154,7 +165,11 @@ If there is elpy-project-root can't be found, use xah lee's function"
 (use-package python
   :commands (python-mode)
   :bind (:map python-mode-map
-              ("C-c l r r" . my-elpy/execute-buffer)))
+              ("C-c l r r" . my-elpy/execute-buffer))
+  :mode-hydra
+  (python-mode
+   ("Run"
+    (("r r" my-elpy/execute-buffer "execute buffer")))))
 
 ;; (defun my-python/bind-test ()
 ;;   (local-set-key (kbd "C-c r") 'my-elpy/execute-buffer)

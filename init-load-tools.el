@@ -79,6 +79,18 @@
   )
 (global-set-key (kbd "M-Y") #'duplicate-line)
 
+(defun my/get-project-root ()
+  "use different tools to find project root"
+  (cond ((boundp 'elpy-project-root)
+         (elpy-project-root))
+        ((boundp 'projectile-mode)
+         (require 'projectile)
+         (projectile-project-root))
+        ((project-current)
+         (project-root (project-current)))
+        (t
+         (vc-root-dir))))
+
 (defun my-toggle-visual-line ()
   (interactive)
   (if global-visual-line-mode
@@ -142,5 +154,12 @@
   "load eaf configuration"
   (interactive)
   (require 'init-eaf))
+
+(defun my/local-keymap ()
+  "automatically get major mode local keymap, eg: `emacs-lisp-mode-local-keymap' "
+  (let* ((local-keymap (intern (concat (symbol-name major-mode) "-local-keymap"))))
+    (if (boundp 'local-keymap)
+        local-keymap
+      nil)))
 
 (provide 'init-load-tools)

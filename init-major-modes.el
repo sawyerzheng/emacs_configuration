@@ -1,6 +1,5 @@
 (provide 'init-major-modes)
 
-(straight-use-package 'cmake-mode)
 (straight-use-package 'yaml-mode)
 (straight-use-package 'web-mode)
 (straight-use-package 'js2-mode)

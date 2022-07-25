@@ -25,7 +25,9 @@
   (require 'corfu-info)
   (require 'corfu-quick)
   (require 'corfu-indexed)
-  (require 'kind-icon)
+  (unless my/4k-p
+    (require 'kind-icon))
+
 
   (when (> (frame-pixel-width) 3000)
     ;; (custom-set-faces '(corfu-default ((t (:height 0.9)))))
@@ -56,7 +58,9 @@
               ("M-p" . corfu-previous)))
 
 ;; * for terminal
-(unless (display-graphic-p)
+(when (or (not (display-graphic-p))
+          ;; my/4k-p
+          )
   (with-eval-after-load 'corfu
     (use-package corfu-terminal
       :after corfu
@@ -83,6 +87,7 @@
   :straight t
   :after corfu
   :defer t
+  :hook (corfu-mode . (lambda () (require 'kind-icon)))
   :custom
   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
   :config
@@ -110,8 +115,9 @@
 
   ;; Enable indentation+completion using the TAB key.
   ;; `completion-at-point' is often bound to M-TAB.
-  ;; (setq tab-always-indent 'complete)
-  (setq tab-always-indent t))
+  (setq tab-always-indent 'complete)
+  ;; (setq tab-always-indent t)
+  )
 
 (use-package tempel
   :straight t
@@ -124,7 +130,8 @@
          )
 
   :init
-
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
   ;; Setup completion at point
   (defun tempel-setup-capf ()
     ;; Add the Tempel Capf to `completion-at-point-functions'.

@@ -1,14 +1,5 @@
 ;; -*- coding: utf-8; -*-
 
-(with-eval-after-load 'org-babel
-  ;; integrate with org-mode
-  (add-to-list
-   'org-src-lang-modes '("plantuml" . plantuml))
-  (add-to-list
-   'org-src-lang-modes '("puml" . plantuml))
-  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
-  )
-
 (use-package plantuml-mode
   :straight t
   :mode (("\\.plantuml\\'" . plantuml-mode)

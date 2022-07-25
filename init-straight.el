@@ -58,10 +58,14 @@
     ;; Pin org-mode version.
     (my-straight-pin '("conda" . "78e1aad076f6cefc6aa7cc77d08e174b13050994"))
     (my-straight-pin
-     ;; '("lsp-bridge" . "137ba780623f88c2911694c0a26e357631e2dab6")
-     ;; '("lsp-bridge" . "c3dea2a16b8aec4e22fc9e3ffc62ee40d3c905e6")
-     ;; '("lsp-bridge" . "5dc54efc85ce4188664b539c40ff0f22188efe65")
-     '("lsp-bridge" . "ddfe463cf6ed2dc5c8528b18529a55ea0174b71f")
+     '("lsp-bridge" .
+       ;; "137ba780623f88c2911694c0a26e357631e2dab6"
+       ;; "c3dea2a16b8aec4e22fc9e3ffc62ee40d3c905e6"
+       ;; "5dc54efc85ce4188664b539c40ff0f22188efe65"
+
+       "ddfe463cf6ed2dc5c8528b18529a55ea0174b71f" ;; window10 usable
+       ;; "19a20c95878ec0ba98581af20052b363fa3f9868"
+       )
      )
     (my-straight-pin '("xah-fly-keys" . "5347be6e3165c74d9edc2a84010c2099f0620388"))
     (my-straight-pin '("pyim" .

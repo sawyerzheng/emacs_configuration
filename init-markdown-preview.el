@@ -6,7 +6,7 @@
               ("P" . markdown-preview-mode))
   :config
   (if my/windows-p
-      (setq markdown-preview-delay-time 4)
+      (setq markdown-preview-delay-time 1)
     (setq markdown-preview-delay-time 0.5))
 
   ;; (add-to-list 'markdown-preview-stylesheets "https://raw.githubusercontent.com/richleland/pygments-css/master/emacs.css")

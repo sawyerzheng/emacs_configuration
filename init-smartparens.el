@@ -7,7 +7,10 @@
           emacs-lisp-mode
           org-mode
           markdown-mode
-          java-mode) . smartparens-mode)
+          java-mode
+          c-mode
+          c++-mode
+          cmake-mode) . smartparens-mode)
   :bind
   (:map smartparens-mode-map
         ("C-M-n" . sp-forward-sexp)

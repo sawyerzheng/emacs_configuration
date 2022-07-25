@@ -8,6 +8,11 @@
   :commands (xah-fly-keys)
   :hook (after-init . xah-fly-keys)
   ;; :hook (after-init . (lambda () (require 'xah-fly-keys) (xah-fly-keys +1)))
+
+  ;; local keymap binding
+  ;; :hook ((prog-mode org-mode) . (lambda ()
+  ;;                                 (bind-key "SPC b" (my/local-keymap) 'xah-fly-command-map)))
+
   :bind (:map xah-fly-command-map
               ("<escape>" . xah-fly-mode-toggle))
   :bind (:map xah-fly-insert-map
@@ -18,12 +23,14 @@
               ("SPC SPC" . recenter-top-bottom) ;; unmap xah's SPC p to SPC b
               ;; ("SPC p" . projectile-command-map)
               ;; ("SPC p" . project-prefix-map)
-              ("SPC <tab>" . persp-key-map)
-
-              )
+              ("SPC <tab>" . persp-key-map))
   :config
+  ;; open external
+  (bind-key [remap xah-open-in-external-app] 'my/open-file-externally)
   ;; use `project.el'
   (bind-key "SPC p" project-prefix-map xah-fly-command-map)
+
+
   ;; (global-set-key [remap projectile-command-map] project-prefix-map)
   :bind (:map xah-fly-command-map
               ;; scroll this window
@@ -90,14 +97,13 @@
 
      ;; select just one thing
      (("s" . "select next or current thing") . sp-select-next-thing)
-     (("S" . "select previous or current thing")  . sp-select-previous-thing-exchange)
+     (("S" . "select previous or current thing") . sp-select-previous-thing-exchange)
 
      ;; iedit
      ((";" . "iedit-mode") . my/iedit-smart-trigger)
 
      ;; open at cursor
      ;; (("o" . ))
-
      )
    t)
   (defvar my/xah-quit-keymap
@@ -107,32 +113,57 @@
       (define-key map (kbd "e") #'delete-window)
       (define-key map (kbd "f") #'delete-frame)
       (define-key map (kbd "w") #'quit-window)
+      (define-key map (kbd "a") #'ace-delete-window)
       map)
     "my keymap for `quit'")
 
   (defvar my/xah-search-keymap
-    (let ((map (make-sparse-keymap)))
-      (require 'init-consult)
-      (require 'init-dictionary)
-      (define-key map (kbd "s") #'+default/search-buffer)
-      (define-key map (kbd "f") '("find file path" . consult-find))
-      (define-key map (kbd "p") '("find file content" . consult-ripgrep))
-      (define-key map (kbd "i") #'consult-imenu)
-      (define-key map (kbd "I") #'consult-imenu-multi)
-      (define-key map (kbd "o") #'+lookup/online)
-
-      (define-key map (kbd "y") #'my-youdao-dictionary-search-at-point)
-      (define-key map (kbd "d") #'fanyi-dwim2)
-      (define-key map (kbd "j") #'ace-pinyin-jump-word)
-      (define-key map (kbd "q") #'+default/search-buffer)
-
-      map)
+    (make-sparse-keymap)
     "keymap for search")
+  (let ((map my/xah-search-keymap))
+    (require 'init-consult)
+    (require 'init-dictionary)
+    (define-key map (kbd "s") #'+default/search-buffer)
+    (define-key map (kbd "f") '("find file path" . consult-find))
+    (define-key map (kbd "p") '("find file content" . consult-ripgrep))
+    (define-key map (kbd "i") #'consult-imenu)
+    (define-key map (kbd "I") #'consult-imenu-multi)
+    (define-key map (kbd "o") #'+lookup/online)
+    (define-key map (kbd "k") #'devdocs-dwim)
+    (define-key map (kbd ";") #'consult-dash)
+
+
+    (define-key map (kbd "y") #'my-youdao-dictionary-search-at-point)
+    (define-key map (kbd "d") #'fanyi-dwim2)
+    (define-key map (kbd "b") #'popweb-dict-bing-pointer)
+    (define-key map (kbd "v") #'popweb-dict-bing-input)
+
+
+
+    ;; (define-key map (kbd "j") #'ace-pinyin-jump-word)
+    (define-key map (kbd "j") #'avy-goto-word-1)
+    (define-key map (kbd "c") #'avy-goto-char)
+    (define-key map (kbd "2") #'avy-goto-char-2)
+    (define-key map (kbd "l") #'avy-goto-line)
+
+    (define-key map (kbd "q") #'+default/search-buffer)
+
+    ;; embark
+    (define-key map (kbd ".") #'embark-act)
+
+    ;; C-g
+    (define-key map (kbd "g") #'keyboard-quit))
 
   (bind-key "SPC q" my/xah-quit-keymap 'xah-fly-command-map)
   ;; rebind original `SPC q' to `SPC e q'
   (bind-key "q" 'xah-reformat-lines 'xah-fly-Lp2p1-key-map)
   (bind-key "w" 'xah-fill-or-unfill 'xah-fly-Lp2p1-key-map)
+  ;; align
+  (bind-key "a" #'ialign 'xah-fly-Lp2p1-key-map)
+  ;; window resize and jump
+  ;; (bind-key)
+  (bind-key "o" #'resize-window 'xah-fly-Lp2p1-key-map)
+
   ;; =[= for jump
   (bind-key "[" 'one-key-menu-list-jump 'xah-fly-command-map)
   (bind-key "] ]" 'sp-forward-sexp 'xah-fly-command-map)
@@ -140,7 +171,25 @@
   (bind-key "q" my/xah-search-keymap 'xah-fly-command-map)
   ;; (bind-key)
   (bind-key "'" #'one-key-menu-thing-edit 'xah-fly-command-map)
-  )
 
+  ;; * `SPC i' prefix
+  ;; revert buffer
+  (bind-key "r" 'revert-buffer 'xah-fly-Rp2p1-key-map)
+  (bind-key "R" 'xah-open-last-closed 'xah-fly-Rp2p1-key-map)
+  (bind-key "I" 'persp-switch-to-buffer 'xah-fly-Rp2p1-key-map)
+  (bind-key "i" 'consult-project-buffer 'xah-fly-Rp2p1-key-map)
+  (bind-key "k" 'bookmark-bmenu-list 'xah-fly-Rp2p1-key-map)
+
+  ;; major mode hydra
+  (bind-key "SPC b" #'major-mode-hydra 'xah-fly-command-map)
+  ;; (bind-key "SPC")
+
+  ;; try to change cursor backgroud color between insert and command mode
+  ;; (add-hook 'xah-fly-insert-mode-activate-hook #'(lambda ()
+  ;;                                                  (modify-all-frames-parameters (list (cons 'cursor-type 'box)))
+  ;;                                                  (set-face-background 'cursor "white")))
+  ;; (add-hook 'xah-fly-command-mode-activate-hook #'(lambda ()
+  ;;                                                   (set-face-background 'cursor "#51afef")))
+  )
 
 (provide 'init-xah-fly-keys)

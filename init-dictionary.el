@@ -95,7 +95,7 @@ This command switches to browser."
   :commands (popweb-dict-bing-pointer popweb-dict-youdao-pointer)
   :bind (("C-c s d b" . popweb-dict-bing-pointer)
          ("C-c s d y" . popweb-dict-youdao-pointer))
-  :demand t
+  ;; :demand t
   :hook ((org-mode latex-mode) . popweb-latex-mode)
   :config
   (require 'popweb-dict-bing)

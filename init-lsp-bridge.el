@@ -23,6 +23,8 @@
   ;;   :m "gI" #'lsp-bridge-find-impl)
 
   :config
+  (setq lsp-bridge-c-lsp-server "ccls")
+
   (defun my-lsp-bridge-toggle-acm-english-completion ()
     (interactive)
     (if acm-enable-english-helper

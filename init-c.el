@@ -1,17 +1,18 @@
+(provide 'init-c)
+
 (use-package modern-cpp-font-lock
   :straight t
   :defer t
   :commands (modern-c++-font-lock-mode modern-c++-font-lock-global-mode)
-  :hook (c++-mode . modern-cpp-font-lock-global-mode))
+  :hook (c++-mode . modern-c++-font-lock-mode))
 
 ;; qt keywords setup
 (use-package cc-mode
   :config
   (defun c-mode-style-setup ()
     (interactive)
-    (require)
     ;; cpp font lock.
-    (modern-c++-font-lock-global-mode t)
+    ;; (modern-c++-font-lock-global-mode t)
 
     ;; base-style
     (c-set-style "stroustrup")
@@ -38,4 +39,28 @@
                               '(("\\<SIGNAL\\|SLOT\\>" . 'qt-keywords-face)))
       (font-lock-add-keywords 'c++-mode
                               '(("\\<Q[A-Z][A-Za-z]\\>" . 'qt-keywords-face)))))
-  :hook ((c-mode c++-mode c-mode-common) . c-mode-style-setup))
+  :hook ((c-mode c++-mode c-mode-common) . c-mode-style-setup)
+  )
+
+;; cmake
+(use-package cmake-mode
+  :straight t
+  :commands (cmake-mode))
+
+;; 太老，无法使用
+;; (use-package cmake-project
+;;   :straight t
+;;   :hook ((c-mode c++-mode) . maybe-cmake-project-mode)
+;;   :config
+;;   (defun maybe-cmake-project-mode ()
+;;     (if (or (file-exists-p "CMakeLists.txt")
+;;             (file-exists-p (expand-file-name "CMakeLists.txt" (car (project-roots (project-current))))))
+;;         (cmake-project-mode))))
+
+(use-package eldoc-cmake
+  :straight t
+  :hook (cmake-mode . eldoc-cmake-enable))
+
+(use-package cmake-integration
+  :straight (:type git :host github :repo "darcamo/cmake-integration")
+  :commands (cmake-integration-save-and-compile))

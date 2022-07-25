@@ -1,7 +1,9 @@
 ;; -*- coding: utf-8; -*-
 (use-package ace-window
   :straight t 
-  :bind ("M-o" . ace-window)
+  :bind (("M-o" . ace-window)           ; 1) C-u M-o swap 2) C-u C-u M-o delete
+         ("M-O" . ace-swap-window)
+         ("M-D" . ace-delete-window))
   :config
   ;;=== window labels
   ;; default is 0 1 ... 9

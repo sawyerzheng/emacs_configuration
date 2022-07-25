@@ -4,7 +4,7 @@
 (use-package ansi-color
   :straight (:type built-in)
   :commands ansi-color-apply-on-region
-  :hook (compilation-filter . my/ansi-colorize-buffer)
+  :hook ((org-mode compilation-filter) . my/ansi-colorize-buffer)
   :config
   (defun my/ansi-colorize-buffer ()
     (let ((buffer-read-only nil))

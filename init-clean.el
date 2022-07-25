@@ -2,6 +2,7 @@
 
 (provide 'init-clean)
 
+
 (let (;; temporarily increase `gc-cons-threshold' when loading to speed up startup.
       (gc-cons-threshold most-positive-fixnum)
       ;; Empty to avoid analyzing files when loading remote files.
@@ -18,6 +19,7 @@
   (defun my/reload-init-file () (interactive) (load-file user-init-file))
   (global-set-key (kbd "C-h r r") #'my/reload-init-file)
 
+  (require 'init-load-tools)
   (require 'init-proxy)
   (require 'init-straight)
   (unless (directory-empty-p (expand-file-name "straight/build/use-package" user-emacs-directory))
@@ -35,10 +37,12 @@
   (setq truncate-lines t)
 
   ;; * GUI -- toolbar, menubar, scrollbar
-  (tool-bar-mode -1)
   (scroll-bar-mode -1)
-  (menu-bar-mode -1)
+  (menu-bar-mode +1)
+  (tool-bar-mode -1)
   (global-set-key (kbd "C-c t m") #'menu-bar-mode)
+  (global-set-key (kbd "C-c t t") #'tool-bar-mode)
+
   ;; 着重显示所在行
   (global-hl-line-mode 1)
   ;; mode-line 显示列数
@@ -82,6 +86,10 @@
   (global-set-key (kbd "C-c t l") #'set-language-environment)
   (set-language-environment 'UTF-8)
 
+  ;; * 默认shell
+  (when my/windows-p
+    (setq explicit-shell-file-name "pwsh"))
+
   ;; xah-fly-keys ------ start at earlier time
   (require 'init-xah-fly-keys)
 
@@ -103,7 +111,7 @@
     (setq-default save-place t)
     (setq save-place-file (expand-file-name ".local/file-cursor-places" my/etc-dir)))
 
-  (require 'init-load-tools)
+
 
   (require 'init-window)
   (require 'init-winum)
@@ -115,7 +123,8 @@
   (require 'init-page-break-lines)
   (require 'init-dashboard)
 
-  (require 'init-projectile)
+  (require 'init-project)
+  ;; (require 'init-projectile)
   (require 'init-vertico)
   (require 'init-consult)
   (require 'init-embark)
@@ -127,6 +136,7 @@
     (require 'init-which-key))
 
   (require 'init-unicode-fonts)
+  (require 'init-folding)
 
   ;; tree-sitter
   (require 'init-tree-sitter)
@@ -144,6 +154,9 @@
       (my-enable-lsp-mode)
     (my-enable-lsp-bridge))
 
+  ;; debug
+  (require 'init-dap-mode)
+  (require 'init-realgud)
 
   ;; space and indent
   (require 'init-indent-tabs)
@@ -155,11 +168,9 @@
   (require 'init-org)
 
   ;; python
-  (require 'init-python-basic)
-  (require 'init-conda)
-  (require 'init-yafolding)
-  (require 'init-live-py-plugin)
-
+  (require 'init-python)
+  ;; c and cpp
+  (require 'init-c)
 
   ;; elisp
   (require 'init-emacs-lisp)
@@ -179,11 +190,13 @@
 
   ;; tools
   (require 'init-lookup)
+  (require 'init-docsets)
   (require 'init-dictionary)
   (require 'init-treemacs)
   (require 'init-multiple-cursors)
   (require 'init-pdf-tools)
   (require 'init-everything)
+  (require 'init-eshell)
 
   ;; workspace
   (require 'init-persp-mode)
@@ -217,5 +230,9 @@
   (require 'init-plantuml-mode)
   (require 'init-regexp)
 
+  (require 'init-auto-sudoedit)
   ;; (require 'init-better-jumper)
+
+  (require 'init-quickrun)
+  (require 'init-format)
   )

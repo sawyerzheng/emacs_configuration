@@ -32,4 +32,7 @@
     :hook
     (embark-collect-mode . consult-preview-at-point-mode)))
 
+(with-eval-after-load 'vertico
+  (require 'embark))
+
 (provide 'init-embark)

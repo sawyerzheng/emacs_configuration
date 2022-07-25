@@ -148,4 +148,9 @@ Version 2018-09-29"
   (require 'dirvish-subtree)
   (require 'dirvish-vc))
 
+(use-package dired-sidebar
+  :straight t
+  :commands (dired-sidebar-show-sidebar
+             dired-sidebar-toggle-sidebar))
+
 (provide 'init-dired)

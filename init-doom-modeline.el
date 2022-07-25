@@ -35,7 +35,7 @@
   ;; e.g. `projectile' doesn't handle symlink folders well, while `project' is unable
   ;; to hanle sub-projects.
   ;; You can specify one if you encounter the issue.
-  (setq doom-modeline-project-detection 'projectile)
+  (setq doom-modeline-project-detection 'project)
 
   ;; Determines the style used by `doom-modeline-buffer-file-name'.
   ;;
