@@ -71,6 +71,7 @@
   (eaf-terminal-dark-mode nil)
   (eaf-jupyter-dark-mode nil)
   :config
+  (enable-proxy-eaf)
   (require 'eaf-vue-demo)
   (require 'eaf-browser)
   (require 'eaf-netease-cloud-music)

@@ -31,6 +31,14 @@
 (defvar my/linux-vm-p
   (eq 0 (call-process-shell-command "grep -q \"^flags.*\ hypervisor\ \"  /proc/cpuinfo")))
 
+(defvar my/terminal-p
+  (not (display-graphic-p)))
+
+(defvar my/graphic-p
+  (display-graphic-p))
+
+
+
 (defvar my/wsl-p
   (file-exists-p "/usr/bin/wslpath"))
 

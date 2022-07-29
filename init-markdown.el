@@ -29,9 +29,6 @@
                 "<script src='https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js'></script>"
                 "<script>document.addEventListener('DOMContentLoaded', () => { document.body.classList.add('markdown-body'); document.querySelectorAll('pre[lang] > code').forEach((code) => { code.classList.add(code.parentElement.lang); }); document.querySelectorAll('pre > code').forEach((code) => { hljs.highlightBlock(code); }); });</script>"))
 
-  ;; A shorter alias for org src blocks than "markdown"
-  (with-eval-after-load 'org-src
-    (add-to-list 'org-src-lang-modes '("md" . markdown)))
 
   :config
   ;; Highly rust blocks correctly
@@ -66,10 +63,10 @@
 
   ;; * markdown buffer `dnd' image handling -------------------------------------------
   (use-package org-download
-    :demand t)
+    :defer t)
 
   (load-file "~/home/.evil.d/modules/lang/markdown-extra/+my-markdown-download.el")
-  (setq my-markdown-download-image-dir "./img/")
+  (setq markdown-download-image-dir "./img/")
 
   ;; (require 'markdown-preview-mode)
   (use-package markdown-dnd-images
@@ -96,8 +93,11 @@
   ;;                      "for current buffer")))
   ;;   dnd-save-directory
   ;;   )
-  (bind-key "i c" #'my-markdown-download-clipboard 'markdown-mode-command-map)
-  (bind-key "i s" #'my-markdown-download-screenshot 'markdown-mode-command-map))
+  (use-package markdown-download
+    :bind (:map markdown-mode-command-map
+                ("i c" . markdown-download-clipboard)
+                ("i s" . markdown-download-screenshot)))
+  )
 
 
 (provide 'init-markdown)

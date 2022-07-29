@@ -36,6 +36,12 @@
     (if lsp-bridge-enable-candidate-doc-preview
         (setq lsp-bridge-enable-candidate-doc-preview nil)
       (setq lsp-bridge-enable-candidate-doc-preview t)))
+  (defun my-toggle-lsp-bridge-complete-manually ()
+    (interactive)
+    (if lsp-bridge-complete-manually
+        (setq lsp-bridge-complete-manually nil)
+      (setq lsp-bridge-complete-manually t)))
+
 
   (defun my-lsp-toggle-variable (var)
     ;; (interactive)
@@ -67,6 +73,7 @@
 
       (define-key map (kbd "Te") #'my-lsp-bridge-toggle-acm-english-completion)
       (define-key map (kbd "Td") #'my-lsp-bridge-toggle-condidate-doc-preview)
+      (define-key map (kbd "Tc") #'my-toggle-lsp-bridge-complete-manually)
 
 
       map)
@@ -94,7 +101,15 @@
   ;; doc tooltip
   (if my/4k-p
       (setq lsp-bridge-lookup-doc-tooltip-border-width 20)
-    (setq lsp-bridge-lookup-doc-tooltip-border-width 5)))
+    (setq lsp-bridge-lookup-doc-tooltip-border-width 5))
+
+  ;; advice for `conda-env-activate'
+  (defun my/lsp-bridge-restart-conda-advice (&rest args)
+    (when lsp-bridge-epc-process
+      (lsp-bridge-restart-process)))
+
+  (advice-add 'conda-env-activate :after #'my/lsp-bridge-restart-conda-advice)
+  )
 
 
 (provide 'init-lsp-bridge)

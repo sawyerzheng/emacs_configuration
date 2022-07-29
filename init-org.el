@@ -204,6 +204,8 @@ prepended to the element after the #+HEADER: tag."
 
   ;; (bind-key "SPC b b" org-babel-map 'xah-fly-command-map)
 
+  ;; markdown support
+  (add-to-list 'org-src-lang-modes '("md" . markdown))
   )
 
 ;; babel related

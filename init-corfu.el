@@ -18,15 +18,15 @@
   :config
   (defun my-corfu/enable ()
     (interactive)
-    (company-mode -1)
+    (when (functionp 'company-mode)
+      (company-mode -1))
     (corfu-mode 1))
 
   (require 'corfu-history)
   (require 'corfu-info)
   (require 'corfu-quick)
   (require 'corfu-indexed)
-  (unless my/4k-p
-    (require 'kind-icon))
+  (require 'kind-icon)
 
 
   (when (> (frame-pixel-width) 3000)
@@ -58,19 +58,19 @@
               ("M-p" . corfu-previous)))
 
 ;; * for terminal
-(when (or (not (display-graphic-p))
+(when (or my/terminal-p
           ;; my/4k-p
           )
   (with-eval-after-load 'corfu
+    (use-package popon
+      :defer t
+      :straight (popon :type git :repo "https://codeberg.org/akib/emacs-popon.git"))
+
     (use-package corfu-terminal
       :after corfu
       :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
       :hook (corfu-mode . corfu-terminal-mode)
-      :commands (corfu-terminal-mode))
-
-    (use-package popon
-      :demand t
-      :straight (popon :type git :repo "https://codeberg.org/akib/emacs-popon.git"))))
+      :commands (corfu-terminal-mode))))
 
 (use-package corfu-doc
   :straight t
@@ -87,7 +87,6 @@
   :straight t
   :after corfu
   :defer t
-  :hook (corfu-mode . (lambda () (require 'kind-icon)))
   :custom
   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
   :config

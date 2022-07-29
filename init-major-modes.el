@@ -38,3 +38,6 @@
   :straight t
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.yaml\\'" . yaml-mode)))
+
+(add-to-list 'auto-mode-alist
+             '("conanfile.txt\\'" . conf-mode))

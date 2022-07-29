@@ -8,7 +8,6 @@
   :init
   (setq lsp-keymap-prefix "M-\"")
 
-  :init
   (defun my/lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
           '(flex))
@@ -19,7 +18,21 @@
   :custom
   (lsp-completion-provider :none) ;; we use Corfu!
 
+  :bind (:map lsp-mode-map
+              ("M-." . lsp-find-definition)
+              ("M-?" . lsp-find-references))
+  :config
+  (setq lsp-diagnostics-provider :flymake)
+  ;; (setq lsp-diagnostics-provider :flycheck)
+
   )
+
+(use-package consult-lsp
+  :straight t
+  :after (lsp-mode consult)
+  :commands (consult-lsp-diagnostics
+             consult-lsp-symbols
+             consult-lsp-file-symbols))
 
 (use-package lsp-java
   :defer t
@@ -39,9 +52,26 @@
           (define-key map (kbd "=r") 'lsp-format-region)
 
           ;; errors
-          (define-key map (kbd "ee") 'lsp-treemacs-errors-list)
-          (define-key map (kbd "en") 'flycheck-next-error)
-          (define-key map (kbd "ep") 'flycheck-previous-error)
+          (define-key map (kbd "eE") 'lsp-treemacs-errors-list)
+          (define-key map (kbd "ee") 'consult-lsp-diagnostics)
+          (define-key map (kbd "el") #'(lambda ()
+                                         (interactive)
+                                         (cond ((eq major-mode 'flycheck-mode)
+                                                (flycheck-list-errors))
+                                               (t
+                                                (flymake-show-buffer-diagnostics)))))
+          (define-key map (kbd "en") #'(lambda ()
+                                         (interactive)
+                                         (cond ((eq major-mode 'flycheck-mode)
+                                                (flycheck-next-error))
+                                               (t
+                                                (flymake-goto-next-error)))))
+          (define-key map (kbd "ep") #'(lambda ()
+                                         (interactive)
+                                         (cond ((eq major-mode 'flycheck-mode)
+                                                (flycheck-previous-error))
+                                               (t
+                                                (flymake-goto-prev-error)))))
 
           ;; generate codes--- make(mine)  codes
           (define-key map (kbd "mg") 'lsp-java-generate-getters-and-setters)
@@ -92,7 +122,92 @@
 
 (use-package lsp-pyright
   :straight t
-  :defer t)
+  :defer t
+  :config
+  ;; my own map
+  (defvar my:python-map (make-sparse-keymap)
+    "my own keymap for python")
+
+  (which-key-add-major-mode-key-based-replacements 'python-mode
+    "M-' =" "format"
+    "M-' e" "errors"
+    "M-' g" "generates"
+    "M-' t" "tests"
+    "M-' d" "debugs"
+
+    "M-' ==" "lsp format buffer"
+    )
+
+  (setq  my:python-map
+	 (let* ((map (make-sparse-keymap)))
+	   ;; format
+	   (define-key map (kbd "==") '("lsp format buffer" . (lambda ()
+								(interactive)
+								;; (setq tab-width 4)
+								(lsp-format-buffer))))
+	   (define-key map (kbd "=r") 'lsp-format-region)
+
+	   ;; errors
+	   (define-key map (kbd "eE") 'lsp-treemacs-errors-list)
+	   (define-key map (kbd "ee") 'consult-lsp-diagnostics)
+	   (define-key map (kbd "el") 'flycheck-list-errors)
+
+           (define-key map (kbd "el") #'(lambda ()
+                                          (interactive)
+                                          (cond ((eq major-mode 'flycheck-mode)
+                                                 (flycheck-list-errors))
+                                                (t
+                                                 (flymake-show-buffer-diagnostics)))))
+
+           (define-key map (kbd "en") #'(lambda ()
+                                          (interactive)
+                                          (cond ((eq major-mode 'flycheck-mode)
+                                                 (flycheck-next-error))
+                                                (t
+                                                 (flymake-goto-next-error)))))
+           (define-key map (kbd "ep") #'(lambda ()
+                                          (interactive)
+                                          (cond ((eq major-mode 'flycheck-mode)
+                                                 (flycheck-previous-error))
+                                                (t
+                                                 (flymake-goto-prev-error)))))
+
+	   ;; generate codes
+	   ;; (define-key map (kbd "gg") 'lsp-java-generate-getters-and-setters)
+	   ;; (define-key map (kbd "gs") 'lsp-java-generate-to-string)
+	   ;; (define-key map (kbd "ge") 'lsp-java-generate-equals-and-hash-code)
+	   ;; (define-key map (kbd "go") 'lsp-java-generate-overrides)
+
+	   ;; (define-key map (kbd "gcf") 'lsp-java-create-field)
+	   ;; (define-key map (kbd "gcl") 'lsp-java-create-local)
+	   ;; (define-key map (kbd "gcp") 'lsp-java-create-parameter)
+	   ;; (define-key map (kbd "gi") 'lsp-java-add-import)
+	   ;; (define-key map (kbd "gmc") 'lsp-java-create-method)
+	   ;; (define-key map (kbd "gmu") 'lsp-java-add-unimplemented-methods)
+
+	   ;; dap test
+	   ;; (define-key map (kbd "tm") 'dap-java-run-test-method)
+	   ;; (define-key map (kbd "tc") 'dap-java-run-test-class)
+	   (define-key map (kbd "ta") 'pytest-all)
+	   (define-key map (kbd "tm") 'pytest-module)
+	   (define-key map (kbd "tt") '("dap test method" . dap-python-debug-test-at-point))
+
+	   (define-key map (kbd "r") '("dap run buffer" . (lambda ()
+							    (interactive)
+							    (dap-debug (dap-python--template "Python :: Run file (buffer)")))))
+
+
+
+	   ;; dap debug
+	   ;; (define-key map (kbd "dm") 'dap-java-debug-test-method)
+	   ;; (define-key map (kbd "dc") 'dap-java-debug-test-class)
+	   ;; (define-key map (kbd "dd") 'dap-java-debug)
+
+
+	   map)
+	 )
+
+  (define-key python-mode-map (kbd "M-\"") my:python-map))
 
 (use-package lsp-treemacs
   :straight t

@@ -47,6 +47,32 @@
      (("'" . "cycle space, - and _") . xah-cycle-hyphen-lowline-space))
    t))
 
+(use-package open-newline
+  :straight (:type git :host github :repo "manateelazycat/open-newline")
+  :commands (open-newline-above
+             open-newline-below)
+  :bind (("C-O" . open-newline-above)
+         ("C-o" . open-newline-below))
+  )
 
+(use-package move-text
+  :straight (:type git :host github :repo "manateelazycat/move-text")
+  :commands (move-text-up
+             move-text-down))
+
+(use-package duplicate-line
+  :straight (:type git :host github :repo "manateelazycat/duplicate-line")
+  :commands
+  (duplicate-line-or-region-above
+   duplicate-line-or-region-below
+   duplicate-line-above-comment
+   duplicate-line-below-comment))
+
+(use-package find-orphan
+  :straight (:type git :host github :repo "manateelazycat/find-orphan")
+  :commands (find-orphan-function-in-buffer
+             find-orphan-function-in-directory)
+
+  )
 
 (provide 'init-thing-edit)

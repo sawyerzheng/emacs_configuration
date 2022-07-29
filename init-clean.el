@@ -55,6 +55,9 @@
   ;; * 自动刷新文件
   (global-auto-revert-mode 1)
 
+  ;; * sub-word
+  (global-subword-mode +1)
+
   ;; * 显示时间
   ;; display with 24 hour format
   (setq display-time-24hr-format t)
@@ -68,6 +71,7 @@
     :init
     (defun my/switch-default-browser ()
       (interactive)
+
       (let ((select-choise)
             (function-assoc '(("default" . browse-url-default-browser)
                               ("eaf" . eaf-open-browser)
@@ -75,10 +79,13 @@
                               ("eww" . eww-browse-url)
                               ("firefox" . browse-url-firefox)
                               ("chrome" . browse-url-chrome))))
-        (setq select-choise (ido-completing-read "Choose Browser:" '("default" "eaf" "w3m" "eww" "firefox" "chrome")))
+        (setq select-choise (completing-read "Choose Browser:" '("default" "eaf" "w3m" "eww" "firefox" "chrome")))
         (setq browse-url-browser-function (cdr (assoc select-choise function-assoc)))))
     :bind ("C-c t W" . my/switch-default-browser)
     :config
+    (when my/windows-p
+      (setq browse-url-chrome-program "chrome.exe"))
+
     ;; (setq browse-url-browser-function #'browse-url-default-browser)
     )
 
@@ -106,10 +113,12 @@
   ;; * 保存退出光标位置
   ;; remember cursor position
   (use-package saveplace
+    :init
+    (setq save-place-file (expand-file-name "file-cursor-places" my/etc-dir))
+    (setq save-place-forget-unreadable-files nil)
     :hook (after-init . save-place-mode)
     :config
-    (setq-default save-place t)
-    (setq save-place-file (expand-file-name ".local/file-cursor-places" my/etc-dir)))
+    )
 
 
 
@@ -235,4 +244,11 @@
 
   (require 'init-quickrun)
   (require 'init-format)
+
+  (when (and my/linux-p
+             my/graphic-p)
+    (require 'init-eaf))
+
+  (require 'init-align)
+  (require 'init-xref)
   )

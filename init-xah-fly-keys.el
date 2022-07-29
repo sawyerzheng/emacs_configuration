@@ -25,6 +25,14 @@
               ;; ("SPC p" . project-prefix-map)
               ("SPC <tab>" . persp-key-map))
   :config
+  ;; open new line
+  (bind-key "O" #'open-newline-above 'xah-fly-command-map)
+  (bind-key "C-o" #'open-newline-below 'xah-fly-command-map)
+
+  ;; move text
+  (bind-key "J" #'move-text-up 'xah-fly-command-map)
+  (bind-key "L" #'move-text-down 'xah-fly-command-map)
+
   ;; open external
   (bind-key [remap xah-open-in-external-app] 'my/open-file-externally)
   ;; use `project.el'
@@ -126,26 +134,41 @@
     (define-key map (kbd "s") #'+default/search-buffer)
     (define-key map (kbd "f") '("find file path" . consult-find))
     (define-key map (kbd "p") '("find file content" . consult-ripgrep))
-    (define-key map (kbd "i") #'consult-imenu)
+    (define-key map (kbd "i") #'(lambda ()
+                                  (interactive)
+                                  (cond
+                                   ((eq major-mode 'org-mode)
+                                    (consult-org-heading))
+                                   ((or (derived-mode-p 'outline-mode)
+                                        (member major-mode '(markdown-mode gfm-mode)))
+                                    (consult-outline))
+                                   ((derived-mode-p 'compilation-mode)
+                                    (consult-compile-error))
+                                   (t
+                                    (consult-imenu)))))
     (define-key map (kbd "I") #'consult-imenu-multi)
+
+    ;; * docsets or devdocs
     (define-key map (kbd "o") #'+lookup/online)
-    (define-key map (kbd "k") #'devdocs-dwim)
-    (define-key map (kbd ";") #'consult-dash)
+    (define-key map (kbd "D") #'devdocs-dwim)
+    (define-key map (kbd "d") #'counsel-dash-at-point)
+    (define-key map (kbd "z") #'zeal-at-point)
 
-
+    ;; * dictionary
     (define-key map (kbd "y") #'my-youdao-dictionary-search-at-point)
-    (define-key map (kbd "d") #'fanyi-dwim2)
+    (define-key map (kbd "Y") #'fanyi-dwim2)
     (define-key map (kbd "b") #'popweb-dict-bing-pointer)
     (define-key map (kbd "v") #'popweb-dict-bing-input)
 
 
-
+    ;; * char, word jump
     ;; (define-key map (kbd "j") #'ace-pinyin-jump-word)
     (define-key map (kbd "j") #'avy-goto-word-1)
-    (define-key map (kbd "c") #'avy-goto-char)
+    (define-key map (kbd "k") #'avy-goto-char)
     (define-key map (kbd "2") #'avy-goto-char-2)
-    (define-key map (kbd "l") #'avy-goto-line)
 
+    ;; * line jump
+    (define-key map (kbd "l") #'avy-goto-line)
     (define-key map (kbd "q") #'+default/search-buffer)
 
     ;; embark
@@ -156,7 +179,14 @@
 
   (bind-key "SPC q" my/xah-quit-keymap 'xah-fly-command-map)
   ;; rebind original `SPC q' to `SPC e q'
-  (bind-key "q" 'xah-reformat-lines 'xah-fly-Lp2p1-key-map)
+  (bind-key "q" #'(lambda (&optional args)
+                    (interactive)
+                    (cond ((derived-mode-p 'prog-mode)
+                           (funcall-interactively #'format-all-buffer))
+                          (t
+                           (ignore-errors
+                             (funcall-interactively #'xah-reformat-lines))))) 'xah-fly-Lp2p1-key-map)
+
   (bind-key "w" 'xah-fill-or-unfill 'xah-fly-Lp2p1-key-map)
   ;; align
   (bind-key "a" #'ialign 'xah-fly-Lp2p1-key-map)
@@ -190,6 +220,16 @@
   ;;                                                  (set-face-background 'cursor "white")))
   ;; (add-hook 'xah-fly-command-mode-activate-hook #'(lambda ()
   ;;                                                   (set-face-background 'cursor "#51afef")))
+  (with-eval-after-load 'eaf
+    (add-hook 'eaf-mode-hook #'xah-fly-insert-mode-activate))
+
+  ;; iedit fix
+  (with-eval-after-load 'iedit
+    (add-hook 'iedit-mode-hook #'xah-fly-insert-mode-activate))
+  ;; magit
+  (with-eval-after-load 'magit
+    (add-hook 'magit-mode #'xah-fly-insert-mode-activate))
   )
+
 
 (provide 'init-xah-fly-keys)
