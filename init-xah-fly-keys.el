@@ -83,7 +83,7 @@
      ;; function jump
      (("a" . "ahead of function") . beginning-of-defun)
      (("e" . "end of function") . end-of-defun)
-     (("u" . "go up of code") . (lambda ()
+     (("w" . "go up of code") . (lambda ()
                                   (interactive)
                                   (cond
                                    ((eq major-mode 'python-mode) (python-nav-backward-up-list))
@@ -103,9 +103,6 @@
      (("n" . "next bracket") . forward-list)
      (("k" . "down bracket") . down-list)
 
-     ;; select just one thing
-     (("s" . "select next or current thing") . sp-select-next-thing)
-     (("S" . "select previous or current thing") . sp-select-previous-thing-exchange)
 
      ;; iedit
      ((";" . "iedit-mode") . my/iedit-smart-trigger)
@@ -151,7 +148,7 @@
     ;; * docsets or devdocs
     (define-key map (kbd "o") #'+lookup/online)
     (define-key map (kbd "D") #'devdocs-dwim)
-    (define-key map (kbd "d") #'counsel-dash-at-point)
+    (define-key map (kbd "d") #'my/counsel-dash-at-point)
     (define-key map (kbd "z") #'zeal-at-point)
 
     ;; * dictionary
@@ -220,15 +217,60 @@
   ;;                                                  (set-face-background 'cursor "white")))
   ;; (add-hook 'xah-fly-command-mode-activate-hook #'(lambda ()
   ;;                                                   (set-face-background 'cursor "#51afef")))
-  (with-eval-after-load 'eaf
-    (add-hook 'eaf-mode-hook #'xah-fly-insert-mode-activate))
+
+  ;; mark tool
+  (defvar my/mark-thing-map
+    nil
+    "mark thing keymap")
+  (setq my/mark-thing-map
+        (let* ((map (make-sparse-keymap)))
+          (require 'expand-region)
+          (define-key map (kbd "d") #'mark-defun)
+          (define-key map (kbd "w") #'xah-extend-selection)
+          (define-key map (kbd "s") #'xah-select-line) ;; sentence(line)
+          (define-key map (kbd "e") #'er/expand-region)
+
+          ;; select just one thing
+          (define-key map (kbd "f") #'sp-select-next-thing)
+          (define-key map (kbd "b") #'sp-select-previous-thing-exchange)
+
+          ;; iedit
+          (define-key map (kbd "a") #'my/iedit-smart-trigger)
+          ;; recover jump map
+          (define-key map (kbd "]") #'sp-forward-sexp)
+          map))
+  (bind-key "]" my/mark-thing-map 'xah-fly-command-map)
+
+  ;; eaf fix
+  ;; (with-eval-after-load 'eaf
+  ;;   (add-hook 'eaf-mode-hook #'xah-fly-insert-mode-activate))
 
   ;; iedit fix
   (with-eval-after-load 'iedit
     (add-hook 'iedit-mode-hook #'xah-fly-insert-mode-activate))
+
+  ;; multiple-cursors fix
+  (with-eval-after-load 'multiple-cursors
+    (add-hook 'multiple-cursors-mode-hook #'xah-fly-insert-mode-activate))
   ;; magit
   (with-eval-after-load 'magit
-    (add-hook 'magit-mode #'xah-fly-insert-mode-activate))
+    (add-hook 'magit-mode-hook #'xah-fly-insert-mode-activate)
+    (add-hook 'magit-status-mode-hook #'xah-fly-insert-mode-activate))
+
+  ;; vc-mode
+  (bind-key "SPC v" 'vc-prefix-map #'xah-fly-command-map)
+
+  ;; global tools
+  (defvar my/global-tools-map
+    (make-sparse-keymap)
+    "keymap for global tools")
+
+
+  ;; (autoload 'my/eaf-keymap "init-eaf")
+
+  (define-key my/global-tools-map (kbd "e") my/eaf-keymap)
+
+  (define-key xah-fly-command-map (kbd "SPC .") my/global-tools-map)
   )
 
 

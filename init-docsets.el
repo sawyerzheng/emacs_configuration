@@ -147,7 +147,8 @@ Install the doc if it's not installed."
              (doc-path (expand-file-name (concat elem ".docset") dash-docs-docsets-path)))
         (unless (file-exists-p doc-path))
         (dash-docs-install-docset download-name))
-      ))
+      )
+    (my/dash-docs-set-local-docsets))
 
   (defun my/dash-docs-installed-p (docset)
     (let* ((download-name (replace-regexp-in-string " " "_" docset))
@@ -157,6 +158,13 @@ Install the doc if it's not installed."
                                                ".docset")
                                        dash-docs-docsets-path)))
       (file-exists-p doc-path)))
+
+  (defun my/counsel-dash-at-point ()
+    "auto install docsets before search documentation"
+    (interactive)
+    (my/dash-docs-set-local-docsets)
+    (my/dash-docs-install-missing)
+    (counsel-dash-at-point))
 
 
 
@@ -175,4 +183,5 @@ Install the doc if it's not installed."
   (defun my/dash-docs-use-default-browser ()
     (interactive)
     (setq dash-docs-browser-func 'browse-url))
-  :hook (prog-mode . my/dash-docs-set-local-docsets))
+  :hook (prog-mode . my/dash-docs-set-local-docsets)
+  :commands (my/counsel-dash-at-point))

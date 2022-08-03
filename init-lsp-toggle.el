@@ -6,7 +6,7 @@
   :straight t
   :commands (lsp lsp-mode)
   :init
-  (setq lsp-keymap-prefix "M-\"")
+  (setq lsp-keymap-prefix "M-'")
 
   (defun my/lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))

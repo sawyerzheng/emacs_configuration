@@ -16,7 +16,7 @@
 
     (("o" pytest-one "test one")
      ("a" pytest-all "test all")
-     ("m" pytest-module "test module")
+     ;; ("m" pytest-module "test module")
      ("d" pytest-pdb-one "pdb one"))))
 
   :mode-hydra
@@ -36,9 +36,23 @@
 
 (use-package python-pytest
   :straight t
+  :commands (
+             python-pytest
+             python-pytest-file
+             python-pytest-file-dwim
+             python-pytest-files
+             python-pytest-function
+             python-pytest-function-dwim
+             python-pytest-last-failed
+             python-pytest-repeat
+             )
   :pretty-hydra
   (my/pytest-hydra
    (:color teal)
    ("pytest"
-    (("t" python-pytest-function-dwim "test one"))))
+    (("t" python-pytest-function-dwim "test one")
+     ("m" python-pytest-file-dwim "test one"))))
+  :bind (:map python-pytest-mode-map
+              ("M-n" . compilation-next-error)
+              ("M-p" . compilation-previous-error))
   )

@@ -245,8 +245,9 @@
   (require 'init-quickrun)
   (require 'init-format)
 
-  (when (and my/linux-p
-             my/graphic-p)
+  (when (and
+         ;; my/linux-p
+         my/graphic-p)
     (require 'init-eaf))
 
   (require 'init-align)

@@ -38,9 +38,19 @@
   (display-graphic-p))
 
 
-
 (defvar my/wsl-p
   (file-exists-p "/usr/bin/wslpath"))
+
+(defun my/get-linux-distro ()
+  "from lsb_release"
+  (interactive)
+  (when (eq system-type 'gnu/linux)
+    (let* ((raw-str (shell-command-to-string "lsb_release -sd")))
+      (car (split-string raw-str "\"" t "\"")))))
+
+(defvar my/arch-p
+  (equal (my/get-linux-distro) "Arch Linux"))
+
 
 (defvar my/etc-dir
   (expand-file-name ".local/etc/" user-emacs-directory)
@@ -169,5 +179,7 @@
     (if (boundp 'local-keymap)
         local-keymap
       nil)))
+
+
 
 (provide 'init-load-tools)

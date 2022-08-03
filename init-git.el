@@ -42,8 +42,8 @@
             (setq-default left-fringe-width 20)
             (setq-default right-fringe-width 20))
         (progn
-          (setq-default left-fringe-width 3)
-          (setq-default right-fringe-width 3)))
+          (setq-default left-fringe-width 5)
+          (setq-default right-fringe-width 5)))
       (setq git-gutter-fr:side 'left-fringe))))
 
 (use-package git-timemachine
