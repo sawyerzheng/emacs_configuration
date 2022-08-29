@@ -18,22 +18,25 @@
                          (file-name-directory path)
                        default-directory)))))
     (cond
-     ((eq system-type 'gnu/linux)
-      (shell-command (format "nautilus \"%s\" " folder))
+     ((and (eq system-type 'gnu/linux) (not my/wsl-p))
+      (shell-command (format "nautilus \"%s\" " (expand-file-name folder)))
       )
      ((eq system-type 'darwin)
       (shell-command (format "open -b com.apple.finder%s"
                              (if folder (format " \"%s\""
                                                 (file-name-directory
                                                  (expand-file-name folder))) ""))))
-     ((eq system-type 'windows-nt)
-      (message "windows: %s" folder)
+     ((or (eq system-type 'windows-nt) my/wsl-p)
+      ;; (message "windows: %s" folder)
       ;; (shell-command (format "explorer.exe %s"
       ;;                        (replace-regexp-in-string
       ;;                         "/" "\\\\"
       ;;                         folder)))
-      (let ((default-directory folder))
-        (shell-command "explorer . "))
+      (let ((default-directory folder)
+            (app (if (executable-find "explorer.exe")
+                     "explorer.exe"
+                   "explorer")))
+        (shell-command (concat app " .")))
       ))))
 
 (defalias 'finder 'explorer "Alias for `explorer'.")

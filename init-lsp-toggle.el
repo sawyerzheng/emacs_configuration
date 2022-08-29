@@ -1,3 +1,67 @@
+
+(defvar my/lsp-basic-map nil
+  "parent keymap for all sub-keymaps")
+(setq my/lsp-basic-map
+      (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "ee") '("consult errors" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (consult-flymake))
+                                             (flycheck-mode
+                                              (consult-lsp-diagnostics))
+                                             (lsp-bridge-mode
+                                              (lsp-bridge-list-diagnostics))
+                                             (t
+                                              nil)))) )
+        (define-key map (kbd "el") '("list errors" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (flymake-show-buffer-diagnostics))
+                                             (flycheck-mode
+                                              (flycheck-list-errors))
+                                             (lsp-bridge-mode
+                                              (lsp-bridge-list-diagnostics))
+                                             (t
+                                              nil))
+                                       )))
+        (define-key map (kbd "en") '("next error" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (flymake-goto-next-error))
+                                             (flycheck-mode
+                                              (flycheck-next-error))
+                                             (lsp-bridge-mode
+                                              (lsp-bridge-jump-to-next-diagnostic))
+                                             (t
+                                              nil)))))
+        (define-key map (kbd "ep") '("prev error" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (flymake-goto-prev-error))
+                                             (flycheck-mode
+                                              (flycheck-previous-error))
+                                             (lsp-bridge-mode
+                                              (lsp-bridge-jump-to-prev-diagnostic))
+                                             (t
+                                              nil)))))
+        (define-key map (kbd "es") '("error at point" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (flymake-show-diagnostic (point)))
+                                             (flycheck-mode
+                                              (flycheck-explain-error-at-point))
+                                             (lsp-bridge-mode ;; no support
+                                              nil)
+                                             (t
+                                              nil))
+                                       )))
+        map))
+
 (use-package flycheck
   :straight t
   :defer t
@@ -25,6 +89,9 @@
   (setq lsp-diagnostics-provider :flymake)
   ;; (setq lsp-diagnostics-provider :flycheck)
 
+  (setq lsp-enable-symbol-highlighting nil)
+  (setq lsp-enable-folding nil)
+  (setq lsp-enable-text-document-color nil)
   )
 
 (use-package consult-lsp
@@ -46,32 +113,13 @@
           ;;      						(interactive)
           ;;      						;; (setq tab-width 4)
           ;;      						(lsp-format-buffer))))
-
+          (set-keymap-parent map my/lsp-basic-map)
           (define-key map (kbd "gd") 'lsp-treemacs-java-deps-list)
           (define-key map (kbd "gs") 'lsp-treemacs-symbols)
           (define-key map (kbd "=r") 'lsp-format-region)
 
           ;; errors
           (define-key map (kbd "eE") 'lsp-treemacs-errors-list)
-          (define-key map (kbd "ee") 'consult-lsp-diagnostics)
-          (define-key map (kbd "el") #'(lambda ()
-                                         (interactive)
-                                         (cond ((eq major-mode 'flycheck-mode)
-                                                (flycheck-list-errors))
-                                               (t
-                                                (flymake-show-buffer-diagnostics)))))
-          (define-key map (kbd "en") #'(lambda ()
-                                         (interactive)
-                                         (cond ((eq major-mode 'flycheck-mode)
-                                                (flycheck-next-error))
-                                               (t
-                                                (flymake-goto-next-error)))))
-          (define-key map (kbd "ep") #'(lambda ()
-                                         (interactive)
-                                         (cond ((eq major-mode 'flycheck-mode)
-                                                (flycheck-previous-error))
-                                               (t
-                                                (flymake-goto-prev-error)))))
 
           ;; generate codes--- make(mine)  codes
           (define-key map (kbd "mg") 'lsp-java-generate-getters-and-setters)
@@ -129,18 +177,19 @@
     "my own keymap for python")
 
   (which-key-add-major-mode-key-based-replacements 'python-mode
-    "M-' =" "format"
-    "M-' e" "errors"
-    "M-' g" "generates"
-    "M-' t" "tests"
-    "M-' d" "debugs"
+                                                   "M-' =" "format"
+                                                   "M-' e" "errors"
+                                                   "M-' g" "generates"
+                                                   "M-' t" "tests"
+                                                   "M-' d" "debugs"
 
-    "M-' ==" "lsp format buffer"
-    )
+                                                   "M-' ==" "lsp format buffer"
+                                                   )
 
   (setq  my:python-map
 	 (let* ((map (make-sparse-keymap)))
 	   ;; format
+           (set-keymap-parent map my/lsp-basic-map)
 	   (define-key map (kbd "==") '("lsp format buffer" . (lambda ()
 								(interactive)
 								;; (setq tab-width 4)
@@ -149,45 +198,8 @@
 
 	   ;; errors
 	   (define-key map (kbd "eE") 'lsp-treemacs-errors-list)
-	   (define-key map (kbd "ee") 'consult-lsp-diagnostics)
-	   (define-key map (kbd "el") 'flycheck-list-errors)
-
-           (define-key map (kbd "el") #'(lambda ()
-                                          (interactive)
-                                          (cond ((eq major-mode 'flycheck-mode)
-                                                 (flycheck-list-errors))
-                                                (t
-                                                 (flymake-show-buffer-diagnostics)))))
-
-           (define-key map (kbd "en") #'(lambda ()
-                                          (interactive)
-                                          (cond ((eq major-mode 'flycheck-mode)
-                                                 (flycheck-next-error))
-                                                (t
-                                                 (flymake-goto-next-error)))))
-           (define-key map (kbd "ep") #'(lambda ()
-                                          (interactive)
-                                          (cond ((eq major-mode 'flycheck-mode)
-                                                 (flycheck-previous-error))
-                                                (t
-                                                 (flymake-goto-prev-error)))))
-
-	   ;; generate codes
-	   ;; (define-key map (kbd "gg") 'lsp-java-generate-getters-and-setters)
-	   ;; (define-key map (kbd "gs") 'lsp-java-generate-to-string)
-	   ;; (define-key map (kbd "ge") 'lsp-java-generate-equals-and-hash-code)
-	   ;; (define-key map (kbd "go") 'lsp-java-generate-overrides)
-
-	   ;; (define-key map (kbd "gcf") 'lsp-java-create-field)
-	   ;; (define-key map (kbd "gcl") 'lsp-java-create-local)
-	   ;; (define-key map (kbd "gcp") 'lsp-java-create-parameter)
-	   ;; (define-key map (kbd "gi") 'lsp-java-add-import)
-	   ;; (define-key map (kbd "gmc") 'lsp-java-create-method)
-	   ;; (define-key map (kbd "gmu") 'lsp-java-add-unimplemented-methods)
 
 	   ;; dap test
-	   ;; (define-key map (kbd "tm") 'dap-java-run-test-method)
-	   ;; (define-key map (kbd "tc") 'dap-java-run-test-class)
 	   (define-key map (kbd "ta") 'pytest-all)
 	   (define-key map (kbd "tm") 'pytest-module)
 	   (define-key map (kbd "tt") '("dap test method" . dap-python-debug-test-at-point))
@@ -195,19 +207,10 @@
 	   (define-key map (kbd "r") '("dap run buffer" . (lambda ()
 							    (interactive)
 							    (dap-debug (dap-python--template "Python :: Run file (buffer)")))))
-
-
-
-	   ;; dap debug
-	   ;; (define-key map (kbd "dm") 'dap-java-debug-test-method)
-	   ;; (define-key map (kbd "dc") 'dap-java-debug-test-class)
-	   ;; (define-key map (kbd "dd") 'dap-java-debug)
-
-
 	   map)
 	 )
 
-  (define-key python-mode-map (kbd "M-\"") my:python-map))
+  (define-key python-mode-map (kbd "M-'") my:python-map))
 
 (use-package lsp-treemacs
   :straight t
@@ -221,28 +224,36 @@
              lsp-treemacs-type-hierarchy
              lsp-treemacs-java-deps-list))
 
-(defvar my/lsp-backend 'lsp-bridge
-  "use `lsp-bridge' or `lsp-mode'")
+(defvar my/lsp-backend nil
+  "use `lsp-bridge' or `lsp-mode' or `eglot'")
 
 (defun my-disable-company ()
   (company-mode -1))
 
-(defun my/start-lsp-fn ()
+(defun my-start-lsp-mode-fn ()
   "manage correctly to start lsp-mode"
+  (interactive)
   (require 'lsp-treemacs)
   (cond ((eq major-mode 'java-mode)
          (require 'lsp-java))
         ((eq major-mode 'python-mode)
          (require 'lsp-pyright))
         ((eq major-mode 'c++-mode)))
+  (unless (memq major-mode '(python-mode java-mode))
+    (define-key lsp-mode-map (kbd "M-\'") my/lsp-basic-map))
   (lsp))
 
-(defun my/start-lsp-bridge-fn ()
+(defun my-start-lsp-bridge-fn ()
+  (interactive)
   (lsp-bridge-mode))
+
+(defun my-start-eglot-fn ()
+  (interactive)
+  (eglot-ensure))
 
 ;; * config
 (defcustom my/lsp-toggle-mode-hooks
-  '(python-mode-hook c++-mode-hook c-mode-hook)
+  '(python-mode-hook c++-mode-hook c-mode-hook cmake-mode-hook)
   "auto toggle for lsp-mode and lsp-bridge")
 
 (defun my-enable-lsp-bridge ()
@@ -250,27 +261,94 @@
   ;; (setq lsp-completion-enable nil)
   ;; (global-lsp-bridge-mode)
   (dolist (hook my/lsp-toggle-mode-hooks)
-    (remove-hook hook #'my/start-lsp-fn)
-    (add-hook hook #'my/start-lsp-bridge-fn)))
+    (add-hook hook #'my-start-lsp-bridge-fn))
+  (my-disable-lsp-mode)
+  (my-disable-eglot))
 
 (defun my-enable-lsp-mode ()
   (interactive)
   (dolist (hook my/lsp-toggle-mode-hooks)
-    (remove-hook hook #'my/start-lsp-bridge-fn)
-    (add-hook hook #'my/start-lsp-fn)))
+    (add-hook hook #'my-start-lsp-mode-fn))
+  (my-disable-eglot)
+  (my-disable-lsp-bridge)
+  )
+
+(defun my-enable-eglot ()
+  (interactive)
+  (dolist (hook my/lsp-toggle-mode-hooks)
+    (add-hook hook #'my-start-eglot-fn))
+  (my-disable-lsp-mode)
+  (my-disable-lsp-bridge))
+
+(defun my-disable-lsp-bridge ()
+  (interactive)
+  (dolist (hook my/lsp-toggle-mode-hooks)
+    (remove-hook hook #'my-start-lsp-bridge-fn)))
+
+(defun my-disable-lsp-mode ()
+  (interactive)
+  (dolist (hook my/lsp-toggle-mode-hooks)
+    (remove-hook hook #'my-start-lsp-mode-fn)))
+
+(defun my-disable-eglot ()
+  (interactive)
+  (dolist (hook my/lsp-toggle-mode-hooks)
+    (remove-hook hook #'my-start-eglot-fn)))
+
+(use-package consult-eglot
+  :straight t
+  :commands (consult-eglot-symbols))
+
+(use-package eglot
+  :straight t
+  :commands (eglot eglot-ensure)
+  :config
+  (defun my-eglot-restart ()
+    (interactive)
+    (eglot-shutdown)
+    (eglot))
+
+  (defvar my-eglot-keymap
+    nil
+    "my keymap for eglot-mode")
+  (setq my-eglot-keymap
+        (let ((map (make-sparse-keymap)))
+          (set-keymap-parent map my/lsp-basic-map)
+          (bind-key "wr" #'my-eglot-restart map)
+          (bind-key "wk" #'eglot-shutdown map)
+          (bind-key "wc" #'eglot-reconnect map)
+
+          (bind-key "rr" #'eglot-rename map)
+
+          (bind-key "==" #'eglot-format map)
+          (bind-key "=b" #'eglot-format-buffer map)
+
+          (bind-key "hh" #'eldoc-doc-buffer map)
+          (bind-key "hm" #'eglot-manual map)
+
+          map))
+  (bind-key "M-'" my-eglot-keymap eglot-mode-map)
+
+  (setq completion-category-defaults nil)
+
+  )
 
 (defun my-lsp-toggle ()
   (interactive)
-  (if (eq my/lsp-backend 'lsp-bridge)
-      (progn
-        (my-enable-lsp-mode)
-        (setq my/lsp-backend 'lsp))
-    (my-enable-lsp-bridge)
-    (setq my/lsp-backend 'lsp-bridge)))
+  (let* ((lsp-backends '(("lsp-mode" . my-enable-lsp-mode)
+                         ("lsp-bridge" . my-enable-lsp-bridge)
+                         ("eglot" . my-enable-eglot)))
+         (backend-name (completing-read
+                        "choose lsp backend:" (mapcar #'car lsp-backends)))
+         (selected-backend (cdr
+                            (assoc backend-name lsp-backends))))
+    (setq my/lsp-backend backend-name)
+    (funcall selected-backend)
+    (message "selected backend: %s" backend-name)))
 
 ;; * default to lsp
-(dolist (hook '(cmake-mode-hook))
-  (add-hook hook #'my/start-lsp-fn))
+;; (dolist (hook '(cmake-mode-hook))
+;;   (add-hook hook #'my-start-eglot-fn))
 
 (global-set-key (kbd "C-c t l")  #'my-lsp-toggle)
 

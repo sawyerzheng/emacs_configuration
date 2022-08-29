@@ -1,15 +1,13 @@
-(bind-key "C-c p" project-prefix-map)
+(bind-key "C-c p" 'project-prefix-map)
 (use-package project
   :defer t
   :config
   ;; (bind-key "o" #'+treemacs/toggle  project-prefix-map)
-  (bind-key "o" #'dired-sidebar-toggle-sidebar  project-prefix-map)
-
-  )
+  (bind-key "o" #'dired-sidebar-toggle-sidebar project-prefix-map))
 
 (use-package projectile
   :straight t
-  :after project
+  ;; :after project
   :bind (:map project-prefix-map
               ("P" . projectile-test-project)
               ("T" . projectile-find-test-file)
@@ -17,7 +15,18 @@
               ("g" . projectile-find-file-dwim)
               ("a" . projectile-find-other-file)
               ("u" . projectile-run-project)
-              ("v" . projectile-vc)))
+              ("v" . projectile-vc)
+              ("x" . nil)
+              ("x x" . project-execute-extended-command)
+              ("x v" . projectile-run-vterm)
+              ("x e" . projectile-run-eshell))
+  ;; :bind-keymap ("C-x p" . projectile-command-map)
+  )
+
+(bind-key "C-x p" nil)
+(autoload 'projectile-command-map "projectile")
+(bind-key "C-x p" 'projectile-command-map)
+
 
 (use-package project-x
   :straight (:type git :host github :repo "karthink/project-x")

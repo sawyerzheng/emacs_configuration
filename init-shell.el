@@ -13,4 +13,12 @@
     (fish-completion-fallback-on-bash-p t))
   )
 
+(use-package vterm
+  :straight t
+  :if (not my/windows-p)
+  :commands (vterm vterm-module-compile)
+  :config
+  :custom (vterm-always-compile-module t)
+  )
+
 (provide 'init-shell)

@@ -47,8 +47,13 @@
 
   (use-package markdown-toc
     :hook ((markdown-mode gfm-mode) . markdown-toc-mode)
+    :hook (markdown-toc-mode . (lambda ()
+                                 (setq-local imenu-create-index-function
+                                             #'markdown-imenu-create-nested-index)))
     :after markdown-mode
-    :straight t)
+    :straight t
+    :config
+    )
 
   (use-package edit-indirect
     :straight t

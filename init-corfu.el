@@ -55,7 +55,9 @@
               ("S-TAB" . corfu-previous)
               ([backtab] . corfu-previous)
               ("M-n" . corfu-next)
-              ("M-p" . corfu-previous)))
+              ("M-p" . corfu-previous))
+  :bind ("C-M-i" . completion-at-point))
+
 
 ;; * for terminal
 (when (or my/terminal-p

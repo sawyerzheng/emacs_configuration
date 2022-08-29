@@ -63,7 +63,7 @@
                                         ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   (eaf-browser-continue-where-left-off t)
   (eaf-browser-enable-adblocker t)
-  (browse-url-browser-function 'eaf-open-browser)
+  ;; (browse-url-browser-function 'eaf-open-browser)
   (eaf-pdf-dark-mode nil)
   (eaf-browser-dark-mode "follow")
   (eaf-file-manager-dark-mode nil)
@@ -80,7 +80,7 @@
   (require 'eaf-org-previewer)
   (require 'eaf-jupyter)
   (require 'eaf-file-manager)
-  ;; (require 'eaf-rss-reader)
+  (require 'eaf-rss-reader)
   (require 'eaf-terminal)
   (require 'eaf-system-monitor)
   (require 'eaf-file-browser)
@@ -101,11 +101,6 @@
 
 
 
-
-
-
-
-
   ;; unbind, see more in the Wiki
 
   (defun eaf-toggle-browser-dark-mode ()
@@ -113,8 +108,6 @@
     (if (eq eaf-browser-dark-mode nil)
         (setq eaf-browser-dark-mode "follow")
       (setq eaf-browser-dark-mode nil)))
-
-
 
   ;; copy from lazycat emacs
   (require 'eaf)
@@ -136,7 +129,6 @@
   (require 'eaf-file-browser)
   (require 'eaf-demo)
   (require 'eaf-vue-demo)
-  ;; (require 'eaf-rss-reader)
   (require 'eaf-git)
 
   (require 'popweb)
@@ -166,9 +158,9 @@
   (eaf-bind-key watch-other-window-down-line "M->" eaf-browser-keybinding)
   (eaf-bind-key emacs-session-save "<f5>" eaf-browser-keybinding)
   (eaf-bind-key refresh_page "M-r" eaf-browser-keybinding)
-  (setq eaf-web-engine-default-zoom
+  (setq eaf-webengine-default-zoom
         (if my/4k-p
-            1.7
+            1.9
           1.0))
   ;; (setq eaf-webengine-default-zoom (if (> (frame-pixel-width) 3000) 2 1))
   (setq eaf-browser-aria2-proxy-host "127.0.0.1")
@@ -227,8 +219,11 @@
 
   ;; fix eaf <---> xah-fly-keys
   (with-eval-after-load 'xah-fly-keys
+    ;; (setq my/eaf-mode-list '(eaf-mode pe))
     (defun my/eaf-xah-next-line (old-fun &rest args)
-      (cond ((eq major-mode 'eaf-mode)
+      (cond (
+             ;; (memq major-mode)
+             (eq major-mode 'eaf-mode)
              (eaf-send-down-key))
             (t
              (apply old-fun args))))
@@ -301,7 +296,7 @@
              (apply old-fun args))))
     (defun my/eaf-xah-forward-history (old-fun &rest args)
       (cond ((eq major-mode 'eaf-mode)
-             (eaf-py-proxy-history_backward))
+             (eaf-py-proxy-history_forward))
             (t
              (apply old-fun args))))
 

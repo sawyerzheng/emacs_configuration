@@ -1,16 +1,4 @@
 ;; -*- coding: utf-8; -*-
-;; (use-package use-proxy
-;;   :ensure t
-;;   :config
-;;   (setq use-proxy-http-proxy "http://localhost:7890")
-;;   (setq use-proxy-https-proxy use-proxy-http-proxy)
-;;   )
-
-;; (defun get-my-http-proxy ()
-;;   "retrieve proxy value, depending on if current machine is windows sub linux"
-;;   (if (file-exists-p "/usr/bin/wslpath")
-;;       (shell-command-to-string "enable_proxy; echo $http_proxy")
-;;     "http://192.168.1.127:7890"))
 
 (defun get-my-http-proxy ()
   "retrieve proxy value, depending on if current machine is windows sub linux"
@@ -68,12 +56,13 @@
 (defun enable-proxy-eaf ()
   "remember to restart eaf using: `eaf-restart-process'."
   (interactive)
-  (setq eaf-proxy-host "home.zhenglei.site"
-        eaf-proxy-type "http"
-        eaf-proxy-port "17890")
-  (setq eaf-proxy-host "localhost"
-        eaf-proxy-type "http"
-        eaf-proxy-port "7890")
+  (if my/wsl-p
+      (setq eaf-proxy-host "home.zhenglei.site"
+            eaf-proxy-type "http"
+            eaf-proxy-port "17890")
+    (setq eaf-proxy-host "localhost"
+          eaf-proxy-type "http"
+          eaf-proxy-port "7890"))
 
   (message "env http_proxy is %s now" (concat eaf-proxy-type "://" eaf-proxy-host ":" eaf-proxy-port)))
 

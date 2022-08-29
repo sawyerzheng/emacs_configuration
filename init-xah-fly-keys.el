@@ -14,16 +14,21 @@
   ;;                                 (bind-key "SPC b" (my/local-keymap) 'xah-fly-command-map)))
 
   :bind (:map xah-fly-command-map
-              ("<escape>" . xah-fly-mode-toggle))
+              ("<escape>" . xah-fly-mode-toggle)
+              ("<f7>" . xah-fly-mode-toggle)
+              )
   :bind (:map xah-fly-insert-map
-              ("<escape>" . xah-fly-mode-toggle))
+              ("<escape>" . xah-fly-mode-toggle)
+              ("<f7>" . xah-fly-mode-toggle)
+              )
 
   :bind (:map xah-fly-command-map
               ([remap recentf-open-files] . consult-recent-file)
               ("SPC SPC" . recenter-top-bottom) ;; unmap xah's SPC p to SPC b
               ;; ("SPC p" . projectile-command-map)
               ;; ("SPC p" . project-prefix-map)
-              ("SPC <tab>" . persp-key-map))
+              ("SPC <tab>" . persp-key-map)
+              )
   :config
   ;; open new line
   (bind-key "O" #'open-newline-above 'xah-fly-command-map)
@@ -45,12 +50,16 @@
               ("K" . scroll-up-command)
               ("I" . scroll-down-command)
               ;; scroll other window
-              ("M-J" . scroll-other-window)
-              ("M-L" . scroll-other-window-down))
+              ;; ("M-J" . scroll-other-window)
+              ;; ("M-L" . scroll-other-window-down)
+
+              ("M-K" . scroll-other-window)
+              ("M-I" . scroll-other-window-down)
+              )
   :config
   (xah-fly-keys-set-layout "qwerty")
   ;; (global-set-key (kbd "<escape>") 'xah-fly-mode-toggle)
-  (global-set-key (kbd "<f7>") 'xah-fly-mode-toggle)
+  ;; (global-set-key (kbd "<f7>") 'xah-fly-mode-toggle)
   (defun my/activate-xah-fly-command-mode ()
     (interactive)
     (if (null xah-fly-keys)
@@ -271,6 +280,10 @@
   (define-key my/global-tools-map (kbd "e") my/eaf-keymap)
 
   (define-key xah-fly-command-map (kbd "SPC .") my/global-tools-map)
+
+  ;; * undo
+  (bind-key "y" #'undo-fu-only-undo 'xah-fly-command-map)
+  (bind-key "Y" #'undo-fu-only-redo 'xah-fly-command-map)
   )
 
 

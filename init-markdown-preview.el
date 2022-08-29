@@ -20,5 +20,8 @@
   (setq markdown-preview-javascript '("http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"))
   (setq markdown-preview-http-port 19080))
 
+(use-package web-server
+  :load-path (lambda () (expand-file-name "web-server" my/extra.d-dir))
+  :defer t)
 
 (provide 'init-markdown-preview)

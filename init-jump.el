@@ -1,15 +1,20 @@
 (provide 'init-jump)
 
+
 (use-package dumb-jump
   :straight t
   :after xref
+  :hook (prog-mode . my/dumb-jump-add-activate-fn)
+  :functions (my/dumb-jump-add-activate-fn)
   :commands (dumb-jump-xref-activate)
-  :defer t
   :config
-  (setq xref-show-definitions-function #'xref-show-definitions-completing-read))
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+  (defun my/dumb-jump-add-activate-fn ()
+    (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)))
 
-(with-eval-after-load 'xref
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
+
+
 
 (use-package ace-pinyin
   :straight t

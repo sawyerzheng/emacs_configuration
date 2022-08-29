@@ -20,7 +20,7 @@
 ;;; Code:
 
 (defvar my/4k-p
-  (>= (x-display-pixel-height) 2160)
+  (ignore-errors (>= (x-display-pixel-height) 2160))
   "if monitor is a 4k screen.")
 (defvar my/windows-p
   (eq system-type 'windows-nt))
@@ -180,6 +180,13 @@
         local-keymap
       nil)))
 
+(defvar my/conf-distro-dir (file-name-directory load-file-name) 
+  "folder to place most init files")
 
+(defvar my/extra.d-dir (expand-file-name "extra.d" my/conf-distro-dir)
+  "folder to my manualy downloaded elisp packages")
+
+(defvar my/arch-p (equal (my/get-linux-distro) "Arch Linux")
+  "is arch linux distrobution")
 
 (provide 'init-load-tools)

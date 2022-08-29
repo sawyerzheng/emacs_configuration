@@ -9,10 +9,12 @@
               ("M-*" . lsp-bridge-find-references)
               ("M-?" . lsp-bridge-find-references)
               ("C-M-." . lsp-bridge-popup-documentation-scroll-up)
-              ("C-M-," . lsp-bridge-popup-documentation-scroll-down))
+              ("C-M-," . lsp-bridge-popup-documentation-scroll-down)
+              ("C-M-I" . lsp-bridge-popup-complete))
   :custom
   (lsp-bridge-enable-signature-help t)
   (lsp-bridge-enable-candidate-doc-preview t)
+  (acm-enable-tabnine-helper t)
 
   ;; :bind-keymap
   ;; ("M-\"" . my-lsp-bridge-keymap)
@@ -24,6 +26,7 @@
 
   :config
   (setq lsp-bridge-c-lsp-server "ccls")
+  (setq lsp-bridge-complete-manually t)
 
   (defun my-lsp-bridge-toggle-acm-english-completion ()
     (interactive)
@@ -60,9 +63,10 @@
       (define-key map (kbd "hh") #'lsp-bridge-lookup-documentation)
 
       (define-key map (kbd "rr") #'lsp-bridge-rename)
-      (define-key map (kbd "rf") #'lsp-bridge-rename-file)
-      (define-key map (kbd "rh") #'lsp-bridge-rename-highlight)
+      ;; (define-key map (kbd "rf") #'lsp-bridge-rename-file)
+      ;; (define-key map (kbd "rh") #'lsp-bridge-rename-highlight)
 
+      (define-key map (kbd "ee") #'lsp-bridge-list-diagnostics)
       (define-key map (kbd "en") #'lsp-bridge-jump-to-next-diagnostic)
       (define-key map (kbd "ep") #'lsp-bridge-jump-to-prev-diagnostic)
       (define-key map (kbd "el") #'lsp-bridge-list-diagnostics)
@@ -74,6 +78,7 @@
       (define-key map (kbd "Te") #'my-lsp-bridge-toggle-acm-english-completion)
       (define-key map (kbd "Td") #'my-lsp-bridge-toggle-condidate-doc-preview)
       (define-key map (kbd "Tc") #'my-toggle-lsp-bridge-complete-manually)
+      (define-key map (kbd "==") #'lsp-bridge-code-format)
 
 
       map)
@@ -109,7 +114,42 @@
       (lsp-bridge-restart-process)))
 
   (advice-add 'conda-env-activate :after #'my/lsp-bridge-restart-conda-advice)
+
+  ;; add cmake-mode support
+  ;; (add-to-list 'lsp-bridge-single-lang-server-mode-list '(cmake-mode . "cmake-language-server"))
+  ;; (add-to-list 'lsp-bridge-default-mode-hooks 'cmake-mode-hook)
+  ;; (add-to-list 'lsp-bridge-formatting-indent-alist)
+
+  (defun my/enable-tabnine-bridge ()
+    (interactive)
+    (let ((parent tabnine-bridge-binaries-folder))
+      (if (file-directory-p parent)
+          (let* ((children (->> (directory-files parent)
+                                (--remove (member it '("." "..")))
+                                (--filter (file-directory-p
+                                           (expand-file-name
+                                            it
+                                            (file-name-as-directory
+                                             parent))))
+                                (--filter (ignore-errors (version-to-list it)))
+                                (-non-nil)))
+                 (sorted (nreverse (sort children #'version<)))
+                 (target (tabnine-bridge--get-target))
+                 (filename (tabnine-bridge--get-exe)))
+            (cl-loop
+             for ver in sorted
+             for fullpath = (expand-file-name (format "%s/%s/%s"
+                                                      ver target filename)
+                                              parent)
+             if (and (file-exists-p fullpath)
+                     (file-regular-p fullpath))
+             return fullpath
+             finally do (tabnine-bridge--error-no-binaries)))
+        (tabnine-bridge--error-no-binaries)))
+    (setq acm-enable-tabnine-helper t)
+    )
   )
+
 
 
 (provide 'init-lsp-bridge)

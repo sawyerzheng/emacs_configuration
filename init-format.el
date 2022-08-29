@@ -19,7 +19,7 @@
     (setq-local format-all-formatters my/format-all-default-formatters)
 
     )
-  :hook ((c++-mode c-mode) . format-all-mode)
+  ;; :hook ((c++-mode c-mode) . format-all-mode)
   :hook ((format-all-mode
           python-mode
           c++-mode

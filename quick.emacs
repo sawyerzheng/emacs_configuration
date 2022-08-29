@@ -103,7 +103,8 @@
 (add-hook 'prog-mode-hook (lambda ()
 			    "enable line number mode"
 			    ;;			     (local-set-key (kbd "C-S-o") 'open-newline-forword)
-			    (linum-mode 1)
+                            (display-line-numbers-mode)
+			    ;; (linum-mode 1)
 			    (subword-mode 1)
 			    ;; (whitespace-cleanup-mode 1)
 			    ))

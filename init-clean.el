@@ -160,7 +160,7 @@
   (require 'init-lsp-toggle)
   ;; lsp-bridge not support windows and terminal document
   (if (or (not (display-graphic-p)))
-      (my-enable-lsp-mode)
+      (my-enable-eglot)
     (my-enable-lsp-bridge))
 
   ;; debug
@@ -206,6 +206,7 @@
   (require 'init-pdf-tools)
   (require 'init-everything)
   (require 'init-eshell)
+  (require 'init-shell)
 
   ;; workspace
   (require 'init-persp-mode)
@@ -252,4 +253,8 @@
 
   (require 'init-align)
   (require 'init-xref)
+  (require 'init-ligature)
+
+  (require 'init-elfeed)
+  (require 'init-undo)
   )
