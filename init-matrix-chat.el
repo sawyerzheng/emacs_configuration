@@ -1,0 +1,26 @@
+(use-package ement
+  :straight (:type git :host github :repo "alphapapa/ement.el"))
+
+(use-package matrix-connect
+  :straight (:type git :host github :repo "alphapapa/matrix-client.el")
+  :init
+  (use-package anaphora
+    :straight t)
+  (use-package ov
+    :straight t)
+  (use-package tracking
+    :straight t)
+  (use-package a
+    :straight t)
+  (use-package rainbow-identifiers
+    :straight t)
+  (use-package dash-functional
+    :straight t)
+  )
+(use-package quelpa
+  :straight t)
+(use-package quelpa-use-package
+  :straight t)
+(use-package matrix-client
+  :quelpa (matrix-client :fetcher github :repo "alphapapa/matrix-client.el"
+                         :files (:defaults "logo.png" "matrix-client-standalone.el.sh")))
