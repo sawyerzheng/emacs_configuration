@@ -22,6 +22,8 @@
   (require 'init-load-tools)
   (require 'init-proxy)
   (require 'init-straight)
+  (global-set-key (kbd "C-h r f") #'my-straight-make-sure-freeze-packages)
+
   (unless (directory-empty-p (expand-file-name "straight/build/use-package" user-emacs-directory))
     (add-to-list 'load-path (expand-file-name "straight/build/use-package" user-emacs-directory)))
 
@@ -194,7 +196,8 @@
 
 
   ;; font and theme
-  (require 'init-font-and-theme)
+  (require 'init-font)
+  (require 'init-theme)
   (require 'init-ansi-color)
 
   ;; tools
@@ -257,4 +260,5 @@
 
   (require 'init-elfeed)
   (require 'init-undo)
+  (require 'init-deno)
   )

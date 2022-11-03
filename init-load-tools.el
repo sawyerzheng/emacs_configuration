@@ -95,7 +95,7 @@
   (yank)
   (back-to-indentation)
   )
-(global-set-key (kbd "M-Y") #'duplicate-line)
+;; (global-set-key (kbd "M-Y") #'duplicate-line)
 
 (defun my/get-project-root ()
   "use different tools to find project root"

@@ -3,7 +3,9 @@
     (progn (setq eaf-path-prefix "d:/programs/eaf/")
            (setq eaf-python-command "d:/soft/miniconda3/envs/eaf/python.exe"))
   (progn (setq eaf-path-prefix "~/programs/eaf/")
-         (setq eaf-python-command "~/miniconda3/envs/eaf/bin/python")))
+         ;; (setq eaf-python-command "~/miniconda3/envs/eaf/bin/python")
+         (setq eaf-python-command "~/programs/eaf/.venv/bin/python")
+         ))
 (add-to-list 'load-path eaf-path-prefix)
 (add-subdirs-to-load-path eaf-path-prefix)
 ;; ---------------------- my automatic load apps ------------------
@@ -300,41 +302,41 @@
             (t
              (apply old-fun args))))
 
-    ;; line up/down
-    (advice-add #'next-line :around #'my/eaf-xah-next-line)
-    (advice-add #'previous-line :around #'my/eaf-xah-previous-line)
+    ;; ;; line up/down
+    ;; (advice-add #'next-line :around #'my/eaf-xah-next-line)
+    ;; (advice-add #'previous-line :around #'my/eaf-xah-previous-line)
 
-    ;; page up/down
-    (advice-add #'scroll-up-command :around #'my/eaf-xah-up-page)
-    (advice-add #'scroll-down-command :around #'my/eaf-xah-down-page)
-    (advice-add #'backward-kill-word :around #'my/eaf-xah-down-page)
-    (advice-add #'xah-delete-backward-char-or-bracket-text :around #'my/eaf-xah-up-page)
+    ;; ;; page up/down
+    ;; (advice-add #'scroll-up-command :around #'my/eaf-xah-up-page)
+    ;; (advice-add #'scroll-down-command :around #'my/eaf-xah-down-page)
+    ;; (advice-add #'backward-kill-word :around #'my/eaf-xah-down-page)
+    ;; (advice-add #'xah-delete-backward-char-or-bracket-text :around #'my/eaf-xah-up-page)
 
-    ;; left right
-    (advice-add #'forward-char :around #'my/eaf-xah-forward-char)
-    (advice-add #'backward-char :around #'my/eaf-xah-backward-char)
+    ;; ;; left right
+    ;; (advice-add #'forward-char :around #'my/eaf-xah-forward-char)
+    ;; (advice-add #'backward-char :around #'my/eaf-xah-backward-char)
 
-    ;; left right tab
-    (advice-add #'move-text-up :around #'my/eaf-xah-left-tab)
-    (advice-add #'move-text-down :around #'my/eaf-xah-right-tab)
+    ;; ;; left right tab
+    ;; (advice-add #'move-text-up :around #'my/eaf-xah-left-tab)
+    ;; (advice-add #'move-text-down :around #'my/eaf-xah-right-tab)
 
-    ;; begin end
-    (advice-add #'beginning-of-buffer :around #'my/eaf-xah-beging-of-buffer)
-    (advice-add #'end-of-buffer :around #'my/eaf-xah-end-of-buffer)
+    ;; ;; begin end
+    ;; (advice-add #'beginning-of-buffer :around #'my/eaf-xah-beging-of-buffer)
+    ;; (advice-add #'end-of-buffer :around #'my/eaf-xah-end-of-buffer)
 
-    ;; zoom in/out
-    (advice-add #'xah-forward-punct :around #'my/eaf-xah-zoom-in)
-    (advice-add #'xah-backward-punct :around #'my/eaf-xah-zoom-out)
+    ;; ;; zoom in/out
+    ;; (advice-add #'xah-forward-punct :around #'my/eaf-xah-zoom-in)
+    ;; (advice-add #'xah-backward-punct :around #'my/eaf-xah-zoom-out)
 
-    ;; space scroll
-    (advice-add #'recenter-top-bottom :around #'my/eaf-xah-up-page)
+    ;; ;; space scroll
+    ;; (advice-add #'recenter-top-bottom :around #'my/eaf-xah-up-page)
 
-    ;; delete tab
-    (advice-add #'xah-cut-line-or-region :around #'my/eaf-xah-kill-buffer)
+    ;; ;; delete tab
+    ;; (advice-add #'xah-cut-line-or-region :around #'my/eaf-xah-kill-buffer)
 
-    ;; history left/right
-    (advice-add #'xah-beginning-of-line-or-block :around #'my/eaf-xah-backward-history)
-    (advice-add #'xah-end-of-line-or-block :around #'my/eaf-xah-forward-history)
+    ;; ;; history left/right
+    ;; (advice-add #'xah-beginning-of-line-or-block :around #'my/eaf-xah-backward-history)
+    ;; (advice-add #'xah-end-of-line-or-block :around #'my/eaf-xah-forward-history)
 
     )
 
@@ -355,19 +357,16 @@
   )
 
 ;;;###autoload
-  (defvar my/eaf-keymap
-    (let* ((map (make-sparse-keymap)))
-      (define-key map (kbd "b") 'eaf-open-browser-with-history)
-      (define-key map (kbd "e") 'eaf-open-browser-with-history)
-      (define-key map (kbd "f") 'sort-tab-select-next-tab)
-      (define-key map (kbd "s") 'sort-tab-select-prev-tab)
-      (define-key map (kbd "w") 'eaf-open-external)
-      (define-key map (kbd "k") 'eaf-search-it)
-      (define-key map (kbd "r") 'eaf-restart-process)
-      map)
-    "global map for eaf commands")
-
-
-
+(defvar my/eaf-keymap
+  (let* ((map (make-sparse-keymap)))
+    (define-key map (kbd "b") 'eaf-open-browser-with-history)
+    (define-key map (kbd "e") 'eaf-open-browser-with-history)
+    (define-key map (kbd "f") 'sort-tab-select-next-tab)
+    (define-key map (kbd "s") 'sort-tab-select-prev-tab)
+    (define-key map (kbd "w") 'eaf-open-external)
+    (define-key map (kbd "k") 'eaf-search-it)
+    (define-key map (kbd "r") 'eaf-restart-process)
+    map)
+  "global map for eaf commands")
 
 (provide 'init-eaf)

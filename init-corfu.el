@@ -34,20 +34,7 @@
     (setq kind-icon-use-icons nil)
     (setq corfu-min-width 30))
 
-  (use-package cape
-    :after corfu
-    :straight t
-    :demand t
-    :commands (cape-file cape-dabbrev cape-keyword)
-    :bind (("C-c ` f" . cape-file)
-           ("C-c ` l" . cape-line)
-           ("C-c ` s" . cape-symbol))
-    :init
-    (add-to-list 'completion-at-point-functions #'cape-file)
-    (add-to-list 'completion-at-point-functions #'cape-symbol)
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-    ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
-    )
+
   :bind (:map corfu-map
               ("SPC" . corfu-insert-separator)
               ("TAB" . corfu-next)
@@ -58,6 +45,20 @@
               ("M-p" . corfu-previous))
   :bind ("C-M-i" . completion-at-point))
 
+(use-package cape
+  :after corfu
+  :straight t
+  :demand t
+  :commands (cape-file cape-dabbrev cape-keyword)
+  :bind (("C-c ` f" . cape-file)
+         ("C-c ` l" . cape-line)
+         ("C-c ` s" . cape-symbol))
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-symbol)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
+  )
 
 ;; * for terminal
 (when (or my/terminal-p

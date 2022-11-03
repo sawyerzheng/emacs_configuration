@@ -16,6 +16,7 @@
               ("a" . projectile-find-other-file)
               ("u" . projectile-run-project)
               ("v" . projectile-vc)
+              ("b" . consult-project-buffer)
               ("x" . nil)
               ("x x" . project-execute-extended-command)
               ("x v" . projectile-run-vterm)

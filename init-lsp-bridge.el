@@ -91,7 +91,7 @@
         (expand-file-name "../../../repos/lsp-bridge/lsp_bridge.py" (locate-library "lsp-bridge")))
   (setq lsp-bridge-python-command
         (cond (my/windows-p "d:/soft/miniconda3/envs/tools/python.exe")
-              (t "~/miniconda3/envs/tools/bin/python")))
+              (t (expand-file-name "~/miniconda3/envs/tools/bin/python"))))
 
 
   ;; for commit 14e8c0baefd931a8436d80578e64ebd2deac6b98
@@ -120,35 +120,46 @@
   ;; (add-to-list 'lsp-bridge-default-mode-hooks 'cmake-mode-hook)
   ;; (add-to-list 'lsp-bridge-formatting-indent-alist)
 
+
   (defun my/enable-tabnine-bridge ()
     (interactive)
-    (let ((parent tabnine-bridge-binaries-folder))
-      (if (file-directory-p parent)
-          (let* ((children (->> (directory-files parent)
-                                (--remove (member it '("." "..")))
-                                (--filter (file-directory-p
-                                           (expand-file-name
-                                            it
-                                            (file-name-as-directory
-                                             parent))))
-                                (--filter (ignore-errors (version-to-list it)))
-                                (-non-nil)))
-                 (sorted (nreverse (sort children #'version<)))
-                 (target (tabnine-bridge--get-target))
-                 (filename (tabnine-bridge--get-exe)))
-            (cl-loop
-             for ver in sorted
-             for fullpath = (expand-file-name (format "%s/%s/%s"
-                                                      ver target filename)
-                                              parent)
-             if (and (file-exists-p fullpath)
-                     (file-regular-p fullpath))
-             return fullpath
-             finally do (tabnine-bridge--error-no-binaries)))
-        (tabnine-bridge--error-no-binaries)))
+    (require 'tabnine-bridge)
     (setq acm-enable-tabnine-helper t)
     )
+  :commands (tabnine-bridge-install-binary
+             tabnine-bridge-kill-process
+             tabnine-bridge-restart-server)
+  :init
+  ;; to fix problem of tabnine-bridge
+  (with-eval-after-load 'tabnine-bridge
+    (defun tabnine-bridge--executable-path ()
+      "Find and return the path of the latest TabNine binary for the current system."
+      (let ((parent tabnine-bridge-binaries-folder))
+        (if (file-directory-p parent)
+            (let* ((children (->> (directory-files parent)
+                                  (--remove (member it '("." "..")))
+                                  (--filter (file-directory-p
+                                             (expand-file-name
+                                              it
+                                              (file-name-as-directory
+                                               parent))))
+                                  (--filter (ignore-errors (version-to-list it)))
+                                  (-non-nil)))
+                   (sorted (nreverse (sort children #'version<)))
+                   (target (tabnine-bridge--get-target))
+                   (filename (tabnine-bridge--get-exe)))
+              (cl-loop
+               for ver in sorted
+               for fullpath = (expand-file-name (format "%s/%s/%s"
+                                                        ver target filename)
+                                                parent)
+               if (and (file-exists-p fullpath)
+                       (file-regular-p fullpath))
+               return fullpath
+               finally do (tabnine-bridge--error-no-binaries)))
+          (tabnine-bridge--error-no-binaries)))))
   )
+
 
 
 

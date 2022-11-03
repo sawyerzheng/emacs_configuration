@@ -1,14 +1,14 @@
 ;; -*- coding: utf-8; -*-
 
+(defcustom my/proxy-use-remote-p nil
+  "if to use remove proxy"
+  :type 'boolean)
+
 (defun get-my-http-proxy ()
   "retrieve proxy value, depending on if current machine is windows sub linux"
-  (if (file-exists-p "/usr/bin/wslpath")
-      ;; "http://localhost:7890"
-      ;; (shell-command-to-string "echo http://$(cat /etc/resolv.conf |grep nameserver|awk '{print $2}'):7890")
+  (if my/proxy-use-remote-p
       "http://home.zhenglei.site:17890"
-    ;; "http://home.zhenglei.site:17890"
-    "http://localhost:7890"
-    ))
+    "http://localhost:7890"))
 
 (defun toggle-proxy ()
   "set/unset the environment variable http_proxy which w3m uses"
@@ -53,6 +53,19 @@
     (message "env http_proxy is %s now" proxy))
   )
 
+(defun enable-proxy-windows ()
+  (interactive)
+  (let ((proxy))
+    (when (file-exists-p "/usr/bin/wslpath")
+      ;; "http://localhost:7890"
+      ;;
+      (setq proxy (car (split-string (shell-command-to-string
+                                      "echo http://$(cat /etc/resolv.conf |grep nameserver|awk '{print $2}'):7890"))) )
+
+      (setenv "http_proxy" proxy)
+      (setenv "https_proxy" proxy)
+      (message "env http_proxy is %s now" proxy))))
+
 (defun enable-proxy-eaf ()
   "remember to restart eaf using: `eaf-restart-process'."
   (interactive)
@@ -75,7 +88,10 @@
 
 ;; (enable-proxy-eaf)
 
-(enable-proxy)
+(if my/wsl-p
+    (enable-proxy-windows)
+  (enable-proxy))
+
 
 (defun my-toggle-eaf-proxy ()
   (interactive)

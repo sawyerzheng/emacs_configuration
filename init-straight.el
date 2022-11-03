@@ -76,7 +76,7 @@
   (straight-x-freeze-pinned-versions)
   (straight-x-thaw-pinned-versions))
 
-(global-set-key (kbd "C-h r f") #'my-straight-make-sure-freeze-packages)
+;; (global-set-key (kbd "C-h r f") #'my-straight-make-sure-freeze-packages)
 ;; --------------------------------------------------------------------------
 ;; ;; * packages to install
 ;; (straight-use-package 'use-package)

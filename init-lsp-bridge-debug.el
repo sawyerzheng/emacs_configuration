@@ -15,6 +15,8 @@
 (package-install 'dash) ;; for tabnine-bridge
 (package-initialize)
 
+(require 'dash)
+
 (require 'yasnippet)
 (yas-global-mode 1)
 
@@ -23,5 +25,11 @@
 (global-lsp-bridge-mode)
 
 (define-key lsp-bridge-mode-map (kbd "C-M-i") #'lsp-bridge-popup-complete)
+
+;; (load-file "~/.conf.d/quick.emacs")
+
+(setq lsp-bridge-python-command
+      (cond ((eq system-type 'windows-nt) "d:/soft/miniconda3/envs/tools/python.exe")
+            (t "/home/sawyer/miniconda3/envs/tools/bin/python")))
 
 (provide 'init-lsp-bridge-debug)

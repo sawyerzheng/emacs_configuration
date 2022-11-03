@@ -1,123 +1,26 @@
 ;; -*- coding: utf-8; -*-
-;; load path  
-;; (package-initialize)
-;; (add-to-list 'load-path "~/.emacs.d/elpa/")
-;; ================= use-package ====================
-;; (condition-case nil
-;;     (require 'use-package)
-;;   (file-error
-;;    (require 'package)
-;;    (package-initialize)
-;;    (package-refresh-contents)
-;;    (package-install 'use-package)
-;;    (require 'use-package)))
+(defvar my/enable-doom-modeline-p nil
+  "if use `doom-modeline'")
 
-;; ================= boost.python ================
-;; (load-file "~/.conf.d/jam-mode.emacs")
-;; (if (equal system-type 'gnu/linux)
-;;     (progn
-;;       (add-to-list 'load-path "~/.conf.d/extra.d/")
-;;       (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/")
-;;       (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/auto-complete/")
-;;       (require 'jam-mode)
-;;       (add-to-list 'auto-mode-alist '("[Jj]amfile\\'" . jam-mode))
-;;       (add-to-list 'auto-mode-alist '("\\.jam\\'" . jam-mode))
-;;       ))
-
-;; ================ elpa adn use-package ================
-;; (ignore-errors
-;;   (load-file "~/.conf.d/packages.emacs")
-;;   (load-file "/home/sawyer/.conf.d/packages.emacs")
-;;   )
-
-
-;; ================= auto-complete mode ============
-;; (if (equal system-type 'gnu/linux)
-;;     (progn
-
-;;       ;; (use-package popup
-;;       ;; 	:ensure t)
-;;       ;; (use-package auto-complete
-;;       ;; 	:ensure t)
-
-;;       ;; * old backup, for speed
-;;       (add-to-list 'load-path "~/.conf.d/extra.d/popup/")      
-;;       (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/popup")
-;;       (add-to-list 'load-path "~/.conf.d/extra.d/popup/auto-complete/")
-;;       (add-to-list 'load-path "/home/sawyer/.conf.d/extra.d/popup/auto-complete/")
-
-;;       (require 'auto-complete)
-;;       ;; global
-;;       (global-auto-complete-mode t)
-;;       (require 'auto-complete-config)
-
-;;       (ac-config-default)
-
-;;       ;; popup
-;;       (require 'pos-tip)
-;;       (setq ac-quick-help-prefer-pos-tip t)
-
-;;       ;; 设置tab键的使用模式--??
-;;       (setq ac-dwim t)
-
-
-;;       ;;使用fuzzy功能
-;;       (setq ac-fuzzy-enable t)
-;;       ))
-
-
+;; theme
+(defvar my/theme-to-load
+  ;; 'doom-one
+  'tsdh-dark
+  "tsdh-dark, doom-one")
 ;;====================== search ===============
 (global-set-key (kbd "C-S-s") 'isearch-forward-symbol-at-point)
-
-
-;; ;;======================================
-;; ;; (load-file "~/.conf.d/font.emacs")
-;; (load-file "~/.conf.d/pyim.emacs")
-;; (require 'cmake-mode)
-
-
-
-;; ;; full frame
-;; (toggle-frame-maximized)
-;; ;;=============== key global binding =====================
-;; ;;(global-key-binding "\C-<SPC>" 'set-mark-command)
-;; ;;(global-key-binding (kbd "<C-lwindow-f>") 'toggle-frame-maximized)
-;; ;;(global-set-key (kbd "\C-x\C-d") 'server-edit)
-;; ;;(global-unset-key (kbd "\C-x"))
-
-;; ;;set frame default size
-;; (add-to-list 'default-frame-alist '(width  . 85))
-;; (add-to-list 'default-frame-alist '(height . 33))
 
 (setq visible-bell 1)
 
 ;; ;;===========   menubar-mode    ==============================
-(menu-bar-mode 0)
-
-;;================ code line number mode ================
-;;(global-linum-mode 1) ; always show line numbers 
-(setq linum-format "%2d")  ;set format
+(menu-bar-mode 1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 
 ;;=============== program-mode =====================
-;; add line mode hook for program-mode
 (add-hook 'prog-mode-hook (lambda ()
-			    "enable line number mode"
-			    ;;			     (local-set-key (kbd "C-S-o") 'open-newline-forword)
                             (display-line-numbers-mode)
-			    ;; (linum-mode 1)
-			    (subword-mode 1)
-			    ;; (whitespace-cleanup-mode 1)
-			    ))
-
-(if (eq system-type 'cygwin)
-    (progn
-      (menu-bar-mode 0))
-  (progn
-    (if (boundp 'tool-bar-mode)
-	(tool-bar-mode 0))
-    (if (boundp 'scroll-bar-mode)
-	(scroll-bar-mode 0))
-    ))
+                            (subword-mode 1)))
 
 ;;=============== org mode =======================
 (setq org-edit-src-content-indentation 0)
@@ -126,81 +29,10 @@
 (with-eval-after-load "org"
   (require 'org-indent))
 
-;; (scroll-bar-mode 0)
-;; (column-number-mode t)
-
-;;(set-language-environment 'Chinese-GB)
-;; (set-language-environment 'UTF-8)
-;; (setq locale-coding-system 'gbk)
-
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
- '(custom-safe-themes
-   (quote
-    ("59e82a683db7129c0142b4b5a35dbbeaf8e01a4b81588f8c163bd255b76f4d21" "4639288d273cbd3dc880992e6032f9c817f17c4a91f00f3872009a099f5b3f84" "ec1572b17860768fb3ce0fe0148364b7bec9581f6f1a08b066e13719c882576f" "b747fb36e99bc7f497248eafd6e32b45613ee086da74d1d92a8da59d37b9a829" default))))
-
-
-;; ;; (delete-other-windows)
-;; (maximize-window (selected-window))
-
-;; (add-hook 'window-setup-hook
-;; 	  '(lambda ()
-;; 	     "delete the GNU Emacs buffer"
-;; 	     (kill-buffer "*GNU Emacs*")))
-
-
-
-;; ============ font =============
-;; for linux
-;; (if (equal system-type 'gnu/linux)
-;;     (set-face-attribute
-;;      'default nil
-;;      :font (font-spec :name "-DAMA-Ubuntu Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"
-;;                       :weight 'normal
-;;                       :slant 'normal
-;;                       :size 16.0))
-;;   (if (boundp 'setfontset-font)
-;;       (dolist (charset '(kana han symbol cjk-misc bopomofo))
-;; 	(set-fontset-font
-;; 	 (frame-parameter nil 'font)
-;; 	 charset
-;; 	 (font-spec :name "-MS  -Microsoft YaHei-normal-normal-normal-*-*-*-*-*-*-0-iso10646-1"
-;; 		    :weight 'normal
-;; 		    :slant 'normal
-;; 		    :size 16.5)))))
-
-;; for windows and cygwin, msys2
-;; (if (or (equal system-type 'windows-nt)
-;; 	(equal system-type 'cygwin))
-;;     (custom-set-faces
-;;      '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 120 :width normal))))))
-;; (custom-set-faces
-     ;; '(default ((t (:family "Monaco" :foundry "outline" :slant normal :weight normal :height 120 :width normal)))))
-
-  
-
-
 (global-set-key (kbd "M-o") #'other-window)
 (column-number-mode t)
 ;; ========== splash screen *GNU Emacs* buffer ============
 (setq inhibit-startup-screen t)
-
-
-;; for windows
-(if (or (equal system-type 'cygwin)
-	(equal system-type 'windows-nt)
-	(equal system-type 'gnu/linux))
-    (progn
-      (custom-set-variables
-       '(custom-enabled-themes (quote (tsdh-dark))))
-      ))
 
 
 (if (eq system-type 'windows-nt)
@@ -231,3 +63,152 @@
 ;;  '(mode-line ((t (:background "gray30" :box (:line-width 1 :color "red") :family "Consolas")))))
 
 (put 'upcase-region 'disabled nil)
+
+;; ----------------- extra load path ---------------
+(defun my/enable-extra-loads ()
+
+  (defvar my/conf-distro-dir (file-name-directory load-file-name)
+    "folder to place most init files")
+
+  (defvar my/extra.d-dir (expand-file-name "extra.d" my/conf-distro-dir)
+    "folder to my manualy downloaded elisp packages")
+
+  (add-to-list 'load-path my/conf-distro-dir)
+  (add-to-list 'load-path my/extra.d-dir)
+
+  (require 'init-load-tools)
+  (require 'init-straight)
+  (require 'init-proxy)
+  (require 'init-use-package)
+
+  ;; ------------ doom mode line ---------------
+  (use-package doom-modeline
+    :if my/enable-doom-modeline-p
+    :straight t
+    :config
+    (doom-modeline-mode 1))
+
+  ;; ------------ doom themes ----------------------
+  (add-to-list 'load-path (expand-file-name "doom-themes" my/extra.d-dir))
+  (add-to-list 'load-path (expand-file-name "doom-themes/extensions" my/extra.d-dir))
+
+  (if (eq my/theme-to-load 'tsdh-dark)
+      (load-theme my/theme-to-load t)
+    (use-package doom-themes
+      :straight t
+      :config
+      (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
+            doom-themes-enable-italic t) ; if nil, italics is universally disabled
+
+      (load-theme my/theme-to-load t)
+
+      ;; Enable flashing mode-line on errors
+      (require 'doom-themes-ext-visual-bell)
+      (doom-themes-visual-bell-config)
+
+      ;; Corrects (and improves) org-mode's native fontification.
+      (require 'doom-themes-ext-org)
+      (doom-themes-org-config)))
+
+
+  (require 'init-unicode-fonts)
+  (require 'init-font)
+  (my-load-font)
+  ;; ------------- consult ----------------
+  (require 'init-consult)
+  ;; (fido-vertical-mode -1)
+  (fido-mode -1)
+  (require 'init-vertico)
+  (require 'init-corfu)
+  (require 'init-embark)
+  ;; (require 'init-which-key)
+  ;; ----------- xah fly keys -----------------
+  (use-package xah-fly-keys
+    :straight (xah-fly-keys :type git :host github :repo "xahlee/xah-fly-keys")
+    :init
+    (setq xah-fly-use-control-key nil)
+    (setq xah-fly-use-meta-key nil)
+    :config
+    (defvar my/xah-quit-keymap
+      (let ((map (make-sparse-keymap)))
+
+        (define-key map (kbd "q") '("exit emacs" . save-buffers-kill-terminal))
+        (define-key map (kbd "e") #'delete-window)
+        (define-key map (kbd "f") #'delete-frame)
+        (define-key map (kbd "w") #'quit-window)
+        (define-key map (kbd "a") #'ace-delete-window)
+        map)
+      "my keymap for `quit'")
+
+    (defvar my/xah-search-keymap
+      (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "s") #'consult-line)
+        (define-key map (kbd "f") '("find file path" . consult-find))
+        (define-key map (kbd "p") '("find file content" . consult-ripgrep))
+        (define-key map (kbd "i") #'(lambda ()
+                                      (interactive)
+                                      (cond
+                                       ((eq major-mode 'org-mode)
+                                        (consult-org-heading))
+                                       ((or (derived-mode-p 'outline-mode)
+                                            (member major-mode '(markdown-mode gfm-mode)))
+                                        (consult-outline))
+                                       ((derived-mode-p 'compilation-mode)
+                                        (consult-compile-error))
+                                       (t
+                                        (consult-imenu)))))
+        (define-key map (kbd "I") #'consult-imenu-multi)
+
+        ;; * docsets or devdocs
+        (define-key map (kbd "o") #'+lookup/online)
+        (define-key map (kbd "D") #'devdocs-dwim)
+        (define-key map (kbd "d") #'my/counsel-dash-at-point)
+        (define-key map (kbd "z") #'zeal-at-point)
+
+        ;; * dictionary
+        (define-key map (kbd "y") #'my-youdao-dictionary-search-at-point)
+        (define-key map (kbd "Y") #'fanyi-dwim2)
+        (define-key map (kbd "b") #'popweb-dict-bing-pointer)
+        (define-key map (kbd "v") #'popweb-dict-bing-input)
+
+
+        ;; * char, word jump
+        ;; (define-key map (kbd "j") #'ace-pinyin-jump-word)
+        (define-key map (kbd "j") #'avy-goto-word-1)
+        (define-key map (kbd "k") #'avy-goto-char)
+        (define-key map (kbd "2") #'avy-goto-char-2)
+
+        ;; * line jump
+        (define-key map (kbd "l") #'avy-goto-line)
+        (define-key map (kbd "q") #'consult-line)
+
+        ;; embark
+        (define-key map (kbd ".") #'embark-act)
+
+        ;; C-g
+        (define-key map (kbd "g") #'keyboard-quit)
+        map)
+      "keymap for search")
+
+    :config
+    (define-key xah-fly-command-map (kbd "<escape>") #'xah-fly-mode-toggle)
+    (define-key xah-fly-command-map (kbd "<f7>") #'xah-fly-mode-toggle)
+    (define-key xah-fly-insert-map (kbd "<escape>") #'xah-fly-mode-toggle)
+    (define-key xah-fly-insert-map (kbd "<f7>") #'xah-fly-mode-toggle)
+
+    (define-key xah-fly-command-map (kbd "SPC p") project-prefix-map)
+
+    (define-key xah-fly-command-map (kbd "SPC q") my/xah-quit-keymap)
+    (define-key xah-fly-command-map (kbd "q") my/xah-search-keymap)
+    (define-key xah-fly-command-map (kbd "SPC i r") #'revert-buffer)
+    )
+
+
+
+  ;; * enable xah-fly-keys
+  (xah-fly-keys)
+  ;; --------------- end xah fly keys ---------------
+  )
+
+;; (toggle-debug-on-error)
+(my/enable-extra-loads)

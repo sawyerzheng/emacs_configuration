@@ -66,13 +66,20 @@
   (duplicate-line-or-region-above
    duplicate-line-or-region-below
    duplicate-line-above-comment
-   duplicate-line-below-comment))
+   duplicate-line-below-comment)
+  :init
+  (defun my/duplicate-line-or-region-below (&optional reverse)
+    (interactive)
+    (message "reverse: %s" reverse)
+    (if reverse
+        (duplicate-line-or-region-above)
+      (duplicate-line-or-region-above t)))
+  :bind ("M-Y" . my/duplicate-line-or-region-below))
 
 (use-package find-orphan
   :straight (:type git :host github :repo "manateelazycat/find-orphan")
   :commands (find-orphan-function-in-buffer
              find-orphan-function-in-directory)
-
   )
 
 (provide 'init-thing-edit)
