@@ -1,6 +1,6 @@
 (use-package god-mode
   :straight t
-  :commands (god-mode god-local-mode my-toggle-god-mode)
+  :commands (god-mode god-local-mode my-toggle-god-mode )
   :bind (("C-c t g" . my-toggle-god-mode)
          :map god-local-mode-map
          ("." . repeat)
@@ -57,6 +57,19 @@
   (defun my-god-mode-update-cursor-type ()
     (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
 
-  (add-hook 'post-command-hook #'my-god-mode-update-cursor-type))
+  ;; (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
+
+  (with-eval-after-load 'which-key
+    (which-key-enable-god-mode-support))
+
+
+  ;; isearch integration
+  (require 'god-mode-isearch)
+  ;; (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
+  (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable)
+
+  ;; repeat
+  (define-key god-local-mode-map (kbd ".") #'repeat)
+  )
 
 (provide 'init-god-mode)

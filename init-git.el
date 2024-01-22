@@ -2,19 +2,20 @@
 
 (use-package magit
   :bind ("C-x g" . magit-status)
-  :straight t
+  :straight (:type git :host github :repo "magit/magit")
   :commands (magit-file-delete)
   )
 
-(when my/git-everywhere t
-      (use-package forge
-        :after magit
-        :straight t
-        :bind (:map forge-topic-list-mode-map
-                    ("q" . kill-current-buffer)))
-      (use-package code-review
-        :after magit
-        :straight t))
+;; (when (or my/git-everywhere (daemonp) t)
+;;   (use-package forge
+;;     :after (magit-remote magit)
+;;     :straight t
+;;     :bind (:map forge-topic-list-mode-map
+;;                 ("q" . kill-current-buffer)))
+;;   (use-package code-review
+;;     :after magit
+;;     :straight t)
+;;   )
 
 (use-package magit-gitflow
   :after magit
@@ -33,7 +34,7 @@
   :straight t
   :config
   ;; add beautiful support in GUI.
-  (when (display-graphic-p)
+  (when (or (daemonp) (display-graphic-p))
     (use-package git-gutter-fringe
       :straight t
       :config
@@ -42,9 +43,14 @@
             (setq-default left-fringe-width 20)
             (setq-default right-fringe-width 20))
         (progn
-          (setq-default left-fringe-width 5)
-          (setq-default right-fringe-width 5)))
+          (setq-default left-fringe-width 10)
+          (setq-default right-fringe-width 10)))
       (setq git-gutter-fr:side 'left-fringe))))
+(if (daemonp)
+    (add-hook 'server-after-make-frame-hook #'(lambda ()
+                                                (unless (boundp 'git-gutter-mode)
+                                                  (require 'git-gutter))))
+  (add-hook 'my/startup-hook #'(lambda () (require 'git-gutter))))
 
 (use-package git-timemachine
   :straight t

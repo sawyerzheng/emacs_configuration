@@ -1,9 +1,40 @@
 (bind-key "C-c p" 'project-prefix-map)
 (use-package project
-  :defer t
+  ;; :defer t
+  :straight (:type built-in)
   :config
   ;; (bind-key "o" #'+treemacs/toggle  project-prefix-map)
-  (bind-key "o" #'dired-sidebar-toggle-sidebar project-prefix-map))
+  (bind-key "o" #'dired-sidebar-toggle-sidebar project-prefix-map)
+  (defun project--find-in-directory (dir)
+    (run-hook-with-args-until-success 'project-find-functions (file-truename dir))))
+
+(defun my/project-vterm ()
+  "start a vterm shell buffer for current project"
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+         (project-shell-name (project-prefixed-buffer-name "vterm"))
+         (shell-buffer (get-buffer project-shell-name))
+         (vterm-buffer-name project-shell-name))
+
+    (unless (buffer-live-p shell-buffer)
+      (unless (require 'vterm nil 'noerror)
+        (error "Package 'vterm' is not available"))
+      (vterm-other-window project-shell-name))
+    (switch-to-buffer project-shell-name)))
+
+(defun my/project-eat ()
+  "start a eat shell buffer for current project"
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+         (project-shell-name (project-prefixed-buffer-name "eat"))
+         (shell-buffer (get-buffer project-shell-name))
+         (eat-buffer-name project-shell-name))
+
+    (unless (buffer-live-p shell-buffer)
+      (unless (require 'eat nil 'noerror)
+        (error "Package 'eat' is not available"))
+      (eat-other-window))
+    (switch-to-buffer project-shell-name)))
 
 (use-package projectile
   :straight t
@@ -18,11 +49,19 @@
               ("v" . projectile-vc)
               ("b" . consult-project-buffer)
               ("x" . nil)
-              ("x x" . project-execute-extended-command)
-              ("x v" . projectile-run-vterm)
-              ("x e" . projectile-run-eshell))
+              ("x c" . project-shell-command)
+              ("x a" . project-async-shell-command)
+              ("x E" . project-execute-extended-command)
+              ("x x" . my/project-eat)
+              ("x v" . my/project-vterm)
+              ("x e" . project-eshell)
+              ("x s" . project-shell)
+              ("x t" . my/project-eat)
+              )
   ;; :bind-keymap ("C-x p" . projectile-command-map)
   )
+
+
 
 (bind-key "C-x p" nil)
 (autoload 'projectile-command-map "projectile")

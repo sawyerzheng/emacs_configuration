@@ -4,6 +4,6 @@
   :delight
   (which-key-mode)
   :commands which-key-mode
-  :hook (after-init . which-key-mode))
+  :hook (my/startup . which-key-mode))
 
 (provide 'init-which-key)

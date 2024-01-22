@@ -38,6 +38,13 @@
   ;; 手动安装 posframe 包。
   ;; 使用默认配置，兼容 terminal
   ;; (setq pyim-page-tooltip 'posframe)
+  (use-package posframe
+    :if (or (daemonp) (display-graphic-p))
+    :straight t)
+  (use-package popup
+    :unless (display-graphic-p)
+    :straight t)
+
 
   ;; 选词框显示5个候选词
   (setq pyim-page-length 5)
@@ -99,8 +106,20 @@
 
   :bind
   (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
-   ))
+   )
 
+  :config
+  (with-eval-after-load 'key-chord
+    (defun rime--enable-key-chord-fun (orig key)
+      "如果这样也无法解决问题，可以的处理方法：先输入一个字符如 j, 点击 M-j 再输入后续输入字符，如 k, 这样可以避免 key-chord 快捷键 `jk' 无法作为小鹤拼音输入的问题"
+      (if (key-chord-lookup-key (vector 'key-chord key))
+	  (let ((result (key-chord-input-method key)))
+            (if (eq (car result) 'key-chord)
+		result
+              (funcall orig key)))
+	(funcall orig key)))
+
+    (advice-add 'pyim-input-method :around #'rime--enable-key-chord-fun)))
 
 (use-package pyim-basedict
   :straight t
@@ -124,13 +143,15 @@
                      :elpa t))
           (message "pyim 没有安装，pyim-greatdict 启用失败。"))))))
 
-
+(defun my/pyim-get-default-scheme ()
+  'xiaohe-shuangpin)
 
 ;; 使 vertico consult 等支持 pyim-isearch-mode 类似的中文搜索
 (with-eval-after-load 'orderless
   (require 'pyim)
   (defun my-orderless-regexp (orig-func component)
-    (let ((result (funcall orig-func component)))
+    (let ((result (funcall orig-func component))
+          (pyim-default-scheme (my/pyim-get-default-scheme)))
       (pyim-cregexp-build result)))
 
   (advice-add 'orderless-regexp :around #'my-orderless-regexp))
@@ -139,15 +160,19 @@
 (with-eval-after-load 'avy
   (require 'pyim)
   (defun my-avy--regex-candidates (fun regex &optional beg end pred group)
-    (let ((regex (pyim-cregexp-build regex)))
+    (let ((regex (pyim-cregexp-build regex))
+          (pyim-default-scheme (my/pyim-get-default-scheme)))
       (funcall fun regex beg end pred group)))
   (advice-add 'avy--regex-candidates :around #'my-avy--regex-candidates))
 
 ;; ivy + pyim cregexp
 (with-eval-after-load 'ivy
   (require 'pyim)
+  (defun my-pyim-cregexp-ivy (str)
+    (let ((pyim-default-scheme (my/pyim-get-default-scheme)))
+      (pyim-cregexp-ivy str)))
   (setq ivy-re-builders-alist
-        '((t . pyim-cregexp-ivy))))
+        '((t . my-pyim-cregexp-ivy))))
 
 
 (provide 'init-pyim)

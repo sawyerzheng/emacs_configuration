@@ -1,7 +1,10 @@
 ;;; codes from doom emacs
 ;;; tools/lookup/autoload/online.el -*- lexical-binding: t; -*-
 (defvar +lookup-provider-url-alist
-  '(("Doom Emacs issues" "https://github.com/hlissner/doom-emacs/issues?q=is%%3Aissue+%s")
+  '(
+    ("Baidu" "https://www.baidu.com/s?wd=%s")
+    ("Bing" "https://cn.bing.com/search?q=%s")
+    ("Doom Emacs issues" "https://github.com/hlissner/doom-emacs/issues?q=is%%3Aissue+%s")
     ("Google"            +lookup--online-backend-google "https://google.com/search?q=%s")
     ("Google images"     "https://www.google.com/images?q=%s")
     ("Google maps"       "https://maps.google.com/maps?q=%s")
@@ -9,7 +12,7 @@
     ("DuckDuckGo"        +lookup--online-backend-duckduckgo "https://duckduckgo.com/?q=%s")
     ("DevDocs.io"        "https://devdocs.io/#q=%s")
     ("StackOverflow"     "https://stackoverflow.com/search?q=%s")
-    ("Github"            "https://github.com/search?ref=simplesearch&q=%s")
+    ("Github"            "https://github.com/search?q=%s&ref=opensearch")
     ("Youtube"           "https://youtube.com/results?aq=f&oq=&search_query=%s")
     ("Wolfram alpha"     "https://wolframalpha.com/input/?i=%s")
     ("Wikipedia"         "https://wikipedia.org/search-redirect.php?language=en&go=Go&search=%s")
@@ -144,10 +147,10 @@ provider.
 QUERY must be a string, and PROVIDER must be a key of
 `+lookup-provider-url-alist'."
   (interactive
-   (list (if (use-region-p)
-             (thing-at-point 'symbol)
-           ;; (doom-thing-at-point-or-region)
-           )
+   (list (cond
+          ((region-active-p)
+           (buffer-substring-no-properties (region-beginning) (region-end)))
+          (t nil))
          (+lookup--online-provider current-prefix-arg)))
   (let ((backends (cdr (assoc provider +lookup-provider-url-alist))))
     (unless backends

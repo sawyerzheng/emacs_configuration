@@ -31,6 +31,9 @@
 
 
   :config
+  (setq markdown-command "multimarkdown")
+  (setq markdown-header-scaling nil)
+
   ;; Highly rust blocks correctly
   (if (featurep 'rust)
       (add-to-list 'markdown-code-lang-modes '("rust" . rustic-mode)))
@@ -68,9 +71,9 @@
 
   ;; * markdown buffer `dnd' image handling -------------------------------------------
   (use-package org-download
-    :defer t)
+    :straight t)
 
-  (load-file "~/home/.evil.d/modules/lang/markdown-extra/+my-markdown-download.el")
+  (require '+my-markdown-download)
   (setq markdown-download-image-dir "./img/")
 
   ;; (require 'markdown-preview-mode)
@@ -98,11 +101,32 @@
   ;;                      "for current buffer")))
   ;;   dnd-save-directory
   ;;   )
-  (use-package markdown-download
-    :bind (:map markdown-mode-command-map
-                ("i c" . markdown-download-clipboard)
-                ("i s" . markdown-download-screenshot)))
-  )
 
+  )
+(use-package markdown-download
+  ;; :after (markdown-mode org-download)
+  :bind (:map markdown-mode-command-map
+              ("i c" . markdown-download-clipboard)
+              ("i s" . markdown-download-screenshot)))
+
+(use-package gh-md
+  :straight t
+  :commands (gh-md-render-buffer
+             gh-md-render-region))
+
+(use-package markdown-soma
+  :straight (:type git :host github :repo "jasonm23/markdown-soma" :files  ("*")
+                   ;; :pre-build (("cargo install --path ."))
+                   )
+  :bind (:map markdown-mode-command-map
+              ("p" . markdown-soma-mode)
+              ("C-p" . markdown-soma-mode))
+  :config
+  ;; theme for whole page
+  (setq markdown-soma-custom-css
+        (markdown-soma--css-pathname-from-builtin-name "github-dark"))
+  ;; theme for code blocks from highlightjs: https://highlightjs.org/static/demo/
+  (setq markdown-soma-highlightjs-theme "github-dark")
+  )
 
 (provide 'init-markdown)

@@ -7,4 +7,8 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)))
 
+(use-package iedit
+  :straight t
+  :bind (("C-;" . iedit-mode)))
+
 (provide 'init-multiple-cursors)

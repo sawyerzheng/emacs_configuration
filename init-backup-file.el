@@ -3,6 +3,7 @@
   :hook (after-save . 'backup-file)
   :bind ("C-c f b" . backup-file-log)
   :config
-  (setq backup-file-location (expand-file-name "git-backups/" my/cache-dir)))
+  (setq backup-file-location (expand-file-name "git-backups/" no-littering-var-directory)))
+
 
 (provide 'init-backup-file)

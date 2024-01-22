@@ -2,7 +2,7 @@
 
 ;; 参考：https://github.com/mickeynp/ligature.el/wiki
 (use-package ligature
-  :straight (:type git :repo "https://github.com/mickeynp/ligature.el")
+  :straight (:type git :host github :repo "mickeynp/ligature.el")
   :config
   (ligature-set-ligatures 't '(
                                ;; arrows
@@ -53,3 +53,9 @@
   ;;    "\\\\" "://"))
   :hook ((prog-mode org-mode markdown-mode gfm-mode)  . ligature-mode)
   )
+
+
+(with-eval-after-load 'prog-mode
+
+  (add-hook 'python-mode-hook #'(lambda ()
+                                  (add-to-list 'python--prettify-symbols-alist '("->" . ?→)))))

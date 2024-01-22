@@ -47,4 +47,30 @@
   ;;                               (image-toggle-display))))
   )
 
+(use-package plantuml
+  :straight (:type git :host github :repo "ginqi7/plantuml-emacs")
+  :config
+  (require 'plantuml-mode)
+  (setq ;; plantuml-jar-path "/some/path/plantuml.jar"
+   plantuml-output-type "svg"
+   plantuml-relative-path "./img/"
+   plantuml-theme "plain"
+   ;; plantuml-font "somefont"
+   plantuml-add-index-number t
+   plantuml-log-command t
+   plantuml-mindmap-contains-org-content t
+   plantuml-org-headline-bold t)
+
+  :commands (
+             plantuml–parse-headlines
+             plantuml-org-to-mindmap
+             plantuml-display-json
+             plantuml-display-yaml
+             plantuml-org-to-mindmap-open
+             plantuml-display-json-open
+             plantuml-display-yaml-open
+             plantuml-org-to-wbs
+             plantuml-org-to-wbs-open
+             plantuml-auto-convert-open))
+
 (provide 'init-plantuml-mode)

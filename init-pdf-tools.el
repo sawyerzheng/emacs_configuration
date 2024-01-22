@@ -1,6 +1,6 @@
 (use-package pdf-tools
   :init
-  (my-add-extra-folder-to-load-path "pdf-tools" '("lisp"))
+  (my/add-extra-folder-to-load-path "pdf-tools" '("lisp"))
   :mode (("\\.pdf\\'" . pdf-view-mode)
          ("\\.PDF\\'" . pdf-view-mode))
   :straight (pdf-tools :files (:defaults "*"))

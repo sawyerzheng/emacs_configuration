@@ -10,7 +10,7 @@
   :straight (:type git :host github :repo "manateelazycat/auto-save")
   :hook ((prog-mode markdown-mode org-mode) . auto-save-enable)
   :config
-  (setq auto-save-idle 10)
+  (setq auto-save-idle 3)
 
   (setq auto-save-silent t)             ; quietly save
   ;; (setq auto-save-delete-trailing-whitespace t)  ; automatically delete spaces at the end of the line when saving

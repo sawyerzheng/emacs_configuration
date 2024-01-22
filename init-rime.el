@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8; -*-
 (use-package rime
-  :ensure t
+  :straight t
   :custom
   (default-input-method "rime")
   :bind
@@ -29,6 +29,17 @@
 
   ;; defaults
   (setq rime-translate-keybindings
-        '("C-f" "C-b" "C-n" "C-p" "C-g")))
+        '("C-f" "C-b" "C-n" "C-p" "C-g"))
+
+  (with-eval-after-load 'key-chord
+    (defun rime--enable-key-chord-fun (orig key)
+      (if (key-chord-lookup-key (vector 'key-chord key))
+	  (let ((result (key-chord-input-method key)))
+            (if (eq (car result) 'key-chord)
+		result
+              (funcall orig key)))
+	(funcall orig key)))
+
+    (advice-add 'rime-input-method :around #'rime--enable-key-chord-fun)))
 
 (provide 'init-rime)

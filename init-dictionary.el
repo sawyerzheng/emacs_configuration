@@ -3,7 +3,77 @@
   :straight t
   :bind (("C-c s d f" . fanyi-dwim)
          ("C-c s d d" . fanyi-dwim2)
-         ("C-c s d h" . fanyi-from-history)))
+         ("C-c s d h" . fanyi-from-history))
+  :config
+  (custom-set-variables
+   '(fanyi-providers '(fanyi-youdao-thesaurus-provider
+                       fanyi-haici-provider
+                       ;; fanyi-etymon-provider
+                       ;; fanyi-longman-provider
+                       )))
+  (defun my/fanyi-custom-more ()
+    (interactive)
+    (custom-set-variables
+     '(fanyi-providers '(fanyi-youdao-thesaurus-provider
+                         fanyi-haici-provider
+                         fanyi-etymon-provider
+                         fanyi-longman-provider))))
+  (defun my/fanyi-custom-less ()
+    (interactive)
+    (custom-set-variables
+     '(fanyi-providers '(fanyi-youdao-thesaurus-provider
+                         fanyi-haici-provider
+                         ;; fanyi-etymon-provider
+                         ;; fanyi-longman-provider
+                         )))))
+
+(use-package bing-dict
+  :straight t
+  :commands (bing-dict-brief
+             my/bing-dict-brief)
+  :config
+  (defun my/bing-dict-brief (&optional arg)
+    "Show the explanation of WORD from Bing in the echo area."
+    (interactive "P")
+    (let* ((default (if (use-region-p)
+                        (buffer-substring-no-properties
+                         (region-beginning) (region-end))
+                      (let ((text (thing-at-point 'word)))
+                        (if text (substring-no-properties text)))))
+           (prompt (if (stringp default)
+                       (format "Search Bing dict (default \"%s\"): " default)
+                     "Search Bing dict: "))
+           (word (if arg
+                     (read-string prompt nil 'bing-dict-history default)
+                   default))
+           (sync-p nil))
+
+
+      (and bing-dict-cache-auto-save
+           (not bing-dict--cache)
+           (bing-dict--cache-load))
+
+      (let ((cached-result (and (listp bing-dict--cache)
+                                (car (assoc-default word bing-dict--cache)))))
+        (if cached-result
+            (progn
+              ;; update cached-result's time
+              (setcdr (assoc-default word bing-dict--cache) (time-to-seconds))
+              (message cached-result))
+          (save-match-data
+            (if sync-p
+                (with-current-buffer (url-retrieve-synchronously
+                                      (concat bing-dict--base-url
+                                              (url-hexify-string word))
+                                      t t)
+                  (bing-dict-brief-cb nil (decode-coding-string word 'utf-8)))
+              (url-retrieve (concat bing-dict--base-url
+                                    (url-hexify-string word))
+                            'bing-dict-brief-cb
+                            `(,(decode-coding-string word 'utf-8))
+                            t
+                            t))))))))
+
 
 ;; part of codes from centuar-emacs
 (use-package youdao-dictionary
@@ -91,18 +161,93 @@ This command switches to browser."
 (use-package popweb
   :straight (popweb :type git :host github :repo "manateelazycat/popweb" :files (:defaults "extension/dict" "extension/latex" "extension/org-roam" "extension/url-preview" "*"))
   :init
-  (my-add-extra-folder-to-load-path "popweb" '("extension/dict" "extension/latex" "extension/org-roam" "extension/url-preview"))
-  :commands (popweb-dict-bing-pointer popweb-dict-youdao-pointer)
+  (my/add-extra-folder-to-load-path "popweb" '("extension/dict" "extension/latex" "extension/org-roam" "extension/url-preview"))
+  :commands (popweb-dict-bing-pointer
+             popweb-dict-bing-input
+             popweb-dict-youdao-pointer
+             popweb-latex-mode
+             popweb-dict-youglish-pointer
+             popweb-dict-youglish-input
+             popweb-dict-dictcn-pointer
+             popweb-dict-dictcn-input
+             popweb-org-roam-link-show
+             popweb-org-roam-link-preview-select
+             popweb-org-roam-node-preview-select
+             popweb-url-input
+             popweb-url-preview-pointer)
   :bind (("C-c s d b" . popweb-dict-bing-pointer)
          ("C-c s d y" . popweb-dict-youdao-pointer))
   ;; :demand t
-  :hook ((org-mode latex-mode) . popweb-latex-mode)
+  ;; :hook ((org-mode latex-mode) . popweb-latex-mode)
   :config
-  (require 'popweb-dict-bing)
-  (require 'popweb-dict-youdao)
+  (require 'popweb-dict)
+  (require 'popweb-url)
   (require 'popweb-latex)
-  (setq popweb-python-command (if my/windows-p
-                                  "d:/soft/miniconda3/envs/tools/python"
-                                "~/miniconda3/envs/tools/bin/python")))
+  (require 'popweb-org-roam-link)
+  (setq popweb-python-command my/epc-python-command))
+(setq popweb-python-command my/epc-python-command)
+
+(use-package websocket-bridge
+  :straight (:type git :host github :repo "ginqi7/websocket-bridge")
+  :defer t)
+
+
+(use-package dictionary-overlay
+  :straight (:type git :host github :repo "ginqi7/dictionary-overlay" :files ("*"))
+  :commands (dictionary-overlay-start
+             dictionary-overlay-mark-word-unknown
+             dictionary-overlay-mark-word-known
+             dictionary-overlay-render-buffer
+             my/dictionary-overlay-toggle
+             my/dictionary-overlay-render-buffer
+             my/dictionary-overlay-mark-word-unknown
+             my/dictionary-overlay-mark-word-known)
+  :config
+  (setq dictionary-overlay-user-data-directory (expand-file-name "dictionary-overlay-data" no-littering-var-directory))
+
+  (defun my/dictionary-overlay-render-buffer ()
+    "render buffer, if backend is not start, start it first"
+    (interactive)
+    (unless dictionary-overlay-active-p
+      (unless (featurep 'dictionary-overlay)
+        (require 'dictionary-overlay))
+      (dictionary-overlay-start)
+      (dictionary-overlay-render-buffer)))
+  (defun my/dictionary-overlay-toggle ()
+    (interactive)
+    (if dictionary-overlay-active-p
+        (dictionary-overlay-toggle)
+      (my/dictionary-overlay-render-buffer)))
+
+  (defun my/dictionary-overlay-mark-word-unknown ()
+    "mark word unknow, if backend is not start, start it first"
+    (interactive)
+    (my/dictionary-overlay-render-buffer)
+    (dictionary-overlay-mark-word-unknown))
+
+  (defun my/dictionary-overlay-mark-word-known ()
+    "mark word know, if backend is not start, start it first"
+    (interactive)
+    (my/dictionary-overlay-render-buffer)
+    (dictionary-overlay-mark-word-known))
+  )
+;; (autoload 'dictionary-overlay-start "dictionary-overlay" nil t)
+;; (autoload 'dictionary-overlay-render-buffer "dictionary-overlay" nil t)
+
+
+(use-package baidu-translate
+  :straight (:type git :host github :repo "suxiaogang223/baidu-translate")
+  :commands (baidu-translate-en-mark
+             baidu-translate-zh-mark
+             baidu-translate-en-whole-buffer
+             baidu-translate-zh-whole-buffer)
+  :config
+  ;;需要去百度申请API
+  ;;设置你的百度翻译APPID
+  ;; (setq baidu-translate-appid "your APPID")
+  ;;设置你的秘钥
+  ;; (setq baidu-translate-security "your SECURITY")
+  (load-file "~/org/private/baidu.el"))
+
 
 (provide 'init-dictionary)

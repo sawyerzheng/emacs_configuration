@@ -1,6 +1,6 @@
 (use-package autoinsert
   :commands (auto-insert-mode auto-insert)
-  :hook (after-init . auto-insert-mode)
+  :hook (my/startup . auto-insert-mode)
   :config
   (defun my/autoinsert-yas-expand()
     "Replace text in yasnippet template."

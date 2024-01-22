@@ -1,51 +1,141 @@
+(require 'thingatpt)
+
+;;;###autoload
+(defun my/thingatpt-end-of-symbol ()
+  (interactive)
+  (unless (ignore-errors
+            (if (equal (point) (cdr (bounds-of-thing-at-point 'symbol)))
+                (forward-word)
+              (end-of-thing 'symbol)))
+    (forward-word)))
+
+;;;###autoload
+(defun my/thingatpt-beginning-of-symbol ()
+  (interactive)
+  (unless (ignore-errors
+            (if (equal (point) (car (bounds-of-thing-at-point 'symbol)))
+                (backward-word)
+              (beginning-of-thing 'symbol)))
+    (backward-word)))
+
+
 (use-package thing-edit
   :straight (thing-edit :type git :host github :repo "manateelazycat/thing-edit")
+  :commands (thing-edit-hydra/body
+             thing-mark-hydra/body)
   :config
-  ;; (bind-key "SPC '" 'one-key-menu-thing-edit xah-fly-command-map)
-  :commands (one-key-menu-thing-edit)
-  :defer t
-  :config
-  (require 'init-one-key)
-  (one-key-create-menu
-   "THING-EDIT"
-   '(
-     ;; Copy.
-     (("w" . "Copy Word") . thing-copy-word)
-     (("s" . "Copy Symbol") . thing-copy-symbol)
-     (("m" . "Copy Email") . thing-copy-email)
-     (("f" . "Copy Filename") . thing-copy-filename)
-     (("u" . "Copy URL") . thing-copy-url)
-     (("x" . "Copy Sexp") . thing-copy-sexp)
-     (("g" . "Copy Page") . thing-copy-page)
-     (("t" . "Copy Sentence") . thing-copy-sentence)
-     (("o" . "Copy Whitespace") . thing-copy-whitespace)
-     (("i" . "Copy List") . thing-copy-list)
-     (("c" . "Copy Comment") . thing-copy-comment)
-     (("h" . "Copy Function") . thing-copy-defun)
-     (("p" . "Copy Parentheses") . thing-copy-parentheses)
-     (("l" . "Copy Line") . thing-copy-line)
-     (("a" . "Copy To Line Begin") . thing-copy-to-line-beginning)
-     (("e" . "Copy To Line End") . thing-copy-to-line-end)
-     ;; Cut.
-     (("W" . "Cut Word") . thing-cut-word)
-     (("S" . "Cut Symbol") . thing-cut-symbol)
-     (("M" . "Cut Email") . thing-cut-email)
-     (("F" . "Cut Filename") . thing-cut-filename)
-     (("U" . "Cut URL") . thing-cut-url)
-     (("X" . "Cut Sexp") . thing-cut-sexp)
-     (("G" . "Cut Page") . thing-cut-page)
-     (("T" . "Cut Sentence") . thing-cut-sentence)
-     (("O" . "Cut Whitespace") . thing-cut-whitespace)
-     (("I" . "Cut List") . thing-cut-list)
-     (("C" . "Cut Comment") . thing-cut-comment)
-     (("H" . "Cut Function") . thing-cut-defun)
-     (("P" . "Cut Parentheses") . thing-cut-parentheses)
-     (("L" . "Cut Line") . thing-cut-line)
-     (("A" . "Cut To Line Begin") . thing-cut-to-line-beginning)
-     (("E" . "Cut To Line End") . thing-cut-to-line-end)
-     ;; toggle sub-word link char
-     (("'" . "cycle space, - and _") . xah-cycle-hyphen-lowline-space))
-   t))
+
+  (defun my/mark-thing-at-point (thing)
+    (interactive)
+    (let* (start end region)
+      (if (member thing '(symbol list sexp defun
+                                 filename existing-filename url email uuid word
+                                 sentence whitespace line number page))
+          (setq region (bounds-of-thing-at-point thing))
+        (setq region
+              (cond
+               ((eq thing 'parentheses) (my/thing-get-parentheses-bounds))
+               ((eq thing 'line-begin) (cons (save-excursion
+                                               (back-to-indentation)
+                                               (point)) (point)))
+               ((eq thing 'line-end) (cons (line-end-position) (point)))
+               (t nil))))
+      (if region
+          (progn
+            (setq start (car region)
+                  end (cdr region))
+            (set-mark start)
+            (goto-char end)
+
+            (message "%s [ %s ]"
+                     (propertize "Mark" 'face 'thing-edit-font-lock-action)
+                     (buffer-substring start end)))
+        (message "no %s under point" thing))))
+
+  (defun my/thing-get-parentheses-bounds (&rest arg)
+    (interactive "P")
+    (save-excursion
+      (if (thing-edit-in-string-p)
+          (cons (1+ (car (thing-edit-string-start+end-points)))
+                (cdr (thing-edit-string-start+end-points)))
+        (cons (progn
+                (backward-up-list)
+                (forward-char +1)
+                (point))
+              (progn
+                (up-list)
+                (forward-char -1)
+                (point))))))
+
+  (pretty-hydra-define thing-mark-hydra (:color blue :quit-key "q")
+    ("Mark"
+     (
+
+      ("w" (lambda () (interactive) (my/mark-thing-at-point 'word)) "mark word")
+      ("f" (lambda () (interactive) (my/mark-thing-at-point 'filename)) "mark filename")
+      ("h" (lambda () (interactive) (my/mark-thing-at-point 'defun)) "mark defun")
+      ("s" (lambda () (interactive) (my/mark-thing-at-point 'symbol)) "mark symbol")
+      ("x" (lambda () (interactive) (my/mark-thing-at-point 'sexp)) "mark sexp")
+      ("u" (lambda () (interactive) (my/mark-thing-at-point 'url)) "mark url")
+      ("l" (lambda () (interactive) (my/mark-thing-at-point 'line)) "mark line")
+      ("t" (lambda () (interactive) (my/mark-thing-at-point 'sentence)) "mark sentence")
+      ("p" (lambda () (interactive) (my/mark-thing-at-point 'parentheses)) "(inner)mark parentheses")
+      ("i" (lambda () (interactive) (my/mark-thing-at-point 'list)) "(outer)mark list")
+      ("g" (lambda () (interactive) (my/mark-thing-at-point 'page)) "mark page")
+      ("c" (lambda () (interactive) (my/mark-thing-at-point 'comment)) "mark comment")
+
+      ("a" (lambda () (interactive) (my/mark-thing-at-point 'line-begin)) "mark line-ahead")
+      ("e" (lambda () (interactive) (my/mark-thing-at-point 'line-end)) "mark line-end" ))))
+
+
+  :pretty-hydra
+  ((:color blue :quit-key "q")
+   ("Copy"
+    (("w" thing-copy-word "Copy Word")
+     ("s" thing-copy-symbol "Copy Symbol")
+     ("m" thing-copy-email "Copy Email")
+     ("f" thing-copy-filename "Copy Filename")
+     ("u" thing-copy-url "Copy URL")
+     ("x" thing-copy-sexp "Copy Sexp")
+     ("g" thing-copy-page "Copy Page")
+     ("t" thing-copy-sentence "Copy Sentence")
+     ("o" thing-copy-whitespace "Copy Whitespace")
+     ("i" thing-copy-list "Copy List")
+     ("c" thing-copy-comment "Copy Comment")
+     ("h" thing-copy-defun "Copy Function")
+     ("p" thing-copy-parentheses "Copy Parentheses")
+     ("l" thing-copy-line "Copy Line")
+     ("a" thing-copy-to-line-beginning "Copy To Line Begin")
+     ("e" thing-copy-to-line-end "Copy To Line End"))
+    "Cut"
+    (("W" thing-cut-word "Cut Word")
+     ("S" thing-cut-symbol "Cut Symbol")
+     ("M" thing-cut-email "Cut Email")
+     ("F" thing-cut-filename "Cut Filename")
+     ("U" thing-cut-url "Cut URL")
+     ("X" thing-cut-sexp "Cut Sexp")
+     ("G" thing-cut-page "Cut Page")
+     ("T" thing-cut-sentence "Cut Sentence")
+     ("O" thing-cut-whitespace "Cut Whitespace")
+     ("I" thing-cut-list "Cut List")
+     ("C" thing-cut-comment "Cut Comment")
+     ("H" thing-cut-defun "Cut Function")
+     ("P" thing-cut-parentheses "Cut Parentheses")
+     ("L" thing-cut-line "Cut Line")
+     ("A" thing-cut-to-line-beginning "Cut To Line Begin")
+     ("E" thing-cut-to-line-end "Cut To Line End"))
+    "Mark"
+    (("'" thing-mark-hydra/body "mark thing"))
+    )
+   )
+
+
+
+  :bind (:map xah-fly-command-map
+              ("'" . thing-edit-hydra/body))
+  )
+
+
 
 (use-package open-newline
   :straight (:type git :host github :repo "manateelazycat/open-newline")
@@ -81,5 +171,53 @@
   :commands (find-orphan-function-in-buffer
              find-orphan-function-in-directory)
   )
+
+(use-package drag-stuff
+  :straight (:type git :host github :repo "rejeep/drag-stuff.el")
+  :commands (drag-stuff-mode
+             global-drag-stuff-mode))
+
+
+;; ref: https://github.com/manateelazycat/markmacro
+(use-package markmacro
+  :straight (:type git :host github :repo "manateelazycat/markmacro")
+  :config
+  :bind
+  (("C-M-m ;" . markmacro-mark-words)
+   ("C-M-m '" . markmacro-mark-lines)
+   ("C-M-m /" . markmacro-mark-chars)
+   ("C-M-m L" . markmacro-mark-imenus)
+   ("C-M-m <" . markmacro-apply-all)
+   ("C-M-m >" . markmacro-apply-all-except-first)
+   ("C-M-m M" . markmacro-rect-set)
+   ("C-M-m D" . markmacro-rect-delete)
+   ("C-M-m R" . markmacro-rect-replace)
+   ("C-M-m I" . markmacro-rect-insert)
+   ("C-M-m C" . markmacro-rect-mark-columns)
+   ("C-M-m S" . markmacro-rect-mark-symbols)
+
+   ;; 流程：
+   ;; 1. 选择有效区域region-1(限定外围区域)
+   ;; 2. 设定region-1 有效markmacro-secondary-region-set
+   ;; 3. 选择第二个区域 region-2(设定multi-cursor 位置)
+   ;; 4. 设定 region-2 是编辑的位置
+   ;;
+   ("C-M-m h" . markmacro-secondary-region-set) ;设置二级选中区域
+   ("C-M-m H" . markmacro-secondary-region-mark-cursors) ;标记二级选中区域内的光标对象
+   ))
+
+(use-package chinese-word-at-point
+  :straight t
+  :defer t
+  :config
+  (setq chinese-word-split-command
+        (concat "echo %s | "
+                (cond (my/linux-p "/usr/bin/python")
+                      (t "python"))
+                " -m jieba -q -d ' '")
+
+        ))
+
+
 
 (provide 'init-thing-edit)

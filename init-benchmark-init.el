@@ -8,14 +8,14 @@
 ;;       ;; (autoload #'benchmark-init/show- "benchmark-init")
 ;;       ;; (autoload #'benchmark-init/deactivate "benchmark-init")
 ;;       (benchmark-init/activate)
-;;       (add-hook 'after-init-hook 'benchmark-init/deactivate)))
+;;       (add-hook 'my/startup-hook 'benchmark-init/deactivate)))
 ;; ;; to install if not available after int. and to make sure load correctly.
-;; (add-hook 'after-init-hook #'(lambda () (straight-use-package 'benchmark-init)))
+;; (add-hook 'my/startup-hook #'(lambda () (straight-use-package 'benchmark-init)))
 ;; ;; (use-package benchmark-init
 ;; ;;   ;; :load-path (lambda () (expand-file-name "straight/repos/benchmark-init" user-emacs-directory))
 ;; ;;   :config
 ;; ;;   ;; To disable collection of benchmark data after init is done.
-;; ;;   (add-hook 'after-init-hook 'benchmark-init/deactivate))
+;; ;;   (add-hook 'my/startup-hook 'benchmark-init/deactivate))
 
 ;; ;; * load with emacs require
 
@@ -30,6 +30,6 @@
 ;; generate `benchmark-init-loaddefs' with `make' CLI command
 (require 'benchmark-init-loaddefs)
 (benchmark-init/activate)
-(add-hook 'after-init-hook 'benchmark-init/deactivate)
+(add-hook 'my/startup-hook 'benchmark-init/deactivate)
 
 (provide 'init-benchmark-init)

@@ -19,13 +19,20 @@ If there is not function elpy-project-root, use xah lee's function"
         (if root
             (message "Not valid file %s" file))))))
 
+(defun my/python-which-module ()
+  (interactive)
+  (let ((file (buffer-file-name))
+        (p-root (my/get-project-root)))
+    (when (and file p-root)
+      (my/python-get-module-name file p-root)))
+  )
+
 (defun my/python-get-module-name (file root)
   (let* ((file (expand-file-name file))
          (root (expand-file-name root))
          (default-directory root)
          (relative-name (file-relative-name file root))
-         (module-name (replace-regexp-in-string "/" "." (file-name-sans-extension relative-name)))
-         )
+         (module-name (replace-regexp-in-string "/" "." (file-name-sans-extension relative-name))))
     module-name))
 
 (defun my/python-get-module-name-cmd ()
@@ -35,131 +42,92 @@ If there is not function elpy-project-root, use xah lee's function"
         (my/python-get-module-name file root)
       nil)))
 
-
 (defun my-elpy/execute-from-project-root (file root)
   "execute current file with `python -m' command"
   ;; save file
-  (when (not (buffer-file-name)) (save-buffer))
-  (when (buffer-modified-p) (save-buffer))
-  (save-some-buffers)
+  ;; (when (and (not (buffer-file-name))
+  ;;            (buffer-modified-p))
+  ;;   (save-buffer))
+
+  (save-some-buffers (not compilation-ask-about-save)
+                     (lambda ()
+                       (and (my/get-project-root)
+                            buffer-file-name
+                            (string-prefix-p (my/get-project-root) (file-truename buffer-file-name)))))
+
   (let* ((file (expand-file-name file))
          (root (expand-file-name root))
+         (file-at-src (string= (car (file-name-split (file-relative-name file root)))
+                               "src"))
+         (src-root (expand-file-name "src" root))
+         (root (if file-at-src
+                   src-root
+                 root))
          (default-directory root)
          (relative-name (file-relative-name file root))
+
          (module-name (replace-regexp-in-string "/" "." (file-name-sans-extension relative-name)))
-         (newBuffName "*Run Python*")
+         (proj-name (if (project-current)
+                        (project-name (project-current))
+                      (directory-file-name (file-relative-name root (file-name-parent-directory root)))))
+         (newBuffName (format "*%s run python*" proj-name))
          (newBuff (get-buffer-create newBuffName))
-         (command (format "%s -m %s " (executable-find "python") module-name)))
+         (exec-path (if (and (boundp 'my/conda-project-env)
+                             (not (string-empty-p my/conda-project-env)))
+                        (progn
+                          (let* ((venv-dir (cond ((file-exists-p my/conda-project-env)
+                                                  my/conda-project-env)
+                                                 ((file-exists-p (expand-file-name my/conda-project-env my/conda-env-extra-home))
+                                                  (expand-file-name my/conda-project-env my/conda-env-extra-home))
+                                                 ((file-exists-p (expand-file-name my/conda-project-env conda-env-home-directory))
+                                                  (expand-file-name my/conda-project-env conda-env-home-directory))
+                                                 (t
+                                                  "")))
+                                 (venv-bin (cond (my/windows-p
+                                                  (expand-file-name "Scripts" venv-dir))
+                                                 (t
+                                                  (expand-file-name "bin" venv-dir)))))
+                            (if (and (not (string-empty-p venv-dir)) (file-exists-p venv-bin))
+                                (cons venv-bin exec-path)
+                              exec-path)))
+                      exec-path))
+         (python-executable
+          "python"
+          ;; (executable-find "python")
+          )
+         (command (if (my/file-at-project-root file root)
+                      (format "%s %s"  python-executable file)
+                    (format "%s -m %s "  python-executable module-name)))
 
 
-    ;; clear previous content
-    (add-to-list 'auto-mode-alist '("*Run Python*" . compilation-mode))
-    (pop-to-buffer newBuff)
-    ;; (switch-to-buffer-other-window newBuff)
+         ;; (command (if (and (boundp 'my/conda-project-env)
+         ;;                   (not (string-empty-p my/conda-project-env)))
+         ;;              (format "conda activate %s\n%s"
+         ;;                      my/conda-project-env
+         ;;                      command
+         ;;                      )
+         ;;            command))
+         ;; (command (format "cd %s\n\n%s" root command))
+         )
+
+    ;; add src path to PYTHONPATH
+    (when (file-exists-p src-root)
+      (setenv "PYTHONPATH" src-root))
 
     (with-current-buffer newBuff
       (setq major-mode 'compilation-mode)
+      (read-only-mode -1)
       (setf (buffer-string) "")
 
       (princ (concat "# -*- mode: compilation; command: " command " -*- " "\n\n")
-             newBuff))
+             newBuff)
 
+      (let ((default-directory root))
+        (compile command))
 
-
-    ;; (setq program (concat command " " module-name))
-    ;; (cd root)
-    ;; (call-process "python" nil newBuff nil "-m" module-name)
-    (progn
-      ;; (switch-to-buffer-other-window newBuff)
-      ;; (shell-command command newBuff)
-      ;; (start-process-shell-command newBuffName newBuff command)
-      (with-current-buffer newBuff
-        (compile command)))
-
-
-    (with-current-buffer newBuff
-      ;; (run-mode-hooks compilation-mode-hook)
-      ;; (set-buffer-major-mode newBuff)
-      ;; (setq-default major-mode 'compilation-mode)
       (ignore-errors
-        ;; (funcall 'compilation-mode)
-        ;; (compilation-mode 1)
-        ;; (normal-mode)
         (read-only-mode -1))
-      (local-set-key (kbd "q") 'quit-window))
-
-    ;; (start-process "python-run-module" newBuff "python" "-m" module-name)
-    ;; (cd (file-name-directory file))
-    ))
-
-
-;; -*- coding: utf-8; -*-
-;;====================== exec current buffer =============
-(defun my-elpy/test-buffer ()
-  "Execute the buffer with python -m path.module.current.
-If there is elpy-project-root can't be found, use xah lee's function"
-  (interactive)
-  ;; (setq root (elpy-project-root))
-  (setq root (my/get-project-root))
-  (setq file (buffer-file-name))
-  (if (and root file)
-      (my-elpy/test-from-project-root file root "pytest")
-    (progn
-      (unless root
-        (message "Not find project root, use elpy to set it"))
-      (if root
-          (message "Not valid file %s" file)))))
-
-
-(defun my-elpy/test-from-project-root (file root test-runner)
-  "Run unittest from project root given test runner eg: pytest unittest,
- with `python -m pytest' command."
-  ;; save file
-  (when (not (buffer-file-name)) (save-buffer))
-  (when (buffer-modified-p) (save-buffer))
-  (save-some-buffers)
-  (let ((command)
-        newBuffName
-        newBuff
-        output
-        program)
-    (setq root (expand-file-name root))
-    (setq file (expand-file-name file))
-    ;; (message "Error:")
-    ;; (message  module-name)
-    ;; (message file)
-    ;; (message root)
-    ;; (message relative-name)
-    (format "python -m %s %s" test-runner root)
-    (setq newBuffName "*Test Python*")
-    (setq newBuff (get-buffer-create newBuffName))
-
-    ;; file in the project root
-    ;; (if (equal (cl-search "/" module-name) nil)
-    ;;	(setq program (concat "python" " " relative-name))
-    ;;   (setq program (concat command " " module-name)))
-
-    ;; clear previous content
-    (with-current-buffer newBuff
-      (ignore-errors
-        (compilation-mode 1)
-        (read-only-mode -1))
-      (local-set-key (kbd "q") 'quit-window))
-
-    (pop-to-buffer newBuff)
-    (setf (buffer-string) "")
-
-    (setq command (format "python -m %s %s" test-runner "."))
-    (princ (concat "-*- command: " command " " " -*- " "\n\n")
-           newBuff)
-    ;; (cd root)
-    (let ((default-directory root))
-      (shell-command command newBuff))
-    ;; (call-process "python" nil newBuff nil "-m" test-runner root)
-
-
-    ;; (cd (file-name-directory file))
-    ))
+      (local-set-key (kbd "q") 'quit-window))))
 
 ;; (define-key elpy-mode-map (kbd "C-c r") 'my-elpy/execute-buffer)
 (use-package python
@@ -171,87 +139,56 @@ If there is elpy-project-root can't be found, use xah lee's function"
    ("Run"
     (("r r" my-elpy/execute-buffer "execute buffer")))))
 
-;; (defun my-python/bind-test ()
-;;   (local-set-key (kbd "C-c r") 'my-elpy/execute-buffer)
-;;   (if (boundp 'elpy-test)
-;;       (local-set-key (kbd "C-c t") 'elpy-test)
-;;     (local-set-key (kbd "C-c t") 'my-elpy/test-buffer))
-;;   )
-
-;; (add-hook 'python-mode-hook 'my-python/bind-test)
+;; (setq python-shell-interpreter "ipython"
+;; python-shell-interpreter-args "-i --simple-prompt")
+(setq python-shell-interpreter "python"
+      python-shell-interpreter-args "-i")
 
 
-;;========================================================
-
-
-;; ============= virtualenv
-
-;; (if (eq system-type 'gnu/linux)
-;;     (setq python-my-virtualenv-prefix "/home/sawyer/miniconda3/envs"))
-
-;; (if  (eq system-type 'windows-nt)
-;;     ;; (setq python-my-virtualenv-prefix "d:/soft/miniconda3/envs")
-;;     (setq python-my-virtualenv-prefix "d:/soft/miniconda3/envs")
-;;   )
-;; (pyvenv-activate (concat python-my-virtualenv-prefix "/py37"))
-
-;; (defun myactivate ()
-;;   (interactive)
-;;   (let ((select-env "base")
-;; 		(condidates nil))
-
-;; 	(setq condidates (mapcar (lambda (env) (if (not (string-prefix-p "." env)) env))
-;; 							 (directory-files (concat python-my-virtualenv-prefix "/"))
-;; 							 ))
-;; 	(setq condicates (remove-duplicates condidates :test 'eq))
-;; 	(setq condidates (remove nil condidates))
-;; 	(message "available envs: %s" condidates)
-;; 	(if (equal (length condidates) 1)
-;; 		(progn
-;; 		  (message "Just base env, no others!")
-;; 		  (setq select-env "base"))
-;; 	  (setq select-env (ido-completing-read "Choose conda env:" condidates)))
-;; 	;; (print select-env)
-;; 	(pyvenv-activate (concat python-my-virtualenv-prefix "/" select-env))
-;; 	)
-;;   )
-
-
-
-;;========= use ipython fully
-(setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "-i --simple-prompt")
-
-
-
-;; ;; ========== customize for  file or directory local variables ============
-;; ;; ref: https://stackoverflow.com/questions/5147060/how-can-i-access-directory-local-variables-in-my-major-mode-hooks
-;; (defun run-local-vars-mode-hook ()
-;;   "Run a hook for the major-mode after the local variables have been processed."
-;;   (run-hooks (intern (concat (symbol-name major-mode) "-local-vars-hook"))))
-
-;; (add-hook 'hack-local-variables-hook 'run-local-vars-mode-hook)
-;; ;; (add-hook 'python-mode-local-vars-hook 'Our-self-defined-function)
-;; ;;=========================================================================
-
-;; (defun python-my-activate-project-env ()
-;;   (interactive)
-;;     (if (and (boundp 'python-my-project-env) python-my-project-env)
-;; 	(pyvenv-activate (concat python-my-virtualenv-prefix  "/" python-my-project-env)))
-;;     )
-;; (add-hook 'python-mode-local-vars-hook 'python-my-activate-project-env)
-
-;; (defvar my:project-conda-env nil
-;;   "project level conda env")
-
-;; (defun my:project-activate-conda-env ()
-;;   (interactive)
-;;   (unless (eq my:project-conda-env nil)
-	
-;; 	(pyvenv-activate (concat python-my-virtualenv-prefix "/" my:project-conda-env)))
-;;   (message "enabled %s" my:project-conda-env)
-;;   )
-
-;; (add-hook 'python-mode-local-vars-hook #'my:project-activate-conda-env)
+(defun my/python-execute-under-cursor (&optional arg)
+  (interactive "P")
+  (let* ((module (my/python-which-module))
+         (fun-path (which-function))
+         (obj-path (concat module ":" fun-path))
+         (python-command "python -c \"import sys; (m, obj) = sys.argv[1].split(':'); obj_path = obj.split('.'); import importlib; m = importlib.import_module(m); fun = getattr(m, obj_path[0]); import functools; fun = functools.reduce(lambda fun, sub_obj: getattr(fun, sub_obj), obj_path[1:], fun); print('\\n' + '='*70 + '\\n'); print('calling_function: --> ' + sys.argv[1] + '\\n\\n' + '='*70 + '\\n' ); fun()\"")
+         (exec-path (if (and (boundp 'my/conda-project-env)
+                             (not (string-empty-p my/conda-project-env)))
+                        (progn
+                          (let* ((venv-dir (cond ((file-exists-p my/conda-project-env)
+                                                  my/conda-project-env)
+                                                 ((file-exists-p (expand-file-name my/conda-project-env my/conda-env-extra-home))
+                                                  (expand-file-name my/conda-project-env my/conda-env-extra-home))
+                                                 ((file-exists-p (expand-file-name my/conda-project-env conda-env-home-directory))
+                                                  (expand-file-name my/conda-project-env conda-env-home-directory))
+                                                 (t
+                                                  "")))
+                                 (venv-bin (cond (my/windows-p
+                                                  (expand-file-name "Scripts" venv-dir))
+                                                 (t
+                                                  (expand-file-name "bin" venv-dir)))))
+                            (if (and (not (string-empty-p venv-dir)) (file-exists-p venv-bin))
+                                (cons venv-bin exec-path)
+                              exec-path)))
+                      exec-path))
+         (command (format "cd %s\n" (my/get-project-root)))
+         ;; (command (if (and (boundp 'my/conda-project-env)
+         ;;                   (not (string-empty-p my/conda-project-env)))
+         ;;              (format "conda activate \n%s"
+         ;;                      my/conda-project-env
+         ;;                      command
+         ;;                      )
+         ;;            command))
+         (command (format "%s\n%s %s" command python-command obj-path))
+         (proj-name (if (project-current)
+                        (project-name (project-current))
+                      (directory-file-name (file-relative-name root (file-name-parent-directory root)))))
+         (newBuffName (format "*%s run python*" proj-name))
+         (newBuff (get-buffer-create newBuffName)))
+    (cond
+     ((and arg (which-function))
+      (with-current-buffer newBuff
+        (compile command)))
+     (t
+      (my-elpy/execute-buffer)))))
 
 (provide 'init-python-basic)

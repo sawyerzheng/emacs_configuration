@@ -1,8 +1,37 @@
 ;; -*- coding: utf-8-unix; -*-
+(defvar my/use-org-modern-p t
+  "if use `org-modern' package")
+
+
+(defvar my/org-mode-map (make-sparse-keymap)
+  "my bindings org-mode")
+
+(with-eval-after-load 'org
+  ;; (key-chord-define org-mode-map "kl" my/org-mode-map)
+  (define-key org-mode-map (kbd "C-c C-i") my/org-mode-map))
+
 (use-package org
-  :straight t
+  ;; :straight t
+  :straight (:type built-in)
   :commands org-mode
+  :init
+  (defun my/org-mode-conf-settings-fn ()
+    (interactive)
+    (setq-local line-spacing 0.2)
+    ;; Increase size of LaTeX fragment previews
+    (plist-put org-format-latex-options :scale 1.5)
+
+    (setq-local tab-width 4)
+
+    (setq org-startup-with-inline-images t
+          org-image-actual-width '(600)
+          org-pretty-entities t
+          org-hide-emphasis-markers t
+
+          org-use-sub-superscripts '{}
+          org-export-with-sub-superscripts '{}))
   :hook ((org-mode org-babel-after-execute) . org-redisplay-inline-images)
+  :hook (org-mode . my/org-mode-conf-settings-fn)
   :init
   (defvar org-mode-local-keymap
     (make-sparse-keymap)
@@ -11,7 +40,16 @@
   (org-mode
    ("Edit"
     (;; use `b' for quick access
-     ("b" my/org-entry-hydra/body "edit"))))
+     ("b" my/org-entry-hydra/body "edit"))
+    "format"
+    (
+     ("=" (lambda () (interactive) (org-emphasize ?=) ) "=")
+     ("~" (lambda () (interactive) (org-emphasize ?~) ) "~")
+     ("*" (lambda () (interactive) (org-emphasize ?*) ) "*")
+     ("+" (lambda () (interactive) (org-emphasize ?+) ) "+")
+     ("/" (lambda () (interactive) (org-emphasize ?/) ) "/")
+     ("_" (lambda () (interactive) (org-emphasize ?_) ) "-")
+     )))
   :pretty-hydra
   (my/org-entry-hydra
    (:title (pretty-hydra-title "org entry move and adjust") :color pink :quit-key "q")
@@ -87,7 +125,7 @@
      ("lh" (hot-expand "<h") "html")
      ("ll" (hot-expand "<l") "latex")
      ("ln" (hot-expand "<n") "note")
-     ("lo" (hot-expand "<q") "quote")
+     ("lq" (hot-expand "<q") "quote")
      ("lv" (hot-expand "<v") "verse"))
     "Head"
     (("hi" (hot-expand "<i") "index")
@@ -158,14 +196,18 @@ prepended to the element after the #+HEADER: tag."
                                       ("^[ \t]*[[:digit:]]+) " . 'font-lock-keyword-face)
                                       ("^[ \t]*[[:digit:]]+\\. " . 'font-lock-keyword-face)
                                       ))
-  
+
+  ;; tweak identation
   (setq org-edit-src-content-indentation 0)
   (setq org-src-preserve-indentation nil)
   (setq org-indent-indentation-per-level 2)
 
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (setq-local tab-width 4)))
+  ;; tweak text display style
+  (setq org-hide-emphasis-markers t)
+
+  ;; agenda
+  ;; (setq org-agenda-files (list (expand-file-name "~/org/agenda/work") (expand-file-name "~/org/agenda/life")))
+  (setq org-agenda-files (file-expand-wildcards "~/org/agenda/**/?*.org"))
 
   ;; org tempo templates
   (require 'org-tempo)
@@ -206,7 +248,10 @@ prepended to the element after the #+HEADER: tag."
 
   ;; markdown support
   (add-to-list 'org-src-lang-modes '("md" . markdown))
-  )
+
+  
+)
+
 
 ;; babel related
 
@@ -234,24 +279,46 @@ prepended to the element after the #+HEADER: tag."
   :config
   (setq ob-async-no-async-languages-alist '("jupyter-python" "jupyter-julia")))
 
+(when (boundp 'native-comp-jit-compilation-deny-list)
+  (add-to-list 'native-comp-jit-compilation-deny-list ".*jupyter.*"))
+
 (use-package jupyter
-  :straight t
+  :straight (:no-native-compile t)
   :defer t
   :mode-hydra
   (org-mode
    (:title "Org Commands")
    ("Babel"
     (("j" jupyter-org-hydra/body "Jupyter org hydra"))))
+
+  :config
   )
+(defun my/org-babel-lazy-load-language-advice (orig-fun &rest args)
+  (let* ((info (nth 1 args))
+	 (lang (nth 0 info))
+	 (alist))
+    (message "language: %s, args: %s, orig-fun: %s" lang args orig-fun)
+    (unless (assoc lang org-babel-load-languages)
+      (if (or (eq lang 'jupyter-python) (eq lang 'jupyter-julia))
+	  (setq alist '((julia . t)
+			(python . t)
+			(jupyter . t)))
+	(list (cons lang t))))
+    (org-babel-do-load-languages
+     'org-babel-load-in-session
+     alist))
+  (apply orig-fun args))
+  
+(with-eval-after-load 'ob-core
+  (advice-add 'org-babel-execute-src-block :around #'my/org-babel-lazy-load-language-advice))
 
-(with-eval-after-load 'org
-  (cl-pushnew '(jupyter . t) my/org-babel-language-alist)
-  (require 'jupyter)
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   my/org-babel-language-alist))
-
+(defun my/ob-load-lanuage (lang)
+  (with-eval-after-load 'org
+    (let ((lang (if (symbolp lang) lang (intern lang)))
+          (lang-list (list (list lang t))))
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       lang-list))))
 
 
 ;; Presentation
@@ -297,6 +364,9 @@ prepended to the element after the #+HEADER: tag."
               ;; download image object from clipboard
               ("C-c l i i" . org-download-clipboard)
               ("C-c l i c" . org-download-screenshot)
+              ;; rename
+              ("C-c l i r" . org-download-rename-at-point)
+              ("C-c l i l" . org-download-rename-last-file)
               ;; input link by hand
               ("C-c l i h" . org-download-image))
   :mode-hydra
@@ -307,20 +377,73 @@ prepended to the element after the #+HEADER: tag."
      ("i h" org-download-image "image download from url"))))
   :config
   ;; (add-hook 'dired-mode-hook 'org-download-enable)
+  (setq-default org-download-image-dir "./img/")
   (setq-default org-download-image-org-width 0)
   ;; not use heading name to store image
   (setq-default org-download-heading-lvl nil)
+
+  ;; `convert.exe` command file path
+  (if my/wsl-p
+      (setq my/org-download-convert-command "/mnt/d/soft/scoop/apps/imagemagick/current/convert.exe"))
+  (if my/windows-p
+      (setq my/org-download-convert-command "d:/soft/scoop/apps/imagemagick/current/convert.exe"))
+
   )
+
+(defvar my/org-download-convert-command ""
+  "convert command file path")
+
+(defun my/org-download-clipboard-advice (orig-fn &rest args)
+  (if (file-exists-p my/org-download-convert-command)
+      (if (or my/windows-p my/wsl-p)
+          (let ((org-download-screenshot-file (if my/wsl-p "./screenshot.png"
+                                                org-download-screenshot-file))
+                (org-download-screenshot-method
+                 (concat my/org-download-convert-command " clipboard: %s")))
+            (apply #'org-download-screenshot args)))
+    (apply orig-fn basename)))
+(defun my/markdown-download-clipboard-advice (orig-fn &rest args)
+  (if (file-exists-p my/org-download-convert-command)
+      (if (or my/windows-p my/wsl-p)
+          (let ((org-download-screenshot-file (if my/wsl-p "./screenshot.png"
+                                                org-download-screenshot-file))
+                (org-download-screenshot-method
+                 (concat my/org-download-convert-command " clipboard: %s")))
+            (apply #'my-markdown-download-screenshot args)))
+    (apply orig-fn basename)))
+
+(advice-add #'org-download-clipboard :around #'my/org-download-clipboard-advice)
+(advice-add #'my-markdown-download-clipboard :around #'my/markdown-download-clipboard-advice)
+
+(defun my/org-download-screenshot ()
+  (interactive)
+  (shell-command-to-string "cmd.exe /c snipaste.exe snip")
+  (shell-command-to-string "cmd.exe /c snipaste.exe snip")
+  (shell-command-to-string "cmd.exe /c snipaste.exe snip")
+  (sleep-for 0.5)
+  (when (derived-mode-p 'org-mode)
+    (call-interactively #'org-download-clipboard))
+  (when (derived-mode-p 'markdown-mode)
+    (call-interactively #'my-markdown-download-clipboard))
+  )
+
+
 
 ;; url
 (use-package org-cliplink
   :straight t
   :commands (org-cliplink org-cliplink-capture)
-  :bind ("C-c l l c" . org-cliplink)
+  :bind (:map org-mode-map
+              ("C-c l c" . org-cliplink)
+              ;; ("C-c C-. C-l C-c" . org-cliplink)
+              )
+  :bind (:map my/org-mode-map
+              ("C-l C-c" . org-cliplink)
+              ("l c" . org-cliplink))
   :mode-hydra
   (org-mode
    ("link"
-    (("lc" org-cliplink "from clipboard"))))
+    (("l c" org-cliplink "from clipboard"))))
   :after org)
 
 ;; clip
@@ -338,6 +461,7 @@ prepended to the element after the #+HEADER: tag."
 ;; beatify
 (use-package org-superstar
   :straight t
+  :unless my/use-org-modern-p
   :after org
   :hook (org-mode . org-superstar-mode))
 
@@ -365,5 +489,113 @@ prepended to the element after the #+HEADER: tag."
   (org-mode
    ("Misc"
     (("m p" org-preview-html-mode "html preview")))))
+
+(use-package org-modern
+  :straight t
+  :if my/use-org-modern-p
+  :commands
+  (org-modern-mode)
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
+  :config
+  (setq org-modern-hide-stars ".")
+  (setq org-modern-table nil)
+  (setq org-modern-block-fringe nil))
+
+(use-package org-transclusion
+  :straight t
+  :commands (org-transclusion-mode
+             org-transclusion-add))
+
+(use-package org-pandoc-import
+  :straight (:host github
+                   :repo "tecosaur/org-pandoc-import"
+                   :files ("*.el" "filters" "preprocessors"))
+  :commands (org-pandoc-import-markdown-as-org))
+
+
+
+(use-package org-appear
+  :straight t
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autolinks t
+        org-appear-autoentities t
+        org-appear-autosubmarkers t
+        org-appear-autoemphasis t
+        org-appear-inside-latex t)
+  )
+
+(use-package org-modern-indent
+  :straight (:type git :host github :repo "jdtsmith/org-modern-indent")
+  ;; :hook (org-indent-mode . org-modern-indent-mode)
+  :defer t
+  )
+
+(use-package olivetti
+  :straight t
+  :init
+  (setq olivetti-body-width 0.67)
+  :config
+  (setq my/olivetti-scale-ratio 1.2)
+  (defun distraction-free ()
+    "Distraction-free writing environment"
+    (interactive)
+    (if (equal olivetti-mode nil)
+        (progn
+          (window-configuration-to-register 1)
+          (delete-other-windows)
+          (text-scale-increase my/olivetti-scale-ratio)
+          (olivetti-mode t))
+      (progn
+        (jump-to-register 1)
+        (olivetti-mode 0)
+        (text-scale-decrease my/olivetti-scale-ratio)))
+    (defalias 'focus-mode #'distraction-free)
+    (defalias 'writing-mode #'distraction-free)
+    )
+
+  :commands (olivetti-mode
+             distraction-free))
+
+(use-package org-fragtog
+  :straight t
+  :commands (org-fragtog-mode)
+  :hook (org-mode . org-fragtog-mode)
+  )
+
+(use-package org-pretty-table
+  :straight (:type git :host github :repo "Fuco1/org-pretty-table")
+  :commands (org-pretty-table-mode))
+
+;; ref: https://gitlab.com/matsievskiysv/math-preview
+(use-package math-preview
+  :straight t
+  ;; require: npm install -g git+https://gitlab.com/matsievskiysv/math-preview
+  :defer t
+  )
+
+(use-package latex-math-preview
+  :straight t
+  :defer t)
+
+
+(use-package org-ol-tree
+  :straight (:type git :host github :repo "Townk/org-ol-tree")
+  :commands (org-ol-tree))
+
+;; hugo-blog
+(defun my/hugo-org-update-timestamp ()
+  (interactive)
+  (when (derived-mode-p 'org-mode)
+    (let ((time-stamp-active t)
+          (time-stamp-start "#\\+lastmod:[ \t]*")
+          (time-stamp-end "$")
+          (time-stamp-format "[%04Y-%02m-%02d %a]"))
+      (time-stamp))))
+(with-eval-after-load 'org
+  (add-hook 'after-save-hook #'my/hugo-org-update-timestamp nil))
+
+
 
 (provide 'init-org)

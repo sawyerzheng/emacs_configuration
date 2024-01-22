@@ -2,7 +2,7 @@
   :straight t
   :init
   ;; (dashboard-setup-startup-hook)
-  ;; :hook (after-init . open-dashboard)
+  ;; :hook (my/startup . open-dashboard)
   :bind ("C-c o d" . open-dashboard)
   :bind (:map dashboard-mode-map
               ("n" . dashboard-next-line)

@@ -1,27 +1,30 @@
+(use-package elisp-mode
+  :commands (emacs-lisp-mode)
+  :config
+  (font-lock-add-keywords 'emacs-lisp-mode '(("\\_<[+-]1\\_>" . 'font-lock-keyword-face)
+                                             )))
 (use-package elisp-def
   :straight t
-  :hook ((emacs-lisp-mode ielm-mode) . elisp-def-mode)
+  :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . elisp-def-mode)
   :config
   (use-package highlight-quoted
     :straight t
-    :hook ((emacs-lisp-mode ielm-mode) . highlight-quoted-mode))
+    :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . highlight-quoted-mode))
 
   (use-package highlight-defined
     :straight t
-    :hook ((emacs-lisp-mode ielm-mode) . highlight-quoted-mode))
+    :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . highlight-quoted-mode))
 
-  (use-package elisp-demos
-    :straight t
-    :commands (elisp-demos-advice-describe-function-1))
-
-  ;; for `elisp-demos' in help-mode
-  ;; (use-package help-mode
-  ;;   :straight (:type built-in)
-  ;;   :commands help-mode
-  ;;   :config
-  ;;   (require 'elisp-demos)
-  ;;   (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1))
   (require 'init-lispy)
   (require 'init-helpful))
 
-  (provide 'init-emacs-lisp)
+(use-package rainbow-delimiters
+  :straight t
+  :hook ((emacs-lisp-mode
+          ielm-mode
+          lisp-interaction-mode
+          python-mode) . rainbow-delimiters-mode))
+
+(defalias 'elisp-mode #'emacs-lisp-mode)
+
+(provide 'init-emacs-lisp)

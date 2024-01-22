@@ -1,6 +1,6 @@
 (use-package display-line-numbers
   :straight t
-  :hook ((prog-mode markdown-mode gfm-mode) . display-line-numbers-mode)
+  :hook ((prog-mode markdown-mode gfm-mode fish-mode) . display-line-numbers-mode)
   :config
   (setq display-line-numbers-width 2))
 

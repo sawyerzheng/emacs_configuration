@@ -39,5 +39,27 @@
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.yaml\\'" . yaml-mode)))
 
+(use-package typescript-mode
+  :straight t
+  :mode (("\\.ts\\'" . typescript-mode)))
+
+(use-package dockerfile-mode
+  :straight (:type git :host github :repo "spotify/dockerfile-mode")
+  :mode (("[Dd]ockerfile.*" . dockerfile-mode)))
+
 (add-to-list 'auto-mode-alist
              '("conanfile.txt\\'" . conf-mode))
+(add-to-list 'auto-mode-alist
+             '("\\.service\\'" . conf-mode))
+(add-to-list 'auto-mode-alist
+             '(".condarc\\'" . conf-mode))
+(add-to-list 'auto-mode-alist
+             '("isyncrc\\'" . conf-mode))
+(add-to-list 'auto-mode-alist
+             '(".mbsyncrc\\'" . conf-mode))
+
+(use-package markdown-mode
+  :config
+  (require 'init-markdown)
+  :mode (("\\.md" . gfm-mode)
+	 ))

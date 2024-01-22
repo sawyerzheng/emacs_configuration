@@ -1,6 +1,7 @@
 (use-package tree-sitter
   :straight t
   :hook ((python-mode java-mode c-mode c++-mode) . tree-sitter-mode)
+  :hook (my/startup . global-tree-sitter-mode)
   :config
   (add-to-list 'tree-sitter-load-path (expand-file-name "tree-sitter-bin" my/program-dir))
   (add-to-list 'tree-sitter-major-mode-language-alist '(emacs-lisp-mode . elisp))

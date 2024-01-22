@@ -7,6 +7,6 @@
   :config
   (setq grip-preview-use-webkit nil)
   (setq grip-github-user "sawyerzheng")
-  (setq grip-github-password "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"))
+  (setq grip-github-password "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"))
 
 (provide 'init-grip)

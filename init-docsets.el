@@ -4,6 +4,9 @@
 (require 'init-zeal)
 
 ;; devdocs
+(defun my/devdocs-set-local-docsets ()
+  (let* ((defaults (cdr (assq major-mode my/devdocs-major-mode-docs-alist))))
+    (setq-local devdocs-current-docs defaults)))
 (use-package devdocs
   :straight t
   :bind (:map prog-mode-map
@@ -13,7 +16,7 @@
   (defvar my/devdocs-major-mode-docs-alist
     '((c-mode          . ("c"))
       (c++-mode        . ("cpp"))
-      (python-mode     . ("python~3.9" "numpy~1.22" "pandas~1"))
+      (python-mode     . ("python~3.9" "numpy~1.22" "pandas~1" "flask~2.2"))
       (ruby-mode       . ("ruby~3.1"))
       (go-mode         . ("Go"))
       (rustic-mode     . ("Rust"))
@@ -25,9 +28,7 @@
       (cmake-mode . ("CMake")))
     "Alist of MAJOR-MODE and list of docset names.")
 
-  (defun my/devdocs-set-local-docsets ()
-    (let* ((defaults (cdr (assq major-mode my/devdocs-major-mode-docs-alist))))
-      (setq-local devdocs-current-docs defaults)))
+
 
   ;; (mapc
   ;;  (lambda (e)
@@ -36,7 +37,7 @@
   ;;                (setq-local devdocs-current-docs (cdr e)))))
   ;;  devdocs-major-mode-docs-alist)
 
-  (setq devdocs-data-dir (expand-file-name "devdocs" user-emacs-directory))
+  ;; (setq devdocs-data-dir (expand-file-name "devdocs" user-emacs-directory))
 
   (defun devdocs-dwim()
     "Look up a DevDocs documentation entry.
@@ -74,53 +75,44 @@ Install the doc if it's not installed."
 
 
 ;; use consult + dash-docs
-
 (use-package consult-dash
-  :straight (:type git :repo "https://codeberg.org/ravi/consult-dash.git")
+  :straight (:type git :host github :repo "emacsmirror/consult-dash")
+  ;; :straight (:type git :type codeberg :repo "ravi/consult-dash")
   :commands (consult-dash)
   :config
   ;; Use the symbol at point as initial search term
-  (consult-customize consult-dash :initial (thing-at-point 'symbol)))
-
-(use-package dash-docs
-  :straight t
-  :commands (dash-docs-install-docset)
-  :config
-  ;; * debug
-  (setq dash-docs-enable-debugging nil)
-  ;; * docsets store path
-
-  (setq dash-docs-docsets-path
-        (cond (my/windows-p
-               "e:/soft/zeal/docsets/")
-              (my/linux-p
-               "~/.local/share/Zeal/Zeal/docsets/")
-              (t
-               "~/.docsets")))
+  (consult-customize consult-dash :initial (thing-at-point 'symbol))
+  (require 'dash-docs))
 
 
-  ;;* global
-  ;;  =dash-docs-common-docsets=
-  ;;* buffer-local
-  ;;  =dash-docs-docsets=
-
-  ;; mkdir -p ~/.docsets to suppress error
-  (make-directory dash-docs-docsets-path t)
-
-  (defvar dash-docs-docsets nil
+
+;; config for `dash-docs'
+(defvar dash-docs-docsets nil
     "docs for this buffer")
 
   (defvar my/dash-docs-local-not-installed nil
     "not installed docset preconfigured for buffer")
 
   (defvar my/dash-docs-default-docsets
-    '((python-mode . ("Python 3" "NumPy" "Pandas"))
+    '(
+      (c-mode          . ("C"))
+      (c-ts-mode          . ("C"))
+      (c++-mode        . ("C++"))
+      (c++-ts-mode        . ("C++"))
+      (python-mode     . ("Python_2" "Python_3" "Pandas" "NumPy" "OpenCV_Python"))
+      (python-ts-mode     . ("Python_2" "Python_3" "Pandas" "NumPy" "OpenCV_Python"))
+      (ruby-mode       . ("Ruby"))
+      (go-mode         . ("Go"))
+      (go-ts-mode         . ("Go"))
+      (rustic-mode     . ("Rust"))
+      (css-mode        . ("CSS"))
+      (html-mode       . ("HTML"))
+      (js-mode         . ("JavaScript" "JQuery"))
+      (js2-mode        . ("JavaScript" "JQuery"))
+      (emacs-lisp-mode . ("Emacs_Lisp"))
       (cmake-mode . ("CMake"))
-      (c-mode . ("C"))
-      (c++-mode . ("C" "C++" "Boost"))
-      ;; no docsets for elisp
-      (emacs-lisp-mode . ("Emacs Lisp"))
-
+      (rust-mode . ("Rust"))
+      (rust-ts-mode . ("Rust"))
       )
     "default docsets for respective major mode")
 
@@ -183,5 +175,41 @@ Install the doc if it's not installed."
   (defun my/dash-docs-use-default-browser ()
     (interactive)
     (setq dash-docs-browser-func 'browse-url))
-  :hook (prog-mode . my/dash-docs-set-local-docsets)
+
+(use-package dash-docs
+  :straight t
+  :commands (dash-docs-install-docset)
+  :config
+  ;; * debug
+  (setq dash-docs-enable-debugging nil)
+  ;; * docsets store path
+
+  (setq dash-docs-docsets-path
+        (cond (my/windows-p
+               "e:/soft/zeal/docsets/")
+              (my/linux-p
+               "~/.local/share/Zeal/Zeal/docsets/")
+              (t
+               "~/.docsets")))
+
+
+  ;;* global
+  ;;  =dash-docs-common-docsets=
+  ;;* buffer-local
+  ;;  =dash-docs-docsets=
+
+  ;; mkdir -p ~/.docsets to suppress error
+  (unless (file-exists-p dash-docs-docsets-path)
+    (make-directory dash-docs-docsets-path 'parents))
+  
+
+  
+  :hook (prog-mode . (lambda () 
+                       (require 'dash-docs)
+                       (my/dash-docs-set-local-docsets)))
   :commands (my/counsel-dash-at-point))
+
+(use-package ivy
+  :bind (:map ivy-minibuffer-map
+              ("M-n" . ivy-next-line)
+              ("M--" . ivy-previous-line)))

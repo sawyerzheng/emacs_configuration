@@ -14,8 +14,8 @@
              ))
 
 
-(use-package deno-bridge-jieba
-  :straight (:type git :host github :repo "ginqi7/deno-bridge-jieba")
-  :requires deno-bridge
-  :demand t
-  )
+;; (use-package deno-bridge-jieba
+;;   :straight (:type git :host github :repo "ginqi7/deno-bridge-jieba")
+;;   :requires deno-bridge
+;;   :demand t
+;;   )

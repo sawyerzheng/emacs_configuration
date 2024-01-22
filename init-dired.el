@@ -1,4 +1,65 @@
 ;; -*- coding: utf-8; -*-
+;;;###autoload
+(defun my/open-file-externally (&optional arg)
+  "open current file in dired or current corresponding file in file buffer
+ with external tools."
+  (interactive "P")
+  (let* ((file (cond ((eq major-mode 'dired-mode)
+                      (dired-get-file-for-visit))
+                     ((buffer-file-name) (buffer-file-name))
+                     (t "")))
+         (ext (f-ext file))
+         ($thing nil))
+    (when (and arg (functionp #'eaf-open))
+      (eaf-open file))
+
+    (cond
+     ((eq major-mode 'org-mode)
+      (org-open-at-point))
+     ;; url at point
+     ((thing-at-point 'url)
+      (let* (($url (thing-at-point 'url)))
+        (if (and (not (eq browse-url-browser-function 'eaf-open-browser))
+                 my/wsl-p
+                 (string-match-p "^https?://" $url))
+            (shell-command (format "cmd.exe /c start %s" $url))
+          (browse-url $url))))
+     ((thing-at-point 'filename)
+      ;; file at point
+      (let* (($file (thing-at-point 'filename)))
+        ;; make sure valid file path
+        (if (and (string-match "/\\|\\\\\\|~" $file) (string-match "^\\(\\w:/\\)\\|~\\|/" $file))
+            (cond
+             ((string-match "#" $file)
+              (let (($fpath (substring $file 0 (match-beginning 0)))
+                    ($fractPart (substring $file (1+ (match-beginning 0)))))
+                (if (file-exists-p $fpath)
+                    (progn
+                      (find-file $fpath)
+                      (goto-char (point-min))
+                      (search-forward $fractPart))
+                  (when (y-or-n-p (format "file does not exist: [%s]. Create?" $fpath))
+                    (find-file $fpath)))))
+             ((null (file-name-extension $file))
+              (if my/wsl-p
+                  (shell-command-to-string (format "code %s" $file))
+                (consult-file-externally $file)))
+             (t
+              (if my/wsl-p
+                  (shell-command-to-string (format "powershell.exe -noprofile  -noninteractive -windowstyle hidden \" ii $(wslpath -w %s)\"" $file))
+                (consult-file-externally $file))))
+          (message "Not valid file path at point: %s \nopen buffer file instead" $file)
+          (if my/wsl-p
+              (shell-command-to-string (format "powershell.exe -noprofile  -noninteractive -windowstyle hidden \" ii $(wslpath -w %s)\"" file))
+            (consult-file-externally file)))))
+
+     (t
+      ;; other place, open the buffer file
+      (if my/wsl-p
+          (shell-command-to-string (format "powershell.exe -noprofile  -noninteractive -windowstyle hidden \" ii $(wslpath -w %s)\"" file))
+        (consult-file-externally file))))))
+
+
 (use-package dired
   :straight (:type built-in)
   :init
@@ -71,16 +132,6 @@ Version 2018-09-29"
   :config
   (setq dired-listing-switches "-alh")
   :init
-  (defun my/open-file-externally ()
-    "open current file in dired or current corresponding file in file buffer
- with external tools."
-    (interactive)
-    (let* ((file (cond ((eq major-mode 'dired-mode)
-                        (dired-get-file-for-visit))
-                       ((buffer-file-name) (buffer-file-name))
-                       (t "")))
-           (ext (f-ext file)))
-      (consult-file-externally file)))
 
   :bind (:map dired-mode-map
               ("e" . my/open-file-externally))
@@ -102,55 +153,72 @@ Version 2018-09-29"
     :config
     (setq dired-k-style 'git)
     (setq dired-k-human-readable t))
-  (use-package all-the-icons-dired
-    :straight t
-    :after dired
-    :hook (dired-mode . all-the-icons-dired-mode)
-    :config
-    ;; (remove-hook 'dired-mode-hook 'treemacs-icons-dired-mode)
-    )
+  (use-package nerd-icons-dired
+    :straight (:type git :host github :repo "rainstormstudio/nerd-icons-dired")
+    :hook (dired-mode . nerd-icons-dired-mode))
+  ;; (use-package all-the-icons-dired
+  ;;   :straight t
+  ;;   :after dired
+  ;;   :hook (dired-mode . all-the-icons-dired-mode)
+  ;;   :config
+  ;;   ;; (remove-hook 'dired-mode-hook 'treemacs-icons-dired-mode)
+  ;;   )
   (use-package diredfl
     :straight t
     :hook (dired-mode . diredfl-mode)))
-
-
-
-
-
-
-
 
 ;; (use-package treemacs-icons-dired
 ;;   :straight t
 ;;   :hook (dired-mode . treemacs-icons-dired-mode))
 
-(use-package dirvish
-  :after dired
-  :straight (dirvish :files (:defaults "extensions"))
-  :init
-  (my-add-extra-folder-to-load-path "dirvish" '("extensions"))
+;; (use-package dirvish
+;;   :after dired
+;;   :straight (dirvish :files (:defaults "extensions"))
+;;   :init
+;;   (my/add-extra-folder-to-load-path "dirvish" '("extensions"))
 
-  :commands (dirvish-mode dirvish-dispatch dirvish-fd)
-  :hook (after-init . (lambda () (with-eval-after-load 'dired
-                                   (dirvish-override-dired-mode))))
-  :bind (:map dirvish-mode-map
-              ("P" . dirvish-dispatch))
-  :config
-  (setq dirvish-hide-details t)
-  (require 'dirvish-bookmark)
-  (require 'dirvish-extras)
-  (require 'dirvish-fd)
-  (require 'dirvish-history)
-  (require 'dirvish-icons)
-  (require 'dirvish-menu)
-  (require 'dirvish-peek)
-  (require 'dirvish-side)
-  (require 'dirvish-subtree)
-  (require 'dirvish-vc))
+;;   :commands (dirvish-mode dirvish-dispatch dirvish-fd)
+;;   :hook (my/startup . (lambda () (with-eval-after-load 'dired
+;;                                    (dirvish-override-dired-mode))))
+;;   :bind (:map dirvish-mode-map
+;;               ("P" . dirvish-dispatch))
+;;   :config
+;;   (setq dirvish-hide-details t)
+;;   (require 'dirvish-bookmark)
+;;   (require 'dirvish-extras)
+;;   (require 'dirvish-fd)
+;;   (require 'dirvish-history)
+;;   (require 'dirvish-icons)
+;;   (require 'dirvish-menu)
+;;   (require 'dirvish-peek)
+;;   (require 'dirvish-side)
+;;   (require 'dirvish-subtree)
+;;   (require 'dirvish-vc))
 
 (use-package dired-sidebar
   :straight t
   :commands (dired-sidebar-show-sidebar
-             dired-sidebar-toggle-sidebar))
+             dired-sidebar-toggle-sidebar)
+  :init
+  (add-hook 'dired-sidebar-mode-hook
+            (lambda ()
+              (unless (file-remote-p default-directory)
+                (auto-revert-mode))))
+  :config
+  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+
+  (setq dired-sidebar-subtree-line-prefix "__")
+  (setq dired-sidebar-theme 'icons)
+  (setq dired-sidebar-use-term-integration t)
+  (setq dired-sidebar-use-custom-font t))
+
+(use-package ztree
+  :straight t
+  :commands (ztree-dir
+             ztree-diff)
+  :bind (:map ztree-mode-map
+              ("p" . ztree-previous-line)
+              ("n" . ztree-next-line)))
 
 (provide 'init-dired)

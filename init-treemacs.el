@@ -70,5 +70,10 @@ Use `treemacs' command for old functionality."
     :hook (treemacs-mode . (lambda ()
                              (with-eval-after-load "treemacs"
                                (require 'treemacs-projectile))))))
+(use-package treemacs-nerd-icons
+  :straight (:type git :host github :repo "rainstormstudio/treemacs-nerd-icons")
+  :after treemacs
+  :config
+  (treemacs-load-theme "nerd-icons"))
 
 (provide 'init-treemacs)

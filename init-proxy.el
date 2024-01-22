@@ -1,8 +1,16 @@
 ;; -*- coding: utf-8; -*-
 
-(defcustom my/proxy-use-remote-p nil
+(defcustom my/proxy-use-remote-p t
   "if to use remove proxy"
   :type 'boolean)
+
+(defcustom my/proxy-host "localhost"
+  "http proxy host ip"
+  :type 'string)
+
+(defcustom my/proxy-port "7890"
+  "http proxy port"
+  :type 'string)
 
 (defun get-my-http-proxy ()
   "retrieve proxy value, depending on if current machine is windows sub linux"
@@ -32,8 +40,7 @@
   (interactive)
   (setenv "http_proxy" "")
   (setenv "https_proxy" "")
-  (message "env http_proxy is empty now")
-  )
+  (message "env http_proxy is empty now"))
 
 (defun enable-proxy ()
   (interactive)
@@ -53,14 +60,16 @@
     (message "env http_proxy is %s now" proxy))
   )
 
+(defun my/wsl-get-windows-ip ()
+  (when (file-exists-p "/usr/bin/wslpath")
+    (car (split-string (shell-command-to-string
+                        "cat /etc/resolv.conf |grep nameserver|awk '{print $2}'")))))
+
 (defun enable-proxy-windows ()
   (interactive)
   (let ((proxy))
-    (when (file-exists-p "/usr/bin/wslpath")
-      ;; "http://localhost:7890"
-      ;;
-      (setq proxy (car (split-string (shell-command-to-string
-                                      "echo http://$(cat /etc/resolv.conf |grep nameserver|awk '{print $2}'):7890"))) )
+    (when my/wsl-p
+      (setq proxy (format "http://%s:%s" (my/wsl-get-windows-ip) my/proxy-port) )
 
       (setenv "http_proxy" proxy)
       (setenv "https_proxy" proxy)
@@ -69,10 +78,18 @@
 (defun enable-proxy-eaf ()
   "remember to restart eaf using: `eaf-restart-process'."
   (interactive)
+  (setq eaf-proxy-host "localhost"
+        eaf-proxy-type "http"
+        eaf-proxy-port "7890")
+  (message "env http_proxy is %s now" (concat eaf-proxy-type "://" eaf-proxy-host ":" eaf-proxy-port)))
+
+(defun enable-proxy-windows-eaf ()
+  "remember to restart eaf using: `eaf-restart-process'."
+  (interactive)
   (if my/wsl-p
-      (setq eaf-proxy-host "home.zhenglei.site"
+      (setq eaf-proxy-host (my/wsl-get-windows-ip)
             eaf-proxy-type "http"
-            eaf-proxy-port "17890")
+            eaf-proxy-port "7890")
     (setq eaf-proxy-host "localhost"
           eaf-proxy-type "http"
           eaf-proxy-port "7890"))
@@ -89,8 +106,11 @@
 ;; (enable-proxy-eaf)
 
 (if my/wsl-p
-    (enable-proxy-windows)
-  (enable-proxy))
+    (progn
+      (enable-proxy-windows)
+      (enable-proxy-windows-eaf))
+  (enable-proxy)
+  (enable-proxy-eaf))
 
 
 (defun my-toggle-eaf-proxy ()
@@ -104,5 +124,18 @@
       (eaf-toggle-proxy)
       )))
 
+
+(defun my/with-proxy-disable (fun)
+  "run function without proxy"
+  (interactive)
+  (let* ((proxy (getenv "http_proxy")))
+
+    (ignore-errors
+      (disable-proxy)
+      (call-interactively fun))
+
+    (setenv "http_proxy" proxy)
+    (setenv "https_proxy" proxy)
+    ))
 
 (provide 'init-proxy)

@@ -8,7 +8,7 @@
              undo-fu-disable-checkpoint)
   ;; :bind (("C-_" . undo-fu-only-redo)
   ;;        ("C-M-_" . undo-fu-only-redo))
-  :hook (after-init . undo-fu-mode)
+  :hook (my/startup . undo-fu-mode)
   :config
   ;; Increase undo history limits to reduce likelihood of data loss
   (setq undo-limit 400000               ; 400kb (default is 160kb)
@@ -20,7 +20,7 @@
     "Enables `undo-fu' for the current session."
     :keymap (let ((map (make-sparse-keymap)))
               (define-key map [remap undo] #'undo-fu-only-undo)
-              (define-key map [remap redo] #'undo-fu-only-redo)
+              (define-key map [remap undo-redo] #'undo-fu-only-redo) ;; redo command
               (define-key map (kbd "C-_")     #'undo-fu-only-undo)
               (define-key map (kbd "M-_")     #'undo-fu-only-redo)
               (define-key map (kbd "C-M-_")   #'undo-fu-only-redo-all)
@@ -60,3 +60,7 @@
         filename))
     (advice-add #'undo-fu-session--make-file-name :filter-return #'+undo--append-zst-extension-to-file-name-a))
   )
+
+(use-package vundo
+  :straight t
+  :commands (vundo))

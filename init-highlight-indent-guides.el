@@ -1,10 +1,29 @@
 ;; -*- coding: utf-8; -*-
 ;; :ref https://github.com/DarthFennec/highlight-indent-guides
 (use-package highlight-indent-guides
-  :defer t
+  :straight t
   :hook (prog-mode . highlight-indent-guides-mode)
-  ;; :custom
-  :config
-  (setq highlight-indent-guides-method 'column))
+  :hook (highlight-indent-guides-mode . (lambda ()
+                                          (ignore-errors (highlight-indent-guides-auto-set-faces))))
+  :commands (highlight-indent-guides-mode
+             highlight-indent-guides-auto-set-faces)
+
+  :init
+  ;; (setq highlight-indent-guides-method 'character)
+  ;; (set-face-background 'highlight-indent-guides-odd-face "darkgray")
+  ;; (set-face-background 'highlight-indent-guides-even-face "dimgray")
+  ;; (set-face-foreground 'highlight-indent-guides-character-face "dimgray")
+
+  ;; default setting
+  ;; (setq highlight-indent-guides-method 'fill)
+  (custom-set-variables '(highlight-indent-guides-method 'character))
+
+  (setq highlight-indent-guides-auto-odd-face-perc 31
+        highlight-indent-guides-auto-even-face-perc 40
+        highlight-indent-guides-auto-character-face-perc 50)
+
+  ;; (set-face-background 'highlight-indent-guides-odd-face 'unspecified)
+  ;; (set-face-background 'highlight-indent-guides-even-face 'unspecified)
+  )
 
 (provide 'init-highlight-indent-guides)

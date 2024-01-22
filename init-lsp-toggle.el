@@ -1,6 +1,40 @@
+(defvar my/lsp-backend "eglot"
+  "use `lsp-bridge' or `lsp-mode' or `eglot'")
+
+;; * config
+(defcustom my/lsp-toggle-mode-hooks
+  '(
+    python-base-mode-hook
+    ;; python-mode-hook
+    ;; python-ts-mode-hook
+    c++-mode-hook
+    c++-ts-mode-hook
+    c-mode-hook
+    c-ts-mode-hook
+    cmake-mode-hook
+    cmake-ts-mode-hook
+    java-mode-hook
+    java-ts-mode-hook
+    web-mode-hook
+    javascript-mode-hook
+    javascript-ts-mode-hook
+    css-mode-hook
+    css-ts-mode-hook
+    html-mode-hook
+    html-ts-mode-hook
+    rust-mode-hook
+    rust-ts-mode-hook
+    )
+  "auto toggle for lsp-mode and lsp-bridge")
+
+(defvar my/lsp-backend-alist '(("lsp-mode" . my-enable-lsp-mode)
+                               ("lsp-bridge" . my-enable-lsp-bridge)
+                               ("eglot" . my-enable-eglot))
+  "backend name <--> backend enable function")
 
 (defvar my/lsp-basic-map nil
   "parent keymap for all sub-keymaps")
+
 (setq my/lsp-basic-map
       (let ((map (make-sparse-keymap)))
         (define-key map (kbd "ee") '("consult errors" .
@@ -60,6 +94,8 @@
                                              (t
                                               nil))
                                        )))
+        (define-key map (kbd "dd") '("dap debug" .
+                                     my/dap-hydra))
         map))
 
 (use-package flycheck
@@ -224,8 +260,6 @@
              lsp-treemacs-type-hierarchy
              lsp-treemacs-java-deps-list))
 
-(defvar my/lsp-backend nil
-  "use `lsp-bridge' or `lsp-mode' or `eglot'")
 
 (defun my-disable-company ()
   (company-mode -1))
@@ -251,10 +285,6 @@
   (interactive)
   (eglot-ensure))
 
-;; * config
-(defcustom my/lsp-toggle-mode-hooks
-  '(python-mode-hook c++-mode-hook c-mode-hook cmake-mode-hook)
-  "auto toggle for lsp-mode and lsp-bridge")
 
 (defun my-enable-lsp-bridge ()
   (interactive)
@@ -263,7 +293,8 @@
   (dolist (hook my/lsp-toggle-mode-hooks)
     (add-hook hook #'my-start-lsp-bridge-fn))
   (my-disable-lsp-mode)
-  (my-disable-eglot))
+  (my-disable-eglot)
+  )
 
 (defun my-enable-lsp-mode ()
   (interactive)
@@ -293,24 +324,54 @@
 (defun my-disable-eglot ()
   (interactive)
   (dolist (hook my/lsp-toggle-mode-hooks)
-    (remove-hook hook #'my-start-eglot-fn)))
+    (remove-hook hook #'my-start-eglot-fn))
+  (eglot-shutdown-all))
+
+(use-package external-completion
+  :straight (:type git :host github :repo "emacs-straight/external-completion")
+  )
 
 (use-package consult-eglot
   :straight t
   :commands (consult-eglot-symbols))
 
-(use-package eglot
+(use-package eldoc-box
   :straight t
-  :commands (eglot eglot-ensure)
+  ;; :hook (eglot-managed-mode . eldoc-box-hover-mode)
+  :commands (eldoc-box-eglot-help-at-point
+             eldoc-box-hover-mode
+             eldoc-box-hover-at-point-mode))
+
+(use-package eglot
+  :init
+
+  :straight t
+  :commands (eglot
+	     eglot-ensure
+	     eglot--managed-mode
+	     eglot-shutdown-all)
   :config
+  (defun my/eglot-completion-fix ()
+    (unless (featurep 'cape)
+      (require 'init-corfu))
+    (setq-local completion-at-point-functions
+                (list
+                 #'cape-file
+                 (cape-super-capf
+                  #'eglot-completion-at-point
+                  #'tempel-expand))))
+  (add-hook 'eglot-managed-mode-hook #'my/eglot-completion-fix)
   (defun my-eglot-restart ()
     (interactive)
-    (eglot-shutdown)
-    (eglot))
+    ;; (eglot-shutdown (eglot-current-server))
+    (call-interactively #'eglot))
 
   (defvar my-eglot-keymap
     nil
     "my keymap for eglot-mode")
+  ;; (setq my/eglot-workspace-map
+  ;;       (let ((map (make-sparse-keymap)))
+  ;;         (define-key )))
   (setq my-eglot-keymap
         (let ((map (make-sparse-keymap)))
           (set-keymap-parent map my/lsp-basic-map)
@@ -323,21 +384,64 @@
           (bind-key "==" #'eglot-format map)
           (bind-key "=b" #'eglot-format-buffer map)
 
-          (bind-key "hh" #'eldoc-doc-buffer map)
+          (bind-key "hh" #'eldoc-box-help-at-point map)
+          ;; (bind-key "hh" #'eldoc-doc-buffer map)
           (bind-key "hm" #'eglot-manual map)
+
+          (bind-key "aa" #'eglot-code-actions map)
+          (bind-key "ai" #'eglot-code-action-inline map)
+          (bind-key "ae" #'eglot-code-action-extract map)
+          (bind-key "aq" #'eglot-code-action-quickfix map)
+          (bind-key "ao" #'eglot-code-action-organize-imports map)
+          (bind-key "ar" #'eglot-code-action-rewrite map)
 
           map))
   (bind-key "M-'" my-eglot-keymap eglot-mode-map)
 
   (setq completion-category-defaults nil)
 
+  ;; ruff
+  ;; (add-to-list 'eglot-server-programs
+  ;;              `(python-mode . ("ruff-lsp"
+  ;;                               :initializationOptions
+  ;;                               (:lineLength "500" :ignore "F403,F405,E722,E402")
+  ;;                               ;; "--line-length=500" "--ignore=F403,F405,E722,E402"
+  ;;                               )))
+  ;; (defun my/eglot-ruff-flymake-fn ()
+  ;;   (when (derived-mode-p 'python-mode)
+  ;;     (setq python-flymake-command '("ruff" "--quiet" "--stdin-filename=stdin" "-"))
+  ;;     (remove-hook 'flymake-diagnostic-functions #'eglot-flymake-backend)
+  ;;     (add-hook 'flymake-diagnostic-functions 'python-flymake nil t)))
+
+  ;; (add-hook 'eglot-managed-mode-hook #'my/eglot-ruff-flymake-fn)
+  (use-package flymake-ruff
+    :straight (flymake-ruff
+               :type git
+               :host github
+               :repo "erickgnavar/flymake-ruff")
+    :commands (flymake-ruff-load))
+  (require 'flymake-ruff)
+
+  (defun my/eglot-ruff-flymake-fn ()
+    (when (derived-mode-p 'python-mode)
+      (remove-hook 'flymake-diagnostic-functions #'eglot-flymake-backend)
+      (flymake-ruff-load)))
+
+  (add-hook 'eglot-managed-mode-hook #'my/eglot-ruff-flymake-fn)
+
+  (defun my/capf-use-ai-code ()
+    (add-hook 'eglot-managed-mode-hook #'eglot-completion-at-point nil t)
+    (dolist (backend '(codeium-completion-at-point codegeex-completion-at-point))
+      (when (fboundp backend)
+        (add-hook 'completion-at-point-functions backend nil t))))
+  ;; (add-hook 'eglot-managed-mode-hook #'my/capf-use-ai-code)
+
   )
+
 
 (defun my-lsp-toggle ()
   (interactive)
-  (let* ((lsp-backends '(("lsp-mode" . my-enable-lsp-mode)
-                         ("lsp-bridge" . my-enable-lsp-bridge)
-                         ("eglot" . my-enable-eglot)))
+  (let* ((lsp-backends my/lsp-backend-alist)
          (backend-name (completing-read
                         "choose lsp backend:" (mapcar #'car lsp-backends)))
          (selected-backend (cdr
@@ -350,6 +454,22 @@
 ;; (dolist (hook '(cmake-mode-hook))
 ;;   (add-hook hook #'my-start-eglot-fn))
 
+(defun my/enable-given-lsp-backend (backend-name)
+  "enable lsp backend with given name."
+  (funcall (cdr
+            (assoc backend-name my/lsp-backend-alist))))
+
+;; enable default backend
+(my/enable-given-lsp-backend my/lsp-backend)
+
 (global-set-key (kbd "C-c t l")  #'my-lsp-toggle)
+
+
+;; meghanada
+(use-package meghanada
+  :straight t
+  :commands (meghanada-mode
+             meghanada-update-server
+             ))
 
 (provide 'init-lsp-toggle)

@@ -1,7 +1,7 @@
 (setq-default indent-tabs-mode nil)
 (use-package dtrt-indent
   :straight t
-  :hook (after-init . dtrt-indent-global-mode))
+  :hook (my/startup . dtrt-indent-global-mode))
 
 (use-package aggressive-indent-mode
   :straight t

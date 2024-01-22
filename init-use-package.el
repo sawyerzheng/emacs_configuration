@@ -7,7 +7,12 @@
 ;;    (package-refresh-contents)
 ;;    (package-install 'use-package)
 ;;    (require 'use-package)))
-(straight-use-package 'use-package)
+(if (< emacs-major-version 29)
+(straight-use-package '(use-package :type git :repo "jwiegley/use-package" :host github))
+  (require 'use-package)
+  (require 'straight))
+(straight-use-package '(use-package :type git :repo "jwiegley/use-package" :host github))
+(add-to-list 'use-package-keywords :straight)
 
 (setq straight-enable-use-package-integration t)
 ;; * like package.el's ":ensure t"  feature
@@ -18,20 +23,25 @@
 
 (use-package delight
   :straight t
-  :commands delight)
+  :defer t)
 
 (use-package general
   :straight t
-  :commands (general-describe-keybindings general-define-key)
-  :demand t)
+  ;; :commands (general-describe-keybindings general-define-key)
+  ;; :defer t
+  )
 
 (use-package major-mode-hydra
   :straight t
-  :demand t)
+  ;; :defer t
+  :config
+  (setq major-mode-hydra-invisible-quit-key (kbd "C-g"))
+  )
 
 (use-package pretty-hydra
   :straight t
-  :demand t
+  :defer t
+  :commands (pretty-hydra-define pretty-hydra-define+)
   :init
   (defun icon-displayable-p ()
     "Return non-nil if icons are displayable."

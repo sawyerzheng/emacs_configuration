@@ -1,7 +1,8 @@
 ;; -*- coding: utf-8; -*-
 (use-package doom-modeline
   :straight t
-  :hook (after-init . (lambda () (with-eval-after-load 'minibuffer (doom-modeline-mode))))
+  :init
+  (setq doom-modeline-support-imenu t)
   :config
   ;; to fix illegal codes
   (setq inhibit-compacting-font-caches t)
@@ -15,7 +16,8 @@
   ;; built-in `project' on 26+
   (setq doom-modeline-project-detection 'project)
   ;; or `find-in-project' if it's installed
-  (setq doom-modeline-project-detection 'ffip)
+  ;; (setq doom-modeline-project-detection 'ffip)
+
 
   ;; How tall the mode-line should be. It's only respected in GUI.
   ;; If the actual char height is larger, it respects the actual height.
@@ -56,11 +58,15 @@
   ;; with tramp, please try `file-name' style.
   ;; Please refer to https://github.com/bbatsov/projectile/issues/657.
   ;; (setq doom-modeline-buffer-file-name-style 'auto)
-  (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
+  (setq doom-modeline-buffer-file-name-style
+        'truncate-with-project
+        ;; 'relative-from-project
+        )
 
   ;; Whether display icons in the mode-line. Respects `all-the-icons-color-icons'.
   ;; While using the server mode in GUI, should set the value explicitly.
-  (setq doom-modeline-icon (display-graphic-p))
+  ;; (setq doom-modeline-icon (or (daemonp) (display-graphic-p)))
+  (setq doom-modeline-icon t)
 
   ;; Whether display the icon for `major-mode'. Respects `doom-modeline-icon'.
   (setq doom-modeline-major-mode-icon t)
@@ -166,7 +172,100 @@
   (setq doom-modeline-before-update-env-hook nil)
   (setq doom-modeline-after-update-env-hook nil)
 
+  (defun doom-modeline-project-root ()
+    "Get the path to the root of your project.
+Return `default-directory' if no project was found."
+    (let* ((project-root (or (doom-modeline--project-root) default-directory))
+           (project-root-true (file-truename project-root)))
+      (if (string< (file-relative-name (buffer-file-name) project-root)
+                   (file-relative-name (buffer-file-name) project-root-true))
+          project-root
+        project-root-true)))
+
+
+  (defun doom-modeline--buffer-file-name (file-path
+                                          _true-file-path
+                                          &optional
+                                          truncate-project-root-parent
+                                          truncate-project-relative-path
+                                          hide-project-root-parent)
+    "Propertize buffer name given by FILE-PATH.
+
+If TRUNCATE-PROJECT-ROOT-PARENT is non-nil will be saved by truncating project
+root parent down fish-shell style.
+
+Example:
+  ~/Projects/FOSS/emacs/lisp/comint.el => ~/P/F/emacs/lisp/comint.el
+
+If TRUNCATE-PROJECT-RELATIVE-PATH is non-nil will be saved by truncating project
+relative path down fish-shell style.
+
+Example:
+  ~/Projects/FOSS/emacs/lisp/comint.el => ~/Projects/FOSS/emacs/l/comint.el
+
+If HIDE-PROJECT-ROOT-PARENT is non-nil will hide project root parent.
+
+Example:
+  ~/Projects/FOSS/emacs/lisp/comint.el => emacs/lisp/comint.el"
+    (let (
+          (file-path (file-truename (buffer-file-name)))
+          ;; (_true-file-path (file-truename (buffer-file-name)))
+          ;; (truncate-project-root-parent 'shrink)
+          ;; (truncate-project-relative-path 'shink)
+          ;; (hide-project-root-parent 'hide)
+
+          (project-root (file-local-name (doom-modeline-project-root))))
+      (concat
+       ;; Project root parent
+       (unless hide-project-root-parent
+         (when-let (root-path-parent
+                    (file-name-directory (directory-file-name project-root)))
+           (propertize
+            (if (and truncate-project-root-parent
+                     (not (string-empty-p root-path-parent))
+                     (not (string= root-path-parent "/")))
+                (shrink-path--dirs-internal root-path-parent t)
+              (abbreviate-file-name root-path-parent))
+            'face 'doom-modeline-project-parent-dir)))
+       ;; Project directory
+       (propertize
+        (concat (file-name-nondirectory (directory-file-name project-root)) "/")
+        'face 'doom-modeline-project-dir)
+       ;; relative path
+       (propertize
+        (when-let (relative-path (file-relative-name
+                                  (or (file-name-directory file-path) "./")
+                                  project-root))
+          (if (string= relative-path "./")
+              ""
+            (if truncate-project-relative-path
+                (substring (shrink-path--dirs-internal relative-path t) 1)
+              relative-path)))
+        'face 'doom-modeline-buffer-path)
+       ;; File name
+       (propertize (file-name-nondirectory file-path)
+                   'face 'doom-modeline-buffer-file))))
+
   )
+
+(with-eval-after-load 'minibuffer (doom-modeline-mode))
+
+
+;; * my patches
+(add-hook 'my/startup-hook
+          #'(lambda ()
+              (with-eval-after-load 'doom-modeline
+                ;; * my patches
+                (defun doom-modeline-project-root ()
+                  "Get the path to the root of your project.
+Return `default-directory' if no project was found."
+                  (let* ((project-root (or (doom-modeline--project-root) default-directory))
+                         (project-root-true (file-truename project-root)))
+                    (if (string< (file-relative-name (buffer-file-name) project-root)
+                                 (file-relative-name (buffer-file-name) project-root-true))
+                        project-root
+                      project-root-true))))))
+
 
 
 (provide 'init-doom-modeline)

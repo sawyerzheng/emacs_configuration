@@ -1,5 +1,5 @@
 (use-package autoinsert
-  :hook (after-init . (lambda () (auto-insert-mode 1)))
+  :hook (my/startup . (lambda () (auto-insert-mode 1)))
   :config
   (use-package yatemplate
     :straight t)

@@ -1,32 +1,67 @@
 ;; -*- coding: utf-8; -*-
+(straight-use-package '(acm :type git :host github :repo "manateelazycat/lsp-bridge" :files ("acm/*") :build nil))
+
+;; (use-package acm-terminal
+;;   :if (and (daemonp) (not (display-graphic-p)))
+;;   :straight (:type git :host github :repo "twlz0ne/acm-terminal")
+;;   :after lsp-bridge)
+
 (use-package lsp-bridge
-  :straight (lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files ("*"))
+  :straight (lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*"))
   :commands (lsp-bridge-rename lsp-bridge-mode global-lsp-bridge-mode)
-  ;; :hook (after-init . global-lsp-bridge-mode)
+  ;; :hook (my/startup . global-lsp-bridge-mode)
   :bind (:map lsp-bridge-mode-map
               ("M-." . lsp-bridge-find-def)
-              ("M-," . lsp-bridge-return-from-def)
+              ("M-," . lsp-bridge-find-def-return)
               ("M-*" . lsp-bridge-find-references)
               ("M-?" . lsp-bridge-find-references)
               ("C-M-." . lsp-bridge-popup-documentation-scroll-up)
               ("C-M-," . lsp-bridge-popup-documentation-scroll-down)
-              ("C-M-I" . lsp-bridge-popup-complete))
+              ("C-M-I" . lsp-bridge-popup-complete-menu)
+              ("M-i" . lsp-bridge-popup-complete-menu))
+  :bind (:map acm-mode-map
+              ("TAB" . acm-select-next)
+              ("<backtab>" . acm-select-prev)
+              ("M-h" . acm-doc-toggle)
+              ("M-i" . acm-select-prev)
+              ("M-k" . acm-select-next)
+              ("M-I" . acm-doc-scroll-up)
+              ("M-K" . acm-doc-scroll-down))
   :custom
   (lsp-bridge-enable-signature-help t)
-  (lsp-bridge-enable-candidate-doc-preview t)
-  (acm-enable-tabnine-helper t)
-
-  ;; :bind-keymap
-  ;; ("M-\"" . my-lsp-bridge-keymap)
-  ;; :init
-  ;; (when (featurep 'evil)
-  ;;   :m "gd" #'lsp-bridge-find-def
-  ;;   :m "gD" #'lsp-bridge-find-references
-  ;;   :m "gI" #'lsp-bridge-find-impl)
 
   :config
-  (setq lsp-bridge-c-lsp-server "ccls")
-  (setq lsp-bridge-complete-manually t)
+  ;; (require 'lsp-bridge)
+  ;; (require 'cl)
+  (setq acm-enable-tabnine nil)
+  (setq acm-enable-doc nil)
+  (setq lsp-bridge-toggle-sdcv-helper t)
+  (setq acm-enable-codeium nil)
+  (setq acm-enable-preview t)
+  (setq lsp-bridge-c-lsp-server "ccls"
+        lsp-bridge-python-lsp-server "pyright"
+        lsp-bridge-python-ruff-lsp-server "pyright_ruff")
+  (setq lsp-bridge-complete-manually nil)
+
+  ;; remote
+  (setq lsp-bridge-remote-python-command "/home/sawyer/miniconda3/envs/tools/bin/python")
+  (setq lsp-bridge-remote-python-file "~/.emacs.d.clean29/straight/repos/lsp-bridge/lsp_bridge.py")
+  (setq lsp-bridge-remote-log "~/.emacs.d.clean29/var/lsp-bridge-remote.log")
+  (setq lsp-bridge-remote-start-automatically t)
+  (setq lsp-bridge-enable-with-tramp t)
+
+  (add-to-list 'lsp-bridge-multi-lang-server-mode-list '((web-mode html-mode) . "html_emmet"))
+  (add-to-list 'lsp-bridge-multi-lang-server-mode-list '((css-mode) . "css_emmet"))
+
+
+  ;; disable corfu-mode
+  (add-hook 'lsp-bridge-mode-hook #'(lambda () (when (functionp 'corfu-mode) (corfu-mode -1))))
+
+  (defun my-lsp-bridge-toggle-tabnine ()
+    (interactive)
+    (if acm-enable-tabnine
+        (setq acm-enable-tabnine nil)
+      (setq acm-enable-tabnine t)))
 
   (defun my-lsp-bridge-toggle-acm-english-completion ()
     (interactive)
@@ -39,7 +74,8 @@
     (if lsp-bridge-enable-candidate-doc-preview
         (setq lsp-bridge-enable-candidate-doc-preview nil)
       (setq lsp-bridge-enable-candidate-doc-preview t)))
-  (defun my-toggle-lsp-bridge-complete-manually ()
+
+  (defun my-lsp-bridge-toggle-complete-manually ()
     (interactive)
     (if lsp-bridge-complete-manually
         (setq lsp-bridge-complete-manually nil)
@@ -60,25 +96,34 @@
       (define-key map (kbd "gI") #'lsp-bridge-find-impl-other-window)
       (define-key map (kbd "gr") #'lsp-bridge-return-from-def)
 
-      (define-key map (kbd "hh") #'lsp-bridge-lookup-documentation)
+      (define-key map (kbd "hh") #'lsp-bridge-popup-documentation)
 
       (define-key map (kbd "rr") #'lsp-bridge-rename)
       ;; (define-key map (kbd "rf") #'lsp-bridge-rename-file)
       ;; (define-key map (kbd "rh") #'lsp-bridge-rename-highlight)
 
-      (define-key map (kbd "ee") #'lsp-bridge-list-diagnostics)
-      (define-key map (kbd "en") #'lsp-bridge-jump-to-next-diagnostic)
-      (define-key map (kbd "ep") #'lsp-bridge-jump-to-prev-diagnostic)
-      (define-key map (kbd "el") #'lsp-bridge-list-diagnostics)
-      (define-key map (kbd "ei") #'lsp-bridge-ignore-current-diagnostic)
+      (define-key map (kbd "ee") #'lsp-bridge-diagnostic-list)
+      (define-key map (kbd "en") #'lsp-bridge-diagnostic-jump-next)
+      (define-key map (kbd "ep") #'lsp-bridge-diagnostic-jump-prev)
+      (define-key map (kbd "el") #'lsp-bridge-diagnostic-list)
+      (define-key map (kbd "ei") #'lsp-bridge-diagnostic-ignore)
+      (define-key map (kbd "ec") #'lsp-bridge-diagnostic-copy)
 
       (define-key map (kbd "wr") #'lsp-bridge-restart-process)
       (define-key map (kbd "wk") #'lsp-bridge-kill-process)
 
-      (define-key map (kbd "Te") #'my-lsp-bridge-toggle-acm-english-completion)
+      (define-key map (kbd "Te") #'lsp-bridge-toggle-sdcv-helper)
       (define-key map (kbd "Td") #'my-lsp-bridge-toggle-condidate-doc-preview)
-      (define-key map (kbd "Tc") #'my-toggle-lsp-bridge-complete-manually)
+      (define-key map (kbd "Tm") #'my-lsp-bridge-toggle-complete-manually)
+      (define-key map (kbd "Tt") #'my-lsp-bridge-toggle-tabnine)
       (define-key map (kbd "==") #'lsp-bridge-code-format)
+
+      (define-key map (kbd "ls") #'lsp-bridge-workspace-list-symbols)
+
+      (define-key map (kbd "ci") #'lsp-bridge-incoming-call-hierarchy)
+      (define-key map (kbd "co") #'lsp-bridge-outgoing-call-hierarchy)
+
+      (define-key map (kbd "aa") #'lsp-bridge-code-action)
 
 
       map)
@@ -90,18 +135,22 @@
   (setq lsp-bridge-python-file
         (expand-file-name "../../../repos/lsp-bridge/lsp_bridge.py" (locate-library "lsp-bridge")))
   (setq lsp-bridge-python-command
-        (cond (my/windows-p "d:/soft/miniconda3/envs/tools/python.exe")
-              (t (expand-file-name "~/miniconda3/envs/tools/bin/python"))))
+        (cond (my/windows-p
+               ;; "d:/soft/miniconda3/envs/tools/python.exe"
+               ;; "e:/soft/envs/win-conda/envs/tools/python.exe"
+               my/epc-python-command
+               )
+              (t
+               ;; (expand-file-name "~/miniconda3/envs/tools-pypy/bin/pypy3")
+               (expand-file-name "~/miniconda3/envs/tools/bin/python")
+               )))
 
-
-  ;; for commit 14e8c0baefd931a8436d80578e64ebd2deac6b98
 
   (require 'yasnippet)
-  (require 'lsp-bridge)
-  (require 'lsp-bridge-jdtls) ;; provide Java third-party library jump and -data directory support, optional
-
   (yas-global-mode 1)
-  ;; (global-lsp-bridge-mode)
+
+  ;; minibuffer setup
+  (remove-hook 'minibuffer-setup-hook #'lsp-bridge-enable-in-minibuffer)
 
   ;; doc tooltip
   (if my/4k-p
@@ -115,52 +164,23 @@
 
   (advice-add 'conda-env-activate :after #'my/lsp-bridge-restart-conda-advice)
 
-  ;; add cmake-mode support
-  ;; (add-to-list 'lsp-bridge-single-lang-server-mode-list '(cmake-mode . "cmake-language-server"))
-  ;; (add-to-list 'lsp-bridge-default-mode-hooks 'cmake-mode-hook)
-  ;; (add-to-list 'lsp-bridge-formatting-indent-alist)
-
-
   (defun my/enable-tabnine-bridge ()
     (interactive)
     (require 'tabnine-bridge)
-    (setq acm-enable-tabnine-helper t)
-    )
+    (setq acm-enable-tabnine-helper t))
   :commands (tabnine-bridge-install-binary
              tabnine-bridge-kill-process
-             tabnine-bridge-restart-server)
-  :init
-  ;; to fix problem of tabnine-bridge
-  (with-eval-after-load 'tabnine-bridge
-    (defun tabnine-bridge--executable-path ()
-      "Find and return the path of the latest TabNine binary for the current system."
-      (let ((parent tabnine-bridge-binaries-folder))
-        (if (file-directory-p parent)
-            (let* ((children (->> (directory-files parent)
-                                  (--remove (member it '("." "..")))
-                                  (--filter (file-directory-p
-                                             (expand-file-name
-                                              it
-                                              (file-name-as-directory
-                                               parent))))
-                                  (--filter (ignore-errors (version-to-list it)))
-                                  (-non-nil)))
-                   (sorted (nreverse (sort children #'version<)))
-                   (target (tabnine-bridge--get-target))
-                   (filename (tabnine-bridge--get-exe)))
-              (cl-loop
-               for ver in sorted
-               for fullpath = (expand-file-name (format "%s/%s/%s"
-                                                        ver target filename)
-                                                parent)
-               if (and (file-exists-p fullpath)
-                       (file-regular-p fullpath))
-               return fullpath
-               finally do (tabnine-bridge--error-no-binaries)))
-          (tabnine-bridge--error-no-binaries)))))
-  )
+             tabnine-bridge-restart-server))
 
 
-
+(use-package lsp-bridge-ref
+  :commands (lsp-bridge-ref-mode
+             )
+  :bind (:map lsp-bridge-ref-mode-map
+              ("M-n" . lsp-bridge-ref-jump-next-keyword)
+              ("M-p" . lsp-bridge-ref-jump-prev-keyword)
+              ("M-q" . lsp-bridge-ref-quit))
+  :bind (:map lsp-bridge-ref-mode-edit-map
+              ("C-c C-c" . lsp-bridge-ref-apply-changed)))
 
 (provide 'init-lsp-bridge)

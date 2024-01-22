@@ -3,7 +3,8 @@
   ;; :after (project projectile)
   :commands (consult-line +default/search-buffer)
   :bind
-  (("C-c f r" . consult-recent-file)
+  (([remap recentf-open-files] . consult-recent-file)
+   ("C-c f r" . consult-recent-file)
    ("C-c f f" . consult-find)
 
    ("C-c o e" . consult-file-externally)
@@ -18,6 +19,7 @@
    ("C-c b b" . consult-buffer)
    ("C-c b i" . consult-imenu)
    ("C-h t" . consult-theme)
+   ("C-h C-t" . consult-theme)
 
    ;; ("C-c o e" . consult-file-externally)
 
@@ -108,6 +110,19 @@ input and search the whole buffer for it."
                (buffer-substring-no-properties start end))))
           (call-interactively #'consult-line)))))
 
+  (defun consult-file-externally (file)
+    "Open FILE using system's default application."
+    (interactive "fOpen externally: ")
+    (if (and (eq system-type 'windows-nt)
+             (fboundp 'w32-shell-execute))
+        (w32-shell-execute "open" file)
+      (call-process (pcase system-type
+                      ('darwin "open")
+                      ('cygwin "cygstart")
+                      (_ "xdg-open"))
+                    nil 0 nil
+                    (expand-file-name file))))
+
   ;; integration with xref
   (setq xref-show-xrefs-function #'consult-xref)
   (setq xref-show-definitions-function #'consult-xref)
@@ -116,7 +131,7 @@ input and search the whole buffer for it."
   ;; enable consult ripgrep at point
   (consult-customize consult-ripgrep
                      :initial (consult--async-split-initial (thing-at-point 'symbol)))
-  )
+  (setq consult-async-min-input 2))
 
 
 
@@ -146,6 +161,43 @@ input and search the whole buffer for it."
   :commands (consult-yasnippet
              consult-yasnippet-visit-snippet-file))
 
+(use-package consult-dir
+  :straight t
+  :bind (("C-x C-d" . consult-dir)
+         :map minibuffer-local-completion-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file)))
 
+(use-package consult-tramp
+  :straight (:type git :host github :repo "Ladicle/consult-tramp")
+  :commands (consult-tramp))
+
+
+;; consult-fd
+(with-eval-after-load 'consult
+  (defvar consult--fd-command nil)
+  (defun consult--fd-builder (input)
+    (unless consult--fd-command
+      (setq consult--fd-command
+            (if (eq 0 (call-process-shell-command "fdfind"))
+                "fdfind"
+              "fd")))
+    (pcase-let* ((`(,arg . ,opts) (consult--command-split input))
+                 (`(,re . ,hl) (funcall consult--regexp-compiler
+                                        arg 'extended t)))
+      (when re
+        (list :command (append
+                        (list consult--fd-command
+                              "--color=never" "--full-path"
+                              (consult--join-regexps re 'extended))
+                        opts)
+              :highlight hl))))
+
+  (defun consult-fd (&optional dir initial)
+    (interactive "P")
+    (let* ((prompt-dir (consult--directory-prompt "Fd" dir))
+           (default-directory (cdr prompt-dir)))
+      (find-file (consult--find (car prompt-dir) #'consult--fd-builder initial))))
+  (global-set-key (kbd "M-s f") #'consult-fd))
 
 (provide 'init-consult)

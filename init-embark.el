@@ -1,5 +1,5 @@
 (use-package embark
-  :straight t
+  :straight (:type git :host github :repo "oantolin/embark" :files ("*"))
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
    ;; ("C-;" . embark-dwim)        ;; good alternative: M-.

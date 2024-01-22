@@ -14,7 +14,7 @@
     (interactive)
     (cond
      ;; python config
-     ((eq major-mode 'python-mode)
+     ((derived-mode-p 'python-mode 'python-ts-mode)
       (require 'dap-python)
       (setq dap-python-debugger 'debugpy)
       ;; 问题修复： pip install git+https://github.com/microsoft/debugpy.git@78b030f5092d91df64860914962333e89852ea9b
@@ -24,7 +24,7 @@
       )
 
      ;; java config
-     ((eq major-mode 'java-mode)
+     ((derived-mode-p 'java-mode)
       (require 'dap-java)
       ;;=====  java options
       (setenv "JAVA_OPTS" "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044")
@@ -48,7 +48,7 @@
              :mainClass nil)))
 
      ;; cpp config
-     ((eq major-mode 'c++-mode)
+     ((derived-mode-p 'c++-mode c++-ts-mode)
       (require 'dap-cpptools))))
 
 
@@ -66,7 +66,7 @@
 
   :config
   (defun my/dap-debug-advice-fn (debug-args)
-    (cond ((eq major-mode 'python-mode)
+    (cond ((derived-mode-p 'python-mode 'python-ts-mode)
            (my/dap-python-register-dynamic))))
 
   (advice-add 'dap-debug :before #'my/dap-debug-advice-fn)
@@ -112,5 +112,15 @@
   (add-hook 'dap-terminated-hook 'my/hide-debug-windows)
 
   )
+
+(defun my/dap-hydra ()
+  (interactive)
+  (cond ((derived-mode-p 'python-mode 'python-ts-mode)
+         (progn
+           (require 'dap-python)
+           (my/dap-python-register-dynamic))
+         ))
+
+  (funcall-interactively #'dap-hydra))
 
 (provide 'init-dap-mode)

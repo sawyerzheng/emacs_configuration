@@ -3,7 +3,7 @@
   :straight t
   :commands (vertico-mode)
   :init
-  (my-add-extra-folder-to-load-path "vertico" '("extensions"))
+  (my/add-extra-folder-to-load-path "vertico" '("extensions"))
   (vertico-mode)
 
   ;; Different scroll margin
@@ -17,6 +17,15 @@
 
   ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
   ;; (setq vertico-cycle t)
+  :bind (:map vertico-map
+              ("M-p" . #'vertico-previous)
+              ("M-n" . #'vertico-next)
+              ("M-I" . #'vertico-scroll-down)
+              ("M-K" . #'vertico-scroll-up)
+              ("M-P" . #'previous-history-element)
+              ("M-N" . #'next-history-element)
+              ("M-;" . #'vertico-quick-exit)
+              )
   :config
   (use-package orderless
     :straight t

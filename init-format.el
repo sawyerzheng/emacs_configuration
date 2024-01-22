@@ -1,6 +1,9 @@
 (provide 'init-format)
 
+(defvar my/use-format-all-p nil)
+
 (use-package format-all
+  ;; :if my/use-format-all-p
   :straight t
   :commands (format-all-mode
              format-all-buffer
@@ -20,12 +23,56 @@
 
     )
   ;; :hook ((c++-mode c-mode) . format-all-mode)
-  :hook ((format-all-mode
-          python-mode
+  :hook ((format-all-mode python-mode
           c++-mode
           c-mode
           json-mode
           markdown-mode
-          gfm-mode
-          java-mode
-          ) . my/format-all-set-formatters-fn))
+          gfm-mode java-mode) . my/format-all-set-formatters-fn))
+
+(use-package apheleia
+  :straight t
+  :unless my/use-format-all-p
+  :commands
+  (apheleia-mode
+   apheleia-global-mode
+   apheleia-format-buffer)
+  :config
+  (setf (alist-get 'taplo apheleia-formatters)
+        '("taplo" "fmt" "-"))
+  (setf (alist-get 'toml-ts-mode apheleia-mode-alist)
+        'taplo)
+  (setf (alist-get 'conf-toml-mode apheleia-mode-alist)
+        'taplo)
+  )
+
+
+(defun my/format-buffer-fn (&optional args)
+    "format all buffer, tend to use `apheleia-format-buffer' instead of `format-all-buffer'"
+    (interactive)
+    (cond
+     ((derived-mode-p 'js2-mode)
+      (apheleia-format-buffer 'prettier-javascript))
+     ((derived-mode-p 'css-mode 'css-ts-mode)
+      (apheleia-format-buffer 'prettier-css))
+     ((derived-mode-p 'html-mode 'html-ts-mode)
+      (apheleia-format-buffer 'prettier-html))
+     ((derived-mode-p 'web-mode)
+      (apheleia-format-buffer 'prettier-html))
+     ((derived-mode-p 'python-mode 'python-ts-mode)
+      (apheleia-format-buffer 'black))
+     ((derived-mode-p 'markdown-mode)
+      (apheleia-format-buffer 'prettier-markdown))
+     ((derived-mode-p 'c-mode 'c++-mode 'c-ts-mode 'c++-ts-mode)
+      (apheleia-format-buffer 'clang-format))
+     ((derived-mode-p 'json-mode 'json-ts-mode)
+      (apheleia-format-buffer 'prettier-json))
+     ((derived-mode-p 'rust-mode 'rust-ts-mode)
+      (apheleia-format-buffer 'rustfmt))
+     ((derived-mode-p 'toml-ts-mode 'conf-toml-mode)
+      (apheleia-format-buffer 'taplo))
+     ((derived-mode-p 'prog-mode)
+      (call-interactively #'format-all-buffer))
+     (t
+      (ignore-errors
+	(funcall-interactively #'xah-reformat-lines)))))

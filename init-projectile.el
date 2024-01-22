@@ -9,7 +9,7 @@
          ;; find file in other project
          ("C-c f o" . projectile-switch-project))
 
-  :hook (after-init . projectile-mode)
+  :hook (my/startup . projectile-mode)
   :config
   (projectile-mode +1)  
   

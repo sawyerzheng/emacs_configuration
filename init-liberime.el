@@ -1,4 +1,6 @@
 ;; -*- coding: utf-8; -*-
+(setq liberime-user-data-dir (expand-file-name "rime" no-littering-var-directory))
+
 (unless my/windows-p
   (straight-use-package `(liberime
                           :pre-build ,(pcase system-type
@@ -6,14 +8,23 @@
                                         (`widnows-nt '(message "liberime can not be made on windows"))
                                         ;; (_ '("make"))
                                         ))))
+
+
+
 (use-package liberime
   :commands (liberime-build liberime-sync liberime-load liberime-deploy)
   :after pyim
+  :straight t
+
   :init
+  (setq liberime-user-data-dir (expand-file-name "rime" no-littering-var-directory))
+
   (if (eq system-type 'windows-nt)
       ;; nil ;; 手动复制官方 Release zip 文件到 emacs 安装目录： https://github.com/merrickluo/liberime/releases
       ;; (setq liberime-module-file "d:/soft/emacs/emacs-28.1/bin/liberime-core.dll")
-      (setq liberime-module-file "D:/soft/emacs/emacs-28.1-NATIVE_FULL_AOT/bin/liberime-core.dll")
+      (setq liberime-module-file "d:/soft/emacs/emacs-29.1_1/emacs-29.1_1/bin/liberime-core.dll")
+
+    ;; (setq liberime-module-file "D:/soft/emacs/emacs-28.1-NATIVE_FULL_AOT/bin/liberime-core.dll")
     ;; (progn (add-to-list 'load-path
     ;;                     ;; "e:/soft/msys64/mingw64/share/emacs/site-lisp/"
     ;;                     "d:/programs/liberime"
@@ -33,6 +44,8 @@
 
   (require 'pyim-liberime)
 
+
+
   ;; * 方案选择 --------------------------------------
   ;; ;; 全拼
   ;; (liberime-select-schema "luna_pinyin_simp")
@@ -43,12 +56,20 @@
 
   ;; 小鹤双拼
   (liberime-select-schema "double_pinyin_flypy")
-  (setq pyim-default-scheme 'xiaohe-shuangpin)
 
-  ;;----------------------------------------------
+  (pyim-scheme-add
+   '(rime-shuangpin-flypy
+     :document "rime 小鹤双拼输入法。"
+     :class rime
+     :code-prefix "rime/"
+     :code-prefix-history ("&")
+     :first-chars "abcdefghijklmnopqrstuvwxyzV" ;; add V for rime-ice scheme of flypy
+     :rest-chars "abcdefghijklmnopqrstuvwxyz;"
+     :prefer-triggers nil))
 
-  ;; (setq liberime-user-data-dir (expand-file-name "rime" doom-etc-dir))
-  )
+  (setq pyim-default-scheme 'rime-shuangpin-flypy)
+
+  (liberime-sync))
 
 
 
@@ -72,6 +93,10 @@
 ;;   (setq pyim-default-scheme 'rime-quanpin))
 
 
-;; (add-hook 'after-init-hook #'liberime-sync)
+;; (add-hook 'my/startup-hook #'liberime-sync)
+
+(with-eval-after-load 'pyim
+  (require 'liberime))
 
 (provide 'init-liberime)
+
