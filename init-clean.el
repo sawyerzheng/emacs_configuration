@@ -352,6 +352,8 @@
 
   (require 'init-so-long)
 
+  (require 'init-mwim)
+
   (require 'init-server)
   ;; ;; ;; xah-fly-keys ------ start at earlier time
   (require 'init-xah-fly-keys)
