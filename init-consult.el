@@ -4,20 +4,21 @@
   :commands (consult-line +default/search-buffer)
   :bind
   (([remap recentf-open-files] . consult-recent-file)
-   ("C-c f r" . consult-recent-file)
-   ("C-c f f" . consult-find)
+   ([remap project-list-buffers] . consult-project-buffer)
+   ;; ("C-c f r" . consult-recent-file)
+   ;; ("C-c f f" . consult-find)
 
-   ("C-c o e" . consult-file-externally)
+   ;; ("C-c o e" . consult-file-externally)
 
-   ("C-c s s" . +default/search-buffer) ;; use `consult-line' as backend
-   ("C-c s p" . consult-ripgrep)
-   ("C-c s g" . consult-git-grep)
-   ("C-c s f" . consult-find)
-   ("C-c s i" . consult-imenu) ;; search items (function, class) with imenu
-   ("C-c s I" . consult-imenu-multi) ;; imenu in all project buffers
+   ;; ("C-c s s" . +default/search-buffer) ;; use `consult-line' as backend
+   ;; ("C-c s p" . consult-ripgrep)
+   ;; ("C-c s g" . consult-git-grep)
+   ;; ("C-c s f" . consult-find)
+   ;; ("C-c s i" . consult-imenu) ;; search items (function, class) with imenu
+   ;; ("C-c s I" . consult-imenu-multi) ;; imenu in all project buffers
 
-   ("C-c b b" . consult-buffer)
-   ("C-c b i" . consult-imenu)
+   ;; ("C-c b b" . consult-buffer)
+   ;; ("C-c b i" . consult-imenu)
    ("C-h t" . consult-theme)
    ("C-h C-t" . consult-theme)
 
@@ -33,8 +34,8 @@
 
    ;; C-c bindings (mode-specific-map)
    ;; ("C-c h" . consult-history)
-   ("C-c m" . consult-mode-command)
-   ("C-c k" . consult-kmacro)
+   ;; ("C-c m" . consult-mode-command)
+   ;; ("C-c k" . consult-kmacro)
    ;; C-x bindings (ctl-x-map)
    ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
    ;; ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
@@ -131,7 +132,8 @@ input and search the whole buffer for it."
   ;; enable consult ripgrep at point
   (consult-customize consult-ripgrep
                      :initial (consult--async-split-initial (thing-at-point 'symbol)))
-  (setq consult-async-min-input 2))
+  (setq consult-async-min-input 2)
+  )
 
 
 

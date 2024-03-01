@@ -342,6 +342,11 @@
              eldoc-box-hover-mode
              eldoc-box-hover-at-point-mode))
 
+(use-package eglot-booster
+  :straight (:type git :host github :repo "jdtsmith/eglot-booster")
+  :after eglot
+  :config (eglot-booster-mode))
+
 (use-package eglot
   :init
 
@@ -449,6 +454,7 @@
     (setq my/lsp-backend backend-name)
     (funcall selected-backend)
     (message "selected backend: %s" backend-name)))
+
 
 ;; * default to lsp
 ;; (dolist (hook '(cmake-mode-hook))

@@ -3,7 +3,9 @@
   :init
   (setq xah-fly-use-control-key nil)
   (setq xah-fly-use-meta-key nil)
-
+  ;; (global-set-key (kbd "M-8") #'xah-fly-mode-toggle)
+  (add-hook 'xah-fly-keys-hook (lambda ()
+                                 (add-hook 'winum-mode-hook (lambda () (define-key winum-keymap (kbd "M-8") nil)))))
   :defines (xah-fly-command-map)
   :commands (xah-fly-keys)
   :hook (my/startup . xah-fly-keys)
@@ -12,10 +14,12 @@
               ("F" . xah-fly-mode-toggle)
               ;; ("<escape>" . xah-fly-mode-toggle)
               ("<f7>" . xah-fly-mode-toggle)
+              ;; ("M-8" . xah-fly-insert-mode-activate)
               )
   :bind (:map xah-fly-insert-map
               ;; ("<escape>" . xah-fly-mode-toggle)
               ("<f7>" . xah-fly-mode-toggle)
+              ;; ("M-8" . xah-fly-command-mode-activate)
               )
 
   :bind (:map xah-fly-command-map
@@ -235,7 +239,7 @@
 
 (let ((map my/insert-char-map))
   (define-key map (kbd "f") '(";" . (lambda () (interactive) (insert ";"))))
-  (define-key map (kbd "SPC") '("zero width space" . (lambda () (interactive) (insert-char ?​))))
+  ;; (define-key map (kbd "SPC") '("zero width space" . (lambda () (interactive) (insert-char ?​))))
   ;; (define-key xah-fly-insert-map (kbd "'") '("\"" . (lambda () (interactive) (insert "\""))))
 
   (define-key map (kbd "'") '("\"" . xah-insert-ascii-double-quote))
@@ -407,70 +411,7 @@
     (define-key map (kbd ";") #'my/iedit-smart-trigger)
     map))
 
-(defvar my/xah-search-keymap (make-sparse-keymap)
-  "keymap for search")
 
-(let ((map my/xah-search-keymap))
-  (require 'init-consult)
-  (require 'init-dictionary)
-  (define-key map (kbd ";") #'blink-search)
-
-  (define-key map (kbd "s") #'+default/search-buffer)
-  (define-key map (kbd "f") '("find file path" . consult-find))
-  (define-key map (kbd "p") '("find file content" . consult-ripgrep))
-  (define-key map (kbd "i") #'(lambda ()
-                                (interactive)
-                                (cond
-                                 ((eq major-mode 'org-mode)
-                                  (consult-org-heading))
-                                 ((or (derived-mode-p 'outline-mode)
-                                      (member major-mode '(markdown-mode gfm-mode)))
-                                  (consult-outline))
-                                 ((derived-mode-p 'compilation-mode)
-                                  (consult-compile-error))
-                                 (t
-                                  (consult-imenu)))))
-  (define-key map (kbd "I") #'consult-imenu-multi)
-
-  ;; * docsets or devdocs
-  (define-key map (kbd "o") #'+lookup/online)
-  (define-key map (kbd "d") #'devdocs-dwim)
-  ;; (define-key map (kbd "d") #'my/counsel-dash-at-point)
-  (define-key map (kbd "D") #'consult-dash)
-  (define-key map (kbd "z") #'zeal-at-point)
-
-  ;; * dictionary
-  ;; (define-key map (kbd "y") #'my-youdao-dictionary-search-at-point)
-  (define-key map (kbd "y") #'fanyi-dwim2)
-  (define-key map (kbd "b") #'popweb-dict-bing-pointer)
-  (define-key map (kbd "v") #'popweb-dict-bing-input)
-  (define-key map (kbd "u") #'my/dictionary-overlay-mark-word-unknown)
-  (define-key map (kbd "U") #'my/dictionary-overlay-mark-word-known)
-  (define-key map (kbd "r") #'my/dictionary-overlay-toggle)
-
-
-  ;; * char, word jump
-  ;; (define-key map (kbd "j") #'ace-pinyin-jump-word)
-  (define-key map (kbd "k") #'avy-goto-word-1)
-  (define-key map (kbd "j") #'avy-goto-char)
-  (define-key map (kbd "l") #'avy-goto-char-in-line)
-  (define-key map (kbd "2") #'avy-goto-char-2)
-
-  ;; * line jump
-  (define-key map (kbd "n") #'(lambda ()
-                                (interactive)
-                                (cond
-                                 ((memq major-mode '(compilation-mode Info-mode eww-mode))
-                                  (ace-link))
-                                 (t (avy-goto-line)))))
-  (define-key map (kbd "q") #'+default/search-buffer)
-
-  ;; embark
-  (define-key map (kbd ".") #'embark-act)
-
-  ;; C-g
-  (define-key map (kbd "g") #'keyboard-quit)
-  map)
 
 
 
@@ -490,7 +431,7 @@
 (bind-key "] ]" 'sp-forward-sexp 'xah-fly-command-map)
 ;; =q= for search(query)
 (bind-key "q" nil 'xah-fly-command-map)
-(bind-key "q" my/xah-search-keymap 'xah-fly-command-map)
+(bind-key "q" my/search-keymap 'xah-fly-command-map)
 
 (require 'persp-mode)
 ;; * `SPC i' prefix
@@ -685,4 +626,10 @@ Version 2020-06-04"
 ;; async shell command (like M-&)
 (bind-key "SPC l -" #'async-shell-command 'xah-fly-command-map)
 
+;; fix pyim
+(with-eval-after-load 'pyim
+  (defun my/xah-fly-keys-not-insert-p ()
+    (interactive)
+    (and (boundp 'xah-fly-insert-state-p) (not xah-fly-insert-state-p)))
+  (add-to-list 'pyim-english-input-switch-functions #'my/xah-fly-keys-not-insert-p))
 (provide 'init-xah-fly-keys)

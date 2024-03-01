@@ -353,17 +353,24 @@
   (require 'init-so-long)
 
   (require 'init-mwim)
+  (require 'init-key-chord)
 
   (require 'init-server)
   ;; ;; ;; xah-fly-keys ------ start at earlier time
-  (require 'init-xah-fly-keys)
+  ;; (require 'init-xah-fly-keys)
+
+  (global-set-key (kbd "C-x q") nil)
+  (global-set-key (kbd "C-x q") my/search-keymap)
+  (require 'init-meow-edit)
 
   (add-hook 'lisp-interaction-mode #'lsp-bridge-mode)
   ;; (switch-to-buffer "*scratch*")
 
+
   )
 
 
+(setq gc-cons-threshold 20000000)
 
 (when (equal emacs-major-version 29)
   (setq max-specpdl-size 500

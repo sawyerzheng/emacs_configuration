@@ -221,4 +221,17 @@ Version 2018-09-29"
               ("p" . ztree-previous-line)
               ("n" . ztree-next-line)))
 
-(provide 'init-dired)
+(use-package dired-rsync
+  :straight t
+  :after dired
+  :bind (:map dired-mode-map
+              ("C-c C-r" . dired-rsync)
+              ("r" . dired-rsync)))
+
+(use-package dired-rsync-transient
+  :straight t
+  :bind (:map dired-mode-map
+              ("C-c C-x" . dired-rsync-transient)
+              ("x" . dired-rsync-transient)))
+
+  (provide 'init-dired)

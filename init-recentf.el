@@ -9,11 +9,11 @@
         recentf-exclude
         (list "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\)$" "^/tmp/" "^/ssh:"
               "\\.?ido\\.last$" "\\.revive$" "/TAGS$" "^/var/folders/.+$"
+              "persp-auto-save" ;; persp-mode
+              ".gpg\\'"       ;; gpg files
               ;; ignore private DOOM temp files
               ;; (recentf-apply-filename-handlers doom-local-dir)
               ))
-
-  (add-to-list 'recentf-exclude  ".gpg\\'")
 
   (defun doom--recent-file-truename (file)
     (if (or (file-remote-p file nil t)

@@ -1,5 +1,33 @@
 (require 'init-doom-themes)
 
+;; modus- themes
+(use-package modus-themes
+  :straight (:type git :host github :repo "protesilaos/modus-themes")
+  :config
+  (progn
+    (setq modus-themes-headings
+          '((0 . (variable-pitch 1.6))
+            (1 . (variable-pitch 1.4))
+            (2 . (1.3))
+            (agenda-date . (1.3))
+            (agenda-structure . (variable-pitch light 1.6))
+            (t . (1.1))))
+
+    (setq modus-themes-common-palette-overrides
+          '((border-mode-line-active unspecified)
+            (border-mode-line-inactive unspecified)
+            ;; Blue background, neutral foreground, intense blue border
+            ;; (bg-mode-line-active bg-blue-intense)
+            (fg-mode-line-active fg-main)
+            ;; (border-mode-line-active blue-intense)
+            ))
+
+    ;; (setq modus-themes-common-palette-overrides
+    ;;       '())
+    (load-theme 'modus-vivendi t)))
+
+
+
 ;; no save theme prop
 (setq custom-safe-themes t)
 
@@ -43,7 +71,7 @@
     (set-face-attribute 'org-document-title nil
                         :height 1.8)
     (set-face-attribute 'org-level-1 nil
-                        :height 1.4)
+                        :height 1.5)
     (set-face-attribute 'org-level-2 nil
                         :height 1.3)
     (set-face-attribute 'org-level-3 nil

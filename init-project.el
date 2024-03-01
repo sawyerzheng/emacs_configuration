@@ -1,4 +1,4 @@
-(bind-key "C-c p" 'project-prefix-map)
+(bind-key "C-c p" project-prefix-map)
 (use-package project
   ;; :defer t
   :straight (:type built-in)

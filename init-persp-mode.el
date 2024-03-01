@@ -6,15 +6,17 @@
   :defines (recentf-exclude)
   :init
   (autoload 'persp-key-map "persp-mode.el" nil t)
-  (setq persp-keymap-prefix (kbd "C-c <tab>"))
+  (setq persp-keymap-prefix (kbd "C-c TAB"))
   (setq
    persp-nil-name "main"
    persp-set-last-persp-for-new-frames nil
    persp-kill-foreign-buffer-behaviour 'kill)
   :hook (window-setup . persp-mode)
   :bind (:map persp-key-map
-	      ("<tab>" . persp-switch))
+	      ("TAB" . persp-switch))
+
   :config
+  (global-set-key (kbd "C-c TAB") persp-key-map)
   (setq wg-morph-on nil) ;; switch off animation
   (setq persp-autokill-buffer-on-remove 'kill-weak)
 

@@ -8,6 +8,7 @@
   :config
   (defun my/ansi-colorize-buffer ()
     (let ((buffer-read-only nil))
-      (ansi-color-apply-on-region (point-min) (point-max)))))
+      (ansi-color-apply-on-region (point-min) (point-max))))
+  (add-hook 'org-babel-after-execute-hook #'my/ansi-colorize-buffer))
 
 (provide 'init-ansi-color)

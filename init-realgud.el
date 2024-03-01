@@ -9,7 +9,5 @@
     "advice function for `realgud:pdb'"
     (let* ((default-directory (my/get-project-root)))
       (apply old-fun args)))
-
-  :hook (python-mode . (lambda ()
-                         (advice-add 'realgud:pdb :around 'my/realgud-set-default-directory-fn)))
-  )
+  (with-eval-after-load 'python
+    (advice-add 'realgud:pdb :around 'my/realgud-set-default-directory-fn)))

@@ -96,6 +96,22 @@
   :hook (my/startup . global-treesit-auto-mode)
   :config
   (global-treesit-auto-mode)
-  (setq treesit-auto-install 'prompt))
+  (setq treesit-auto-install 'prompt)
+  ;; (setq major-mode-remap-alist
+  ;;       '((c-mode . c-ts-mode)
+  ;;         (c++-mode . c++-ts-mode)
+  ;;         (cmake-mode . cmake-ts-mode)
+  ;;         (conf-toml-mode . toml-ts-mode)
+  ;;         (css-mode . css-ts-mode)
+  ;;         (js-mode . js-ts-mode)
+  ;;         (js-json-mode . json-ts-mode)
+  ;;         (python-mode . python-ts-mode)
+  ;;         (sh-mode . bash-ts-mode)
+  ;;         (typescript-mode . typescript-ts-mode)
+  ;;         (rust-mode . rust-ts-mode)))
+  )
+
+
+
 
 (provide 'init-treesit)

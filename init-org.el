@@ -11,8 +11,8 @@
   (define-key org-mode-map (kbd "C-c C-i") my/org-mode-map))
 
 (use-package org
-  ;; :straight t
-  :straight (:type built-in)
+  :straight t
+  ;; :straight (:type built-in)
   :commands org-mode
   :init
   (defun my/org-mode-conf-settings-fn ()
@@ -95,7 +95,7 @@
      ("bk" org-babel-next-src-block "next block")
      ("bh" org-babel-goto-src-block-head "block head")
 
-     ("bj" jupyter-org-hydra/body "jupyter org hydra")
+     ("bj" scimax-jupyter-org-hydra/body "jupyter org hydra")
 
      )
     "babel-operate"
@@ -154,7 +154,8 @@
     "Misc"
     (
 
-     ("<" self-insert-command "ins"))))
+     ("<" self-insert-command "ins")
+     )))
   :bind (
          ;; ("C-c a" . org-agenda)
          ;; ("C-c b" . org-switchb)
@@ -220,6 +221,7 @@ prepended to the element after the #+HEADER: tag."
   (add-to-list 'org-structure-template-alist '("jp" . "src jupyter-python"))
 
   ;; Source Code 文本高亮
+  (setq org-confirm-babel-evaluate nil)
   (setq org-src-fontify-natively t)
 
   ;; image size 图片显示尺寸
@@ -249,8 +251,7 @@ prepended to the element after the #+HEADER: tag."
   ;; markdown support
   (add-to-list 'org-src-lang-modes '("md" . markdown))
 
-  
-)
+  )
 
 
 ;; babel related
@@ -285,13 +286,88 @@ prepended to the element after the #+HEADER: tag."
 (use-package jupyter
   :straight (:no-native-compile t)
   :defer t
+  :config
+
+  (add-to-list 'org-babel-load-languages '(emacs-lisp . t) t)
+  (add-to-list 'org-babel-load-languages '(julia . t) t)
+  (add-to-list 'org-babel-load-languages '(python . t) t)
+  (add-to-list 'org-babel-load-languages '(jupyter . t) t)
   :mode-hydra
   (org-mode
    (:title "Org Commands")
    ("Babel"
-    (("j" jupyter-org-hydra/body "Jupyter org hydra"))))
+    (("j" scimax-jupyter-org-hydra/body "Jupyter org hydra"))))
 
   :config
+  (require 'jupyter-org-client)
+  (define-key jupyter-org-interaction-mode-map (kbd "M-i") nil)
+  (dolist (lang-info my/org-babel-language-alist)
+    ;; (add-to-list 'org-babel-load-languages '(jupyter . t) t)
+    (add-to-list 'org-babel-load-languages lang-info t)
+    )
+
+  (require 'scimax-jupyter)
+  (add-hook 'org-mode-hook #'scimax-jupyter-ansi)
+  (setq scimax-ob-src-key-bindings
+        '(
+          ;; ("<return>" . #'org-return-and-maybe-indent)
+          ;; ("<return>" . #'newline-and-indent)
+          ("C-<return>" . #'org-ctrl-c-ctrl-c)
+          ("S-<return>" . #'scimax-ob-execute-and-next-block)
+          ("M-<return>" . (lambda ()
+		            (interactive)
+		            (scimax-ob-execute-and-next-block t)))
+          ("M-S-<return>" . #'scimax-ob-execute-to-point)
+          ("C-M-<return>" . #'org-babel-execute-buffer)
+          ("s-." . #'scimax-ob/body)))
+  (define-key org-mode-map (kbd "M-' M-'") #'scimax-jupyter-org-hydra/body)
+  (define-key org-mode-map (kbd "M-\"") #'scimax-jupyter-org-hydra/body)
+
+  ;; (defalias 'org-babel-execute:python 'org-babel-execute:jupyter-python)
+
+  ;; treesit patch, ref: https://github.com/emacs-jupyter/jupyter/issues/478
+  ;; (org-babel-jupyter-override-src-block "python")
+  ;; To ensure python src blocks are opened in python-ts-mode
+  ;; (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
+  ;; (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python)
+
+  ;; my patch
+  (defun jupyter-repl-associate-buffer (client)
+    "Associate the `current-buffer' with a REPL CLIENT.
+If the `major-mode' of the `current-buffer' is the
+`jupyter-repl-lang-mode' of CLIENT, call the function
+`jupyter-repl-interaction-mode' to enable the corresponding mode.
+
+CLIENT should be the symbol `jupyter-repl-client' or the symbol
+of a subclass.  If CLIENT is a buffer or the name of a buffer, use
+the `jupyter-current-client' local to the buffer."
+    (interactive
+     (list
+      (when-let* ((buffer (jupyter-repl-completing-read-repl-buffer major-mode)))
+        (buffer-local-value 'jupyter-current-client buffer))))
+    (if (not client)
+        (when (y-or-n-p "No REPL for `major-mode' exists.  Start one? ")
+          (call-interactively #'jupyter-run-repl))
+      (setq client (if (or (bufferp client) (stringp client))
+                       (with-current-buffer client
+                         jupyter-current-client)
+                     client))
+      (unless (object-of-class-p client 'jupyter-repl-client)
+        (error "Not a REPL client (%s)" client))
+      (let ((client-major-mode (jupyter-kernel-language-mode client)))
+        (cond ((and (eq client-major-mode 'python-ts-mode)
+                    (eq major-mode 'python-mode)
+                    )
+               nil)
+              (t
+               (unless (eq (jupyter-kernel-language-mode client) major-mode)
+                 (error "Cannot associate buffer to REPL.  Wrong `major-mode'"))))
+        )
+
+      (setq-local jupyter-current-client client)
+      (unless jupyter-repl-interaction-mode
+        (jupyter-repl-interaction-mode))))
+
   )
 (defun my/org-babel-lazy-load-language-advice (orig-fun &rest args)
   (let* ((info (nth 1 args))
@@ -597,5 +673,9 @@ prepended to the element after the #+HEADER: tag."
   (add-hook 'after-save-hook #'my/hugo-org-update-timestamp nil))
 
 
+
+(use-package ox-ipynb
+  :straight (:type git :host github :repo "jkitchin/ox-ipynb")
+  :after ox)
 
 (provide 'init-org)

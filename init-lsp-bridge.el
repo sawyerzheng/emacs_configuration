@@ -7,9 +7,11 @@
 ;;   :after lsp-bridge)
 
 (use-package lsp-bridge
-  :straight (lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*"))
+  ;; :straight (lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*"))
+  :load-path ("~/source/lsp-bridge/" "~/source/lsp-bridge/acm/")
   :commands (lsp-bridge-rename lsp-bridge-mode global-lsp-bridge-mode)
   ;; :hook (my/startup . global-lsp-bridge-mode)
+  :hook ((org-mode) . lsp-bridge-mode)
   :bind (:map lsp-bridge-mode-map
               ("M-." . lsp-bridge-find-def)
               ("M-," . lsp-bridge-find-def-return)
@@ -31,13 +33,33 @@
   (lsp-bridge-enable-signature-help t)
 
   :config
+
+  (setq lsp-bridge-mode-lighter " 橋")
+  (setq lsp-bridge-mode-lighter " 🚀")
+
+  ;; doom-modeline compatible
+  (defun lsp-bridge--mode-line-format ()
+    "Compose the LSP-bridge's mode-line."
+    (setq-local mode-face
+                (if (lsp-bridge-process-live-p)
+                    'lsp-bridge-alive-mode-line
+                  'lsp-bridge-kill-mode-line))
+
+    (when lsp-bridge-server
+      (if (and (boundp 'doom-modeline-mode) doom-modeline-mode)
+          (doom-modeline-lsp-icon lsp-bridge-mode-lighter mode-face)
+        (propertize lsp-bridge-mode-lighter 'face mode-face))))
+
   ;; (require 'lsp-bridge)
   ;; (require 'cl)
   (setq acm-enable-tabnine nil)
   (setq acm-enable-doc nil)
+  (setq acm-enable-jupyter t)
   (setq lsp-bridge-toggle-sdcv-helper t)
   (setq acm-enable-codeium nil)
   (setq acm-enable-preview t)
+  (setq lsp-bridge-enable-org-babel t)
+  (setq lsp-bridge-org-babel-lang-list '("python" "rust" "sh" "java" "c" "c++" "jupyter-python"))
   (setq lsp-bridge-c-lsp-server "ccls"
         lsp-bridge-python-lsp-server "pyright"
         lsp-bridge-python-ruff-lsp-server "pyright_ruff")
@@ -124,6 +146,8 @@
       (define-key map (kbd "co") #'lsp-bridge-outgoing-call-hierarchy)
 
       (define-key map (kbd "aa") #'lsp-bridge-code-action)
+      (define-key map (kbd "dd") '("dap debug" .
+                                   my/dap-hydra))
 
 
       map)
@@ -133,7 +157,10 @@
 
 
   (setq lsp-bridge-python-file
-        (expand-file-name "../../../repos/lsp-bridge/lsp_bridge.py" (locate-library "lsp-bridge")))
+        (if (file-exists-p (expand-file-name "lsp_bridge.py" (file-name-directory (locate-library "lsp-bridge"))))
+            (expand-file-name "lsp_bridge.py" (file-name-directory (locate-library "lsp-bridge")))
+          (expand-file-name "../../../repos/lsp-bridge/lsp_bridge.py" (locate-library "lsp-bridge"))))
+
   (setq lsp-bridge-python-command
         (cond (my/windows-p
                ;; "d:/soft/miniconda3/envs/tools/python.exe"

@@ -10,6 +10,8 @@
          (dap-mode . my/dap-init-conf))
   :hook ((java-mode python-mode c++-mode) . dap-mode)
   :init
+  (defvar my/dap-hide-sessions-buffer t)
+
   (defun my/dap-init-conf ()
     (interactive)
     (cond
@@ -48,7 +50,7 @@
              :mainClass nil)))
 
      ;; cpp config
-     ((derived-mode-p 'c++-mode c++-ts-mode)
+     ((derived-mode-p 'c++-mode 'c++-ts-mode)
       (require 'dap-cpptools))))
 
 
@@ -65,6 +67,35 @@
                                  ))
 
   :config
+  (setq dap-auto-configure-features '(locals controls tooltip))
+
+  (setq dap-ui-variable-length 1000)
+
+  ;; (setq dap-features->windows
+  ;;       '(
+  ;;         (sessions . (dap-ui-sessions . dap-ui--sessions-buffer))
+  ;;         (locals . (dap-ui-locals . dap-ui--locals-buffer))
+  ;;         (breakpoints . (dap-ui-breakpoints . dap-ui--breakpoints-buffer))
+  ;;         (expressions . (dap-ui-expressions . dap-ui--expressions-buffer))
+  ;;         (repl . (dap-ui-repl . dap-ui--repl-buffer))))
+
+  (setq my/dap-hide-sessions-buffer t)
+
+  (defun my/dap-sessions-buffer--refresh (&optional arg)
+    "kill session buffer and window if `my/dap-hide-sessions-buffer'"
+    (if (and my/dap-hide-sessions-buffer (boundp 'dap-ui--sessions-buffer))
+        (when-let (session-buffer (get-buffer dap-ui--sessions-buffer))
+          (save-excursion
+            (when-let (session-window (get-buffer-window session-buffer))
+
+              (delete-window session-window)
+              (kill-buffer session-buffer))))))
+
+  (add-hook 'dap-mode-hook #'my/dap-sessions-buffer--refresh)
+  (add-hook 'dap-stopped-hook #'my/dap-sessions-buffer--refresh)
+
+  (add-hook 'treemacs-mode-hook (lambda () (setq-local truncate-lines nil)))
+
   (defun my/dap-debug-advice-fn (debug-args)
     (cond ((derived-mode-p 'python-mode 'python-ts-mode)
            (my/dap-python-register-dynamic))))
@@ -96,8 +127,9 @@
         (unless (my/window-visible dap-ui--locals-buffer)
           (dap-ui-locals))
         ;; display sessions
-        (unless (my/window-visible dap-ui--sessions-buffer)
-          (dap-ui-sessions)))))
+        ;; (unless (my/window-visible dap-ui--sessions-buffer)
+        ;;   (dap-ui-sessions))
+        )))
 
   (add-hook 'dap-stopped-hook 'my/show-debug-windows)
 

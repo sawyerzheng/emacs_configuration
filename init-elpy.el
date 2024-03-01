@@ -37,7 +37,7 @@
 (defvar my/elpy-map (make-sparse-keymap)
   "my key bindings for elpy mode")
 (with-eval-after-load 'elpy
-  (define-key elpy-mode-map (kbd "M-\"") my/elpy-map)
+  (define-key elpy-mode-map (kbd "M-'") my/elpy-map)
 
   (define-key my/elpy-map (kbd "ee") #'elpy-flymake-error-at-point)
   (define-key my/elpy-map (kbd "en") #'elpy-flymake-next-error)

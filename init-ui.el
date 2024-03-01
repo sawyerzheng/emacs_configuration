@@ -26,6 +26,12 @@
           rust-ts-mode
           python-mode
           python-ts-mode
+          c-mode
+          c-ts-mode
+          c++-mode
+          c++-ts-mode
+          emacs-lisp-mode
+          emacs-lisp-ts-mode
           java-mode
           java-ts-mode) . breadcrumb-local-mode))
 

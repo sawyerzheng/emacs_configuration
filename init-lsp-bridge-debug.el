@@ -35,8 +35,21 @@
 
 (add-to-list 'load-path "~/.conf.d")
 (require 'init-load-tools)
+(require 'init-proxy)
 (require 'init-straight)
 (require 'init-use-package)
+(use-package org
+  :straight (:type built-in)
+  )
+(use-package jupyter
+  :straight t
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (julia . t)
+     (python . t)
+     (jupyter . t))))
 (use-package yasnippet
   :straight t)
 (use-package markdown-mode
