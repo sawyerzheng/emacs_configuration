@@ -156,6 +156,7 @@
      '("y" . meow-save)
      '("Y" . meow-sync-grab)
      '("z" . meow-pop-selection)
+     '("Z" . xah-comment-dwim)
      '("'" . repeat)
      '("9" . recenter-top-bottom)
      '("\\" . my/meow-quit)
@@ -411,6 +412,12 @@
     ;;  '("[ [" . xah-beginning-of-line-or-block)
     ;;  '("] ]" . xah-end-of-line-or-block)
     ;;  )
+
+    (meow-normal-define-key
+     '("M-N" . move-text-down)
+     '("M-P" . move-text-up))
+
+
     (key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit)
     (global-set-key (kbd "<f7>") #'my/meow-insert-normal-toggle)
     )

@@ -15,7 +15,7 @@
   :bind (:map lsp-bridge-mode-map
               ("M-." . lsp-bridge-find-def)
               ("M-," . lsp-bridge-find-def-return)
-              ("M-*" . lsp-bridge-find-references)
+              ("M-*" . lsp-bridge-peek)
               ("M-?" . lsp-bridge-find-references)
               ("C-M-." . lsp-bridge-popup-documentation-scroll-up)
               ("C-M-," . lsp-bridge-popup-documentation-scroll-down)
@@ -36,6 +36,9 @@
 
   (setq lsp-bridge-mode-lighter " 橋")
   (setq lsp-bridge-mode-lighter " 🚀")
+
+  ;; peek
+  (define-key lsp-bridge-peek-keymap (kbd "M-t") #'lsp-bridge-peek-through)
 
   ;; doom-modeline compatible
   (defun lsp-bridge--mode-line-format ()
@@ -76,8 +79,24 @@
   (add-to-list 'lsp-bridge-multi-lang-server-mode-list '((css-mode) . "css_emmet"))
 
 
+
   ;; disable corfu-mode
   (add-hook 'lsp-bridge-mode-hook #'(lambda () (when (functionp 'corfu-mode) (corfu-mode -1))))
+
+
+  (require 'avy)
+
+  (defun lsp-bridge-avy-peek ()
+    "Peek any symbol in the file by avy jump."
+    (interactive)
+    (setq lsp-bridge-peek-ace-list (make-list 5 nil))
+    (setf (nth 1 lsp-bridge-peek-ace-list) (point))
+    (setf (nth 2 lsp-bridge-peek-ace-list) (buffer-name))
+    (save-excursion
+      (call-interactively 'avy-goto-word-1)
+      (lsp-bridge-peek)
+      (setf (nth 3 lsp-bridge-peek-ace-list) (buffer-name))
+      (setf (nth 4 lsp-bridge-peek-ace-list) (point))))
 
   (defun my-lsp-bridge-toggle-tabnine ()
     (interactive)
@@ -114,6 +133,8 @@
 
       (define-key map (kbd "gd") #'lsp-bridge-find-def)
       (define-key map (kbd "gD") #'lsp-bridge-find-references)
+      (define-key map (kbd "gp") #'lsp-bridge-peek)
+      (define-key map (kbd "ga") #'lsp-bridge-avy-peek)
       (define-key map (kbd "gi") #'lsp-bridge-find-impl)
       (define-key map (kbd "gI") #'lsp-bridge-find-impl-other-window)
       (define-key map (kbd "gr") #'lsp-bridge-return-from-def)
