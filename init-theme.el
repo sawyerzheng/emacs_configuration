@@ -24,7 +24,8 @@
 
     ;; (setq modus-themes-common-palette-overrides
     ;;       '())
-    (load-theme 'modus-vivendi t)))
+    ;; (load-theme 'modus-vivendi t)
+    ))
 
 
 

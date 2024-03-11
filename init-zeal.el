@@ -2,9 +2,10 @@
 
 (use-package zeal-at-point
   :straight t
-  :bind (("C-c o z" . zeal-at-point)
-         ;; ("C-c \"" . zeal-at-point)
-         )
+  :commands (zeal-at-point)
+  ;; :bind (("C-c o z" . zeal-at-point)
+  ;;        ;; ("C-c \"" . zeal-at-point)
+  ;;        )
   :config
   ;; (add-hook 'python-mode-hook
   ;;           (lambda () (setq zeal-at-point-docset '("qt5" "python"))))

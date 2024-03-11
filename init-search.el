@@ -50,8 +50,7 @@
                                 (cond
                                  ((eq major-mode 'org-mode)
                                   (consult-org-heading))
-                                 ((or (derived-mode-p 'outline-mode)
-                                      (member major-mode '(markdown-mode gfm-mode)))
+                                 ((or (derived-mode-p 'outline-mode 'markdown-mode))
                                   (consult-outline))
                                  ((derived-mode-p 'compilation-mode)
                                   (consult-compile-error))

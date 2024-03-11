@@ -35,7 +35,7 @@
   )
 
 (dolist (lib '(org
-               jupyter
+               ;; jupyter
                ;; ob-async
                ;; ob-go
                ;; org-download

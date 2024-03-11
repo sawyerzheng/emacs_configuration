@@ -190,9 +190,9 @@
   (require 'init-folding)
 
   ;; tree-sitter
-  (if (>= emacs-major-version 29)
-      (require 'init-treesit)
-    (require 'init-tree-sitter))
+  ;; (if (>= emacs-major-version 29)
+  ;;     (require 'init-treesit)
+  ;;   (require 'init-tree-sitter))
 
 
   ;; scroll

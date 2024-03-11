@@ -3,7 +3,7 @@
 (use-package treemacs
   :straight t
   :commands (treemacs-mode treemacs treemacs-select-window)
-  :bind ("C-c o p" . +treemacs/toggle)
+  ;; :bind ("C-c o p" . +treemacs/toggle)
   :init
   ;; code free doom emacs
   (defun doom-project-p (&optional dir)

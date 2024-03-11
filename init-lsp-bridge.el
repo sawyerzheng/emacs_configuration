@@ -7,8 +7,8 @@
 ;;   :after lsp-bridge)
 
 (use-package lsp-bridge
-  ;; :straight (lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*"))
-  :load-path ("~/source/lsp-bridge/" "~/source/lsp-bridge/acm/")
+  :straight (lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*"))
+  ;; :load-path ("~/source/lsp-bridge/" "~/source/lsp-bridge/acm/")
   :commands (lsp-bridge-rename lsp-bridge-mode global-lsp-bridge-mode)
   ;; :hook (my/startup . global-lsp-bridge-mode)
   :hook ((org-mode) . lsp-bridge-mode)
@@ -57,7 +57,7 @@
   ;; (require 'cl)
   (setq acm-enable-tabnine nil)
   (setq acm-enable-doc nil)
-  (setq acm-enable-jupyter t)
+  (setq acm-enable-jupyter nil)
   (setq lsp-bridge-toggle-sdcv-helper t)
   (setq acm-enable-codeium nil)
   (setq acm-enable-preview t)

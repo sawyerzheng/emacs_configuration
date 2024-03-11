@@ -135,7 +135,6 @@ Version 2018-09-29"
 
   :bind (:map dired-mode-map
               ("e" . my/open-file-externally))
-  :bind ("C-c o E" . my/open-file-externally)
 
   :config
   ;; * extra packages

@@ -146,6 +146,6 @@ Version 2020-10-17"
                   (find-file (concat $path ".el"))
                 (when (y-or-n-p (format "file no exist: 「%s」. Create?" $path))
                   (find-file $path ))))))))))
-(global-set-key (kbd "C-c o c") #'xah-open-file-at-cursor)
+
 
 (provide 'init-openfile)

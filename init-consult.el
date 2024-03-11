@@ -152,10 +152,10 @@ input and search the whole buffer for it."
   ("C-c b r" . revert-buffer)
   ("C-c b s" . save-buffer))
 
-(use-package frame
-  :straight (:type built-in)  
-  :bind
-  ("C-c o f" . make-frame-command))
+;; (use-package frame
+;;   :straight (:type built-in)
+;;   :bind
+;;   ("C-c o f" . make-frame-command))
 
 
 (use-package consult-yasnippet

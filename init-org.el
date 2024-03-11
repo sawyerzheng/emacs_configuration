@@ -11,8 +11,8 @@
   (define-key org-mode-map (kbd "C-c C-i") my/org-mode-map))
 
 (use-package org
-  :straight t
-  ;; :straight (:type built-in)
+  ;; :straight t
+  :straight (:type built-in)
   :commands org-mode
   :init
   (defun my/org-mode-conf-settings-fn ()
@@ -283,6 +283,11 @@ prepended to the element after the #+HEADER: tag."
 (when (boundp 'native-comp-jit-compilation-deny-list)
   (add-to-list 'native-comp-jit-compilation-deny-list ".*jupyter.*"))
 
+(with-eval-after-load 'org
+  (require 'jupyter)
+  (require 'ob-jupyter)
+  (require 'scimax-jupyter))
+
 (use-package jupyter
   :straight (:no-native-compile t)
   :defer t
@@ -305,6 +310,19 @@ prepended to the element after the #+HEADER: tag."
     ;; (add-to-list 'org-babel-load-languages '(jupyter . t) t)
     (add-to-list 'org-babel-load-languages lang-info t)
     )
+
+  (with-eval-after-load 'ob-jupyter
+    (defun my/org-return (&optional indent arg interactive)
+
+      (interactive "i\nP\np")
+      (let* ((context (if org-return-follows-link (org-element-context)
+                        (org-element-at-point)))
+             (element-type (org-element-type context)))
+        (if (eq element-type 'src-block)
+            (call-interactively #'org-return-and-maybe-indent)
+          (org-return indent arg interactive))))
+
+    (define-key org-mode-map (kbd "RET") #'my/org-return))
 
   (require 'scimax-jupyter)
   (add-hook 'org-mode-hook #'scimax-jupyter-ansi)
@@ -384,7 +402,7 @@ the `jupyter-current-client' local to the buffer."
      'org-babel-load-in-session
      alist))
   (apply orig-fun args))
-  
+
 (with-eval-after-load 'ob-core
   (advice-add 'org-babel-execute-src-block :around #'my/org-babel-lazy-load-language-advice))
 
@@ -677,5 +695,10 @@ the `jupyter-current-client' local to the buffer."
 (use-package ox-ipynb
   :straight (:type git :host github :repo "jkitchin/ox-ipynb")
   :after ox)
+
+
+(use-package outli
+  :straight (:type git :host github :repo "jdtsmith/outli"))
+
 
 (provide 'init-org)

@@ -65,7 +65,8 @@
   :commands (my/holo-layer-enable
              my/holo-layer-disable)
   :config
-  (setq holo-layer-python-command my/epc-python-command)
+  ;; (setq holo-layer-python-command my/epc-python-command)
+  (setq holo-layer-python-command eaf-python-command)
   (defun my/holo-layer-enable ()
     (interactive)
     (holo-layer-enable))

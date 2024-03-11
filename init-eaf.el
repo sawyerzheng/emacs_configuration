@@ -411,4 +411,11 @@
 
   )
 
+;; (use-package trekker
+;;   :straight (:type git :host github :repo "manateelazycat/trekker")
+;;   ;; :commands (trekker-enable)
+;;   :config
+;;   (setq trekker-python-command eaf-python-command)
+;;   (setq trekker-python-file (expand-file-name "../../repos/trekker/trekker.py" (file-name-parent-directory (locate-library "trekker")))))
+
 (provide 'init-eaf)
