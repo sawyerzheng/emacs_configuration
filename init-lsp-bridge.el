@@ -11,7 +11,9 @@
   ;; :load-path ("~/source/lsp-bridge/" "~/source/lsp-bridge/acm/")
   :commands (lsp-bridge-rename lsp-bridge-mode global-lsp-bridge-mode)
   ;; :hook (my/startup . global-lsp-bridge-mode)
-  :hook ((org-mode) . lsp-bridge-mode)
+  :hook ((org-mode
+          emacs-lisp-mode
+          lisp-interaction-mode) . lsp-bridge-mode)
   :bind (:map lsp-bridge-mode-map
               ("M-." . lsp-bridge-find-def)
               ("M-," . lsp-bridge-find-def-return)
@@ -57,7 +59,7 @@
   ;; (require 'cl)
   (setq acm-enable-tabnine nil)
   (setq acm-enable-doc nil)
-  (setq acm-enable-jupyter nil)
+  (setq acm-enable-jupyter t)
   (setq lsp-bridge-toggle-sdcv-helper t)
   (setq acm-enable-codeium nil)
   (setq acm-enable-preview t)
@@ -84,11 +86,13 @@
   (add-hook 'lsp-bridge-mode-hook #'(lambda () (when (functionp 'corfu-mode) (corfu-mode -1))))
 
 
-  (require 'avy)
+
 
   (defun lsp-bridge-avy-peek ()
     "Peek any symbol in the file by avy jump."
     (interactive)
+    (unless (featurep 'avy)
+      (require 'avy))
     (setq lsp-bridge-peek-ace-list (make-list 5 nil))
     (setf (nth 1 lsp-bridge-peek-ace-list) (point))
     (setf (nth 2 lsp-bridge-peek-ace-list) (buffer-name))

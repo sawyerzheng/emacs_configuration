@@ -22,6 +22,8 @@
               ;; ("n" . vr/isearch-forward)
               )
   :config
+  ;; set default python engine flags
+  (setq vr/default-regexp-modifiers '(:I t :M t :S nil :U nil))
   (setq vr/command-python (format "%s %s"
                                   (cond
                                    (my/linux-p "/usr/bin/python")

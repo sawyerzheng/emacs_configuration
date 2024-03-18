@@ -7,18 +7,20 @@
   (setq blink-search-quick-keys '("h" "l" "u" "y" "," "." ";" "/" "'" "r" "v" "g" "t" "c" "7" "8" "9" "0" "H" "L" "U" "I" "Y" "s" "a" "e" "q" "1" "2" "3" "4" "[" "]"))
 
 
-  (add-to-list 'blink-search-common-directory
-               (if my/windows-p
-                   '("SOURCE" "d:/source/")
-                 '("SOURCE" "/mnt/d/source/")))
-
-  (if my/linux-p
-      (add-to-list 'blink-search-common-directory
-                   '("books" "~/nextcloud/books/")))
-  (add-to-list 'blink-search-common-directory
-               (if my/linux-p
-                   '("project-miscs" "/mnt/d/project-miscs/")
-                 '("project-miscs" "d:/project-miscs")))
+  (progn
+    ;; source
+    (when (file-exists-p "d:/source/")
+      (add-to-list 'blink-search-common-directory '("SOURCE" "d:/source/")))
+    (when (file-exists-p "/mnt/d/source/")
+      (add-to-list 'blink-search-common-directory '("SOURCE" "/mnt/d/source/")))
+    ;; books
+    (when (file-exists-p "~/nextcloud/books/")
+      (add-to-list 'blink-search-common-directory '("books" "~/nextcloud/books/")))
+    ;; project-miscs
+    (when (file-exists-p "/mnt/d/project-miscs/")
+      (add-to-list 'blink-search-common-directory '("project-miscs" "/mnt/d/project-miscs/")))
+    (when (file-exists-p "d:/project-miscs/")
+      (add-to-list 'blink-search-common-directory '("project-miscs" "d:/project-miscs/"))))
 
   :bind (:map blink-search-mode-map
               ("M-j" . nil)
@@ -26,12 +28,6 @@
               ("M-k" . blink-search-candidate-group-select-next)
               )
   :commands (blink-search))
-
-
-(use-package nova
-  :straight (:type git :host github :repo "manateelazycat/nova" :files ("*"))
-  :config
-  (setq nova-python-command my/epc-python-command))
 
 
 (defvar my/search-keymap (make-sparse-keymap)

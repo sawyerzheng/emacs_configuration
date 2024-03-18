@@ -1,5 +1,5 @@
-(use-package xah-fly-keys
-  :straight (xah-fly-keys :type git :host github :repo "xahlee/xah-fly-keys")
+(use-package xah-fly-keys-core
+  ;; :straight (xah-fly-keys :type git :host github :repo "xahlee/xah-fly-keys")
   :init
   (setq xah-fly-use-control-key nil)
   (setq xah-fly-use-meta-key nil)

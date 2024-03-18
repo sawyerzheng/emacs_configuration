@@ -355,6 +355,8 @@
   (require 'init-mwim)
   (require 'init-key-chord)
 
+  (require 'init-calc)
+
   (require 'init-server)
   ;; ;; ;; xah-fly-keys ------ start at earlier time
   ;; (require 'init-xah-fly-keys)

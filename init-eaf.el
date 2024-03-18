@@ -17,6 +17,7 @@
 (unless (file-exists-p eaf-path-prefix)
   (message "error, eaf-path-prefix not exists: %s" eaf-path-prefix))
 
+
 (when (file-exists-p eaf-path-prefix)
   (add-to-list 'load-path eaf-path-prefix t)
   (add-subdirs-to-load-path eaf-path-prefix)
@@ -56,6 +57,7 @@
         (call-interactively #'eaf-open)))
     )
 
+
   (use-package eaf
     :init
 
@@ -71,7 +73,9 @@
                eaf-file-sender-qrcode
                eaf-file-sender-qrcode-in-dired
                eaf-open-airshare
-               eaf-open-browser-with-history)
+               eaf-open-browser-with-history
+               eaf-goto-right-tab
+               eaf-goto-left-tab)
     ;; :bind (("C-c o e b" . eaf-open-browser-with-history)
     ;;        ("C-c o e B" . eaf-open-bookmark)
     ;;        ("C-c o e s" . eaf-search-it)
@@ -117,13 +121,16 @@
                                                '(("M-p" . "eaf-send-key-sequence")
                                                  ("M-n" . "eaf-send-key-sequence")))))
 
-    ;; (defalias 'browse-web #'eaf-open-browser)
     (with-eval-after-load 'eaf-pdf-viewer
       (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
       (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding))
+
     (with-eval-after-load 'eaf-browser
-      (eaf-bind-key ace-window "M-o" eaf-browser-keybinding)
-      (eaf-bind-key xah-fly-mode-toggle "<escape>" eaf-browser-keybinding))
+      (eaf-bind-key ace-window "M-o" eaf-browser-keybinding))
+
+    ;; (defalias 'browse-web #'eaf-open-browser)
+
+
 
     ;; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
     (eaf-bind-key nil "M-q" eaf-browser-keybinding)
@@ -180,7 +187,7 @@
 
     ;; Make `eaf-browser-restore-buffers' restore last close browser buffers.
     (setq eaf-browser-continue-where-left-off t)
-
+    (eaf-bind-key insert_or_scroll_down_page "S-SPC" eaf-browser-keybinding)
     (eaf-bind-key undo_action "C-/" eaf-browser-keybinding)
     (eaf-bind-key redo_action "C-?" eaf-browser-keybinding)
     (eaf-bind-key scroll_up "M-j" eaf-browser-keybinding)
@@ -254,126 +261,7 @@
     ;;    (("h" . "Git history") . eaf-git-show-history))
     ;;  t)
 
-    ;; fix eaf <---> xah-fly-keys
-    (with-eval-after-load 'xah-fly-keys
-      ;; (setq my/eaf-mode-list '(eaf-mode pe))
-      (defun my/eaf-xah-next-line (old-fun &rest args)
-        (cond (
-               ;; (memq major-mode)
-               (eq major-mode 'eaf-mode)
-               (eaf-send-down-key))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-previous-line (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-send-up-key))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-down-page (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-scroll_down_page))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-up-page (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-scroll_up_page))
-              (t
-               (apply old-fun args))))
 
-      (defun my/eaf-xah-backward-char (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-insert_or_scroll_right))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-forward-char (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-insert_or_scroll_left))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-left-tab (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-insert_or_select_left_tab))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-right-tab (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-insert_or_select_right_tab))
-              (t
-               (apply old-fun args))))
-
-      (defun my/eaf-xah-beging-of-buffer (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-insert_or_scroll_to_begin))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-end-of-buffer (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-insert_or_scroll_to_bottom))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-zoom-in (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-zoom_in))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-zoom-out (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-zoom_out))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-kill-buffer (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-insert_or_close_buffer))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-backward-history (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-history_backward))
-              (t
-               (apply old-fun args))))
-      (defun my/eaf-xah-forward-history (old-fun &rest args)
-        (cond ((eq major-mode 'eaf-mode)
-               (eaf-py-proxy-history_forward))
-              (t
-               (apply old-fun args))))
-
-      ;; ;; line up/down
-      ;; (advice-add #'next-line :around #'my/eaf-xah-next-line)
-      ;; (advice-add #'previous-line :around #'my/eaf-xah-previous-line)
-
-      ;; ;; page up/down
-      ;; (advice-add #'scroll-up-command :around #'my/eaf-xah-up-page)
-      ;; (advice-add #'scroll-down-command :around #'my/eaf-xah-down-page)
-      ;; (advice-add #'backward-kill-word :around #'my/eaf-xah-down-page)
-      ;; (advice-add #'xah-delete-backward-char-or-bracket-text :around #'my/eaf-xah-up-page)
-
-      ;; ;; left right
-      ;; (advice-add #'forward-char :around #'my/eaf-xah-forward-char)
-      ;; (advice-add #'backward-char :around #'my/eaf-xah-backward-char)
-
-      ;; ;; left right tab
-      ;; (advice-add #'move-text-up :around #'my/eaf-xah-left-tab)
-      ;; (advice-add #'move-text-down :around #'my/eaf-xah-right-tab)
-
-      ;; ;; begin end
-      ;; (advice-add #'beginning-of-buffer :around #'my/eaf-xah-beging-of-buffer)
-      ;; (advice-add #'end-of-buffer :around #'my/eaf-xah-end-of-buffer)
-
-      ;; ;; zoom in/out
-      ;; (advice-add #'xah-forward-punct :around #'my/eaf-xah-zoom-in)
-      ;; (advice-add #'xah-backward-punct :around #'my/eaf-xah-zoom-out)
-
-      ;; ;; space scroll
-      ;; (advice-add #'recenter-top-bottom :around #'my/eaf-xah-up-page)
-
-      ;; ;; delete tab
-      ;; (advice-add #'xah-cut-line-or-region :around #'my/eaf-xah-kill-buffer)
-
-      ;; ;; history left/right
-      ;; (advice-add #'xah-beginning-of-line-or-block :around #'my/eaf-xah-backward-history)
-      ;; (advice-add #'xah-end-of-line-or-block :around #'my/eaf-xah-forward-history)
-
-      )
 
     :commands (eaf-open-browser-with-history
                eaf-open-browser-with-history
@@ -386,7 +274,7 @@
     (setq eaf-browser-search-engines `(("google" . "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s")
                                        ("duckduckgo" . "https://duckduckgo.com/?q=%s")
                                        ("bing" . "https://bing.com/search?q=%s")))
-    (setq eaf-browser-default-search-engine "bing")
+    (setq eaf-browser-default-search-engine "google")
 
     )
 
@@ -411,11 +299,165 @@
 
   )
 
+;; * meow hacking
+(defun my/eaf-use-meow-leader ()
+  (interactive)
+  (when (and (boundp 'meow-global-mode) meow-global-mode)
+    (eaf-bind-key meow-keypad "C-SPC" eaf-browser-keybinding)))
+
+(add-hook 'eaf-mode-hook #'my/eaf-use-meow-leader)
+
+;; * enable sort-tab-mode
+(defun my/eaf-use-sort-tab-mode-fn ()
+  (interactive)
+  (when (and (fboundp 'sort-tab-mode) (null sort-tab-mode))
+    (sort-tab-mode 1)))
+(add-hook 'eaf-mode-hook #'my/eaf-use-sort-tab-mode-fn)
+
+
+(defun my/eaf-doom-modeline-reeanble-fn ()
+  (interactive)
+  (when (and (fboundp 'doom-modeline-mode) doom-modeline-mode)
+    (doom-modeline-mode -1)
+    (doom-modeline-mode 1)))
+
+(add-hook 'eaf-mode-hook #'my/eaf-doom-modeline-reeanble-fn)
+
+
+;; * xah fly keys pathes
+(with-eval-after-load 'xah-fly-keys
+  (with-eval-after-load 'eaf-browser
+    (eaf-bind-key xah-fly-mode-toggle "<escape>" eaf-browser-keybinding))
+
+  ;; * fix eaf <---> xah-fly-keys
+
+  ;; (setq my/eaf-mode-list '(eaf-mode pe))
+  (defun my/eaf-xah-next-line (old-fun &rest args)
+    (cond (
+           ;; (memq major-mode)
+           (eq major-mode 'eaf-mode)
+           (eaf-send-down-key))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-previous-line (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-send-up-key))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-down-page (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-scroll_down_page))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-up-page (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-scroll_up_page))
+          (t
+           (apply old-fun args))))
+
+  (defun my/eaf-xah-backward-char (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-insert_or_scroll_right))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-forward-char (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-insert_or_scroll_left))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-left-tab (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-insert_or_select_left_tab))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-right-tab (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-insert_or_select_right_tab))
+          (t
+           (apply old-fun args))))
+
+  (defun my/eaf-xah-beging-of-buffer (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-insert_or_scroll_to_begin))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-end-of-buffer (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-insert_or_scroll_to_bottom))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-zoom-in (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-zoom_in))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-zoom-out (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-zoom_out))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-kill-buffer (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-insert_or_close_buffer))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-backward-history (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-history_backward))
+          (t
+           (apply old-fun args))))
+  (defun my/eaf-xah-forward-history (old-fun &rest args)
+    (cond ((eq major-mode 'eaf-mode)
+           (eaf-py-proxy-history_forward))
+          (t
+           (apply old-fun args))))
+
+  ;; ;; line up/down
+  ;; (advice-add #'next-line :around #'my/eaf-xah-next-line)
+  ;; (advice-add #'previous-line :around #'my/eaf-xah-previous-line)
+
+  ;; ;; page up/down
+  ;; (advice-add #'scroll-up-command :around #'my/eaf-xah-up-page)
+  ;; (advice-add #'scroll-down-command :around #'my/eaf-xah-down-page)
+  ;; (advice-add #'backward-kill-word :around #'my/eaf-xah-down-page)
+  ;; (advice-add #'xah-delete-backward-char-or-bracket-text :around #'my/eaf-xah-up-page)
+
+  ;; ;; left right
+  ;; (advice-add #'forward-char :around #'my/eaf-xah-forward-char)
+  ;; (advice-add #'backward-char :around #'my/eaf-xah-backward-char)
+
+  ;; ;; left right tab
+  ;; (advice-add #'move-text-up :around #'my/eaf-xah-left-tab)
+  ;; (advice-add #'move-text-down :around #'my/eaf-xah-right-tab)
+
+  ;; ;; begin end
+  ;; (advice-add #'beginning-of-buffer :around #'my/eaf-xah-beging-of-buffer)
+  ;; (advice-add #'end-of-buffer :around #'my/eaf-xah-end-of-buffer)
+
+  ;; ;; zoom in/out
+  ;; (advice-add #'xah-forward-punct :around #'my/eaf-xah-zoom-in)
+  ;; (advice-add #'xah-backward-punct :around #'my/eaf-xah-zoom-out)
+
+  ;; ;; space scroll
+  ;; (advice-add #'recenter-top-bottom :around #'my/eaf-xah-up-page)
+
+  ;; ;; delete tab
+  ;; (advice-add #'xah-cut-line-or-region :around #'my/eaf-xah-kill-buffer)
+
+  ;; ;; history left/right
+  ;; (advice-add #'xah-beginning-of-line-or-block :around #'my/eaf-xah-backward-history)
+  ;; (advice-add #'xah-end-of-line-or-block :around #'my/eaf-xah-forward-history)
+
+  )
+
+
 ;; (use-package trekker
 ;;   :straight (:type git :host github :repo "manateelazycat/trekker")
 ;;   ;; :commands (trekker-enable)
 ;;   :config
 ;;   (setq trekker-python-command eaf-python-command)
 ;;   (setq trekker-python-file (expand-file-name "../../repos/trekker/trekker.py" (file-name-parent-directory (locate-library "trekker")))))
+
+
 
 (provide 'init-eaf)

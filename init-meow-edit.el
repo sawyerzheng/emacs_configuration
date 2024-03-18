@@ -1,6 +1,135 @@
+;; * my redefined commands
+
+(defun my/meow-visit (arg)
+  "visit symbol at point, if want to use `meow-visit', use C-u my/moeow-visi or `SPC j k v'"
+  (interactive "P")
+  (cond ((equal arg '(4))
+         (meow-visit nil))
+
+        ((equal arg nil)
+         (let* ((reverse nil)
+                (pos (point))
+                (symbol-text (thing-at-point 'symbol))
+                (text (if symbol-text
+                          (format "\\_<%s\\_>" (regexp-quote (substring-no-properties symbol-text)))
+                        ""))
+                (visit-point (meow--visit-point text reverse)))
+           (if (and symbol-text visit-point)
+               (let* ((m (match-data))
+                      (marker-beg (car m))
+                      (marker-end (cadr m))
+                      (beg (if (> pos visit-point) (marker-position marker-end) (marker-position marker-beg)))
+                      (end (if (> pos visit-point) (marker-position marker-beg) (marker-position marker-end))))
+                 (thread-first
+                   (meow--make-selection '(select . visit) beg end)
+                   (meow--select))
+                 (meow--push-search text)
+                 (meow--ensure-visible)
+                 (meow--highlight-regexp-in-buffer text)
+                 (setq meow--dont-remove-overlay t))
+             (message "Visit: %s failed" text))))
+        (t
+         ;;(or (eq arg '-) (eq arg nil))
+         (meow-visit arg))))
+
+(defun my/meow-search-back ()
+  (interactive)
+  (meow-search '-))
+
+
+(defun my/meow-next (arg)
+  "Move to the next line.
+
+Will cancel all other selection, except char selection.
+
+Use with universal argument to move to the last line of buffer.
+Use with numeric argument to move multiple lines at once."
+  (interactive "P")
+  (unless (or (equal (meow--selection-type) '(expand . char))
+              (and (eq (meow--selection-type) nil) (region-active-p)))
+    (meow--cancel-selection))
+  (cond
+   ((meow--with-universal-argument-p arg)
+    (goto-char (point-max)))
+   (t
+    (setq this-command #'next-line)
+    (meow--execute-kbd-macro meow--kbd-forward-line))))
+
+(defun my/meow-prev (arg)
+  "Move to the previous line.
+
+Will cancel all other selection, except char selection.
+
+Use with universal argument to move to the first line of buffer.
+Use with numeric argument to move multiple lines at once."
+  (interactive "P")
+  (unless (or (equal (meow--selection-type) '(expand . char))
+              (and (eq (meow--selection-type) nil) (region-active-p)))
+    (meow--cancel-selection))
+  (cond
+   ((meow--with-universal-argument-p arg)
+    (goto-char (point-min)))
+   (t
+    (setq this-command #'previous-line)
+    (meow--execute-kbd-macro meow--kbd-backward-line))))
+
+(defun my/meow-left ()
+  "Move to left.
+
+Will cancel all other selection, except char selection. "
+  (interactive)
+  (when (and (region-active-p)
+             (not (or (equal (meow--selection-type) '(expand . char))
+                      (and (eq (meow--selection-type) nil) (region-active-p)))))
+    (meow-cancel-selection))
+
+  (meow--execute-kbd-macro meow--kbd-backward-char))
+
+(defun my/meow-right ()
+  "Move to right.
+
+Will cancel all other selection, except char selection. "
+  (interactive)
+  (let ((ra (region-active-p)))
+    (when (and ra
+               (not (or (equal (meow--selection-type) '(expand . char))
+                        (and (eq (meow--selection-type) nil) (region-active-p)))))
+      (meow-cancel-selection))
+    (when (or (not meow-use-cursor-position-hack)
+              (not ra)
+              (equal '(expand . char) (meow--selection-type)))
+      (meow--execute-kbd-macro meow--kbd-forward-char))))
+
+
+
+;; * use-package
 (use-package meow
   :straight t
   :commands (meow-quit meow-setup meow-global-mode meow-thing-register)
+  :config
+  ;; * add new editing thing
+  (defun my/meow--inner-of-filename ()
+    (bounds-of-thing-at-point 'filename))
+
+  (defun my/meow--bounds-of-filename ()
+    (when-let (bounds (bounds-of-thing-at-point 'filename))
+      (let ((beg (car bounds))
+            (end (cdr bounds)))
+        (cons beg end))))
+
+  (defun my/meow--inner-of-url ()
+    (bounds-of-thing-at-point 'url))
+
+  (defun my/meow--bounds-of-url ()
+    (when-let (bounds (bounds-of-thing-at-point 'url))
+      (let ((beg (car bounds))
+            (end (cdr bounds)))
+        (cons beg end))))
+
+  (meow-thing-register 'filename #'my/meow--inner-of-filename #'my/meow--bounds-of-filename)
+  (meow-thing-register 'url #'my/meow--inner-of-url #'my/meow--thing-url)
+  (add-to-list 'meow-char-thing-table '(?f . filename))
+  (add-to-list 'meow-char-thing-table '(?u . url))
   :config
   (setq meow-use-clipboard t)
   (require 'init-xah-fly-keys-core)
@@ -32,14 +161,17 @@
      '("j" . meow-next)
      '("k" . meow-prev)
      '("<escape>" . ignore)
-     '("n" . meow-search)
-     '("v" . my/meow-visit)
+     ;; '("n" . meow-search)
+     ;; '("v" . my/meow-visit)
+
+     '("8" . other-window)
+     '("9" . recenter-top-bottom)
 
      '("\\" . my/meow-quit)
      ;; window
-     '("`" . other-window)
-     '("~" . other-frame)
-     '("|" . split-window-right)
+     ;; '("`" . other-window)
+     ;; '("~" . other-frame)
+     ;; '("|" . split-window-right)
 
      ;; region
      '("=" . er/expand-region)
@@ -47,14 +179,11 @@
      ;; pair jump
      '("/" . xah-goto-matching-bracket) ;; "/"
 
-     '("T" . set-mark-command)
-
-     ;; '("M" . xah-backward-left-bracket) ;; "."
-     ;; '(">" . xah-forward-right-bracket) ;; "m"
+     ;; '("T" . set-mark-command)
 
      ;; scroll
-     '("<" . scroll-down-command)
-     '(">" . scroll-up-command)
+     ;; '("<" . scroll-down-command)
+     ;; '(">" . scroll-up-command)
 
      )
     (meow-leader-define-key
@@ -147,7 +276,7 @@
      '("z" . meow-pop-selection)
      '("Z" . xah-comment-dwim)
      '("'" . repeat)
-     '("9" . recenter-top-bottom)
+
      '("\\" . my/meow-quit)
      ;; window
      '("`" . other-window)
@@ -171,11 +300,10 @@
      '("<" . scroll-down-command)
      '(">" . scroll-up-command)
 
-     ;; copy, cut, paste
-     ;; '("C" . kill-ring-save)   ;; use "y" instead for meow default
-     '("X" . kill-region)               ;; use "s" instead for meow default
-     ;; '("V" . yank)                      ;;  use "p" instead for meow default
-
+     ;; line end
+     '("X" . mwim-end)
+     ;; line start
+     '("M" . mwim-beginning)
      ;; insert space
      '("P" . xah-insert-space-after)
      )
@@ -191,12 +319,12 @@
     (global-unset-key (kbd "C-c s"))
     (global-unset-key (kbd "C-x C-0"))
     (meow-leader-define-key
+     '("r" . vr/query-replace)
      '("f" . switch-to-buffer)
      '("H" . beginning-of-buffer)
      '("N" . end-of-buffer)
      '(";" . save-buffer)
      '("w" . xah-shrink-whitespaces)
-     ;; '("s" . kill-line) ;; use "s" without leader key instead for meow
      '("u" . xah-save-close-current-buffer)
 
 
@@ -269,6 +397,7 @@
      '("i p" . bookmark-set)
      '("i r" . revert-buffer)
      '("i u" . eaf-open-browser-with-history)
+     '("i s" . eaf-search-it)
      '("i w" . xah-open-in-external-app)
      '("d a" . xah-insert-double-angle-bracket)
      '("d b" . my/xah-insert-singe-bracket)
@@ -405,113 +534,38 @@
      '("SPC" . major-mode-hydra)
      ;; M-x
      '("a" . execute-extended-command)
+     )
 
-     )
-    (meow-leader-define-key
-     ;; window manage
-     '("3" . delete-window)
-     '("4" . split-window-below)
-     )
     (meow-normal-define-key
      ;; window manage
-     ;; '("#" . delete-other-windows)
-     ;; '("$" . split-window-right)
      '("8" . other-window)
+     '("9" . recenter-top-bottom)
      )
 
-    (meow-motion-overwrite-define-key
-     ;; window manage
-     ;; '("#" . delete-other-windows)
-     ;; '("$" . split-window-right)
-     '("8" . other-window))
-
-    ;; (meow-normal-define-key
-    ;;  '("[ [" . xah-beginning-of-line-or-block)
-    ;;  '("] ]" . xah-end-of-line-or-block)
-    ;;  )
-
-    ;; (meow-normal-define-key
-    ;;  '("M-N" . move-text-down)
-    ;;  '("M-P" . move-twondert-up))
-
-
     (key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit)
+    (key-chord-define meow-insert-state-keymap "JK" #'meow-insert-exit)
     (global-set-key (kbd "<f7>") #'my/meow-insert-normal-toggle)
     )
-
-
-
-  ;; (meow-setup)
-  ;; (add-hook 'meow-global-mode #'meow-setup)
   )
 
+;; * override meow cursor move keys
+(advice-add 'meow-left :override #'my/meow-left)
+(advice-add 'meow-right :override #'my/meow-right)
+(advice-add 'meow-prev :override #'my/meow-prev)
+(advice-add 'meow-next :override #'my/meow-next)
 
-(defun my/meow--inner-of-filename ()
-  (bounds-of-thing-at-point 'filename))
-
-(defun my/meow--bounds-of-filename ()
-  (when-let (bounds (bounds-of-thing-at-point 'filename))
-    (let ((beg (car bounds))
-          (end (cdr bounds)))
-      (cons beg end))))
-
-(defun my/meow--inner-of-url ()
-  (bounds-of-thing-at-point 'url))
-
-(defun my/meow--bounds-of-url ()
-  (when-let (bounds (bounds-of-thing-at-point 'url))
-    (let ((beg (car bounds))
-          (end (cdr bounds)))
-      (cons beg end))))
-
-(meow-thing-register 'filename #'my/meow--inner-of-filename #'my/meow--bounds-of-filename)
-(meow-thing-register 'url #'my/meow--inner-of-url #'my/meow--thing-url)
-(add-to-list 'meow-char-thing-table '(?f . filename))
-(add-to-list 'meow-char-thing-table '(?u . url))
-
-(defun my/meow-visit (arg)
-  "visit symbol at point, if want to use `meow-visit', use C-u my/moeow-visi or `SPC j k v'"
-  (interactive "P")
-  (cond ((equal arg '(4))
-         (meow-visit nil))
-
-        ((equal arg nil)
-         (let* ((reverse nil)
-                (pos (point))
-                (symbol-text (thing-at-point 'symbol))
-                (text (if symbol-text
-                          (format "\\_<%s\\_>" (regexp-quote (substring-no-properties symbol-text)))
-                        ""))
-                (visit-point (meow--visit-point text reverse)))
-           (if (and symbol-text visit-point)
-               (let* ((m (match-data))
-                      (marker-beg (car m))
-                      (marker-end (cadr m))
-                      (beg (if (> pos visit-point) (marker-position marker-end) (marker-position marker-beg)))
-                      (end (if (> pos visit-point) (marker-position marker-beg) (marker-position marker-end))))
-                 (thread-first
-                   (meow--make-selection '(select . visit) beg end)
-                   (meow--select))
-                 (meow--push-search text)
-                 (meow--ensure-visible)
-                 (meow--highlight-regexp-in-buffer text)
-                 (setq meow--dont-remove-overlay t))
-             (message "Visit: %s failed" text))))
-        (t
-         ;;(or (eq arg '-) (eq arg nil))
-         (meow-visit arg))))
-
-(defun my/meow-search-back ()
-  (interactive)
-  (meow-search '-))
-
+;; * hooks
 (defun my/enable-delete-active-region ()
   (interactive)
   (setq delete-active-region t))
-
 (add-hook 'meow-global-mode-hook #'my/enable-delete-active-region)
 
+;; * start meow mode
 (meow-setup)
 (meow-global-mode)
+
+;; * meow mode state list
+(add-to-list 'meow-mode-state-list '(eaf-mode . motion))
+(add-to-list 'meow-mode-state-list '(calc-mode . insert))
 
 (provide 'init-meow-edit)

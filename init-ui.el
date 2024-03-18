@@ -81,3 +81,4 @@
 (require 'init-doom-modeline)
 (require 'init-nav-flash)
 (require 'init-solaire)
+(require 'init-tab)

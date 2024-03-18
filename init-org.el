@@ -698,7 +698,9 @@ the `jupyter-current-client' local to the buffer."
 
 
 (use-package outli
-  :straight (:type git :host github :repo "jdtsmith/outli"))
+  :straight (:type git :host github :repo "jdtsmith/outli")
+  :after (org)
+  :commands (outli-mode))
 
 
 (provide 'init-org)
