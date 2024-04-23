@@ -74,4 +74,10 @@
   :config
   (add-hook 'project-find-functions 'project-x-try-local 90))
 
+(setq project-switch-commands '((project-find-file "Find file" "f")
+                                (project-find-regexp "Find regexp")
+                                (project-find-dir "Find directory" "d")
+                                (magit-status "VC-Dir" "v")
+                                (project-eshell "Eshell" "e")))
+
 (provide 'init-project)

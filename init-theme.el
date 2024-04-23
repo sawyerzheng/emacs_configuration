@@ -67,6 +67,8 @@
 
 (defun my/change-org-markdown-face (&optional frame)
   (interactive)
+  (unless (featurep 'org)
+    (require 'org))
   ;; org mode
   (when (and (facep 'org-level-1) my/use-head-face-scaling)
     (set-face-attribute 'org-document-title nil

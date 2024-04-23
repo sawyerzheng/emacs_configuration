@@ -224,7 +224,7 @@ you have the correctly set the OPENAI_API_KEY variable"
 ;;   :straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("*")))
 
 (use-package gptel
-  :straight t
+  :straight (:type git :host github :repo "karthink/gptel")
   :commands (gptel gptel-mode)
   :config
   (load-file "~/org/private/openai.el.gpg")

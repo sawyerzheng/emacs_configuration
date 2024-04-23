@@ -405,6 +405,36 @@ Nominally unique, but not enforced."
             (previous-buffer))
         (call-interactively #'quit-window)))))
 
+(defun my/browse-url-wsl-advice (url &rest args)
+    "use windows browser in wsl to open urls"
+    (interactive)
+
+
+    (if (and (not (eq browse-url-browser-function 'eaf-open-browser))
+             my/wsl-p)
+        (cond
+         (;; open http://demo.com
+          (string-match-p "^https?://" url)
+          (message "23")
+          (shell-command (format "cmd.exe /c start \"%s\"" url)))
+
+         (;; open file:///home/to/my/file
+          (string-match-p "^file://" url)
+          (shell-command (let* (($file (substring url 7))
+                                ($file (shell-command-to-string (format "wslpath -m %s" $file)))
+                                ($file (split-string $file
+                                                     split-string-default-separators
+                                                     t
+                                                     split-string-default-separators))
+
+                                (url (concat "file:" (car $file)))
+                                (command (format "cmd.exe /c start %s" url)))
+                           command)))
+         (t
+          (funcall-interactively browse-url-browser-function url args)))
+
+      (funcall-interactively browse-url-browser-function url args)))
+
 ;; * 切换默认浏览器工具
 (defun my/switch-default-browser (&optional selected-choice)
   (interactive)

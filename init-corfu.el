@@ -5,7 +5,7 @@
 (use-package corfu
   :straight t
   :commands (corfu-mode)
-  :hook (my/startup . global-corfu-mode)
+  ;; :hook (my/startup . global-corfu-mode)
   :after orderless
   :custom
   (corfu-auto t)

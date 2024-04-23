@@ -37,6 +37,7 @@
   ;; Highly rust blocks correctly
   (if (featurep 'rust)
       (add-to-list 'markdown-code-lang-modes '("rust" . rustic-mode)))
+  (add-to-list 'markdown-code-lang-modes '("json-with-comments" . jsonc-mode))
 
   (setq markdown-max-image-size '(900 . 800))
 
@@ -102,7 +103,10 @@
   ;;   dnd-save-directory
   ;;   )
 
+
+
   )
+
 (use-package markdown-download
   ;; :after (markdown-mode org-download)
   :bind (:map markdown-mode-command-map

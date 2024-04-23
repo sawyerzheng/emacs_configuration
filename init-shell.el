@@ -40,6 +40,10 @@
   ;; * hack for doom theme
   ;; ** doom-vibrant
   ;; change base0 first element to #555f70
+  (with-eval-after-load 'ace-window
+    (define-key eat-semi-char-mode-map (kbd "M-o") #'ace-window)
+    (define-key eat-semi-char-mode-map (kbd "M-O") #'ace-swap-window)
+    )
   )
 
 (provide 'init-shell)

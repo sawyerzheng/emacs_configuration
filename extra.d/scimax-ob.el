@@ -465,17 +465,17 @@ http://endlessparentheses.com/define-context-aware-keys-in-emacs.html"
   (cl-pushnew (cons key def) (cdr (assoc language scimax-ob-src-keys)))
 
   `(define-key org-mode-map ,(kbd key)
-     '(menu-item
-       ,(format "maybe-%s" (or (car (cdr-safe def)) def))
-       nil
-       :filter (lambda (&optional _)
-		 ,(if language
-		      `(when (and (org-in-src-block-p)
-				  (string= ,(symbol-name language)
-					   (car (org-babel-get-src-block-info t))))
-			 ,def)
-		    `(when (org-in-src-block-p)
-		       ,def))))))
+               '(menu-item
+                 ,(format "maybe-%s" (or (car (cdr-safe def)) def))
+                 nil
+                 :filter (lambda (&optional _)
+		           ,(if language
+		                `(when (and (org-in-src-block-p)
+				            (string= ,(symbol-name language)
+					             (car (org-babel-get-src-block-info t))))
+			           ,def)
+		              `(when (org-in-src-block-p)
+		                 ,def))))))
 
 (defcustom scimax-ob-src-key-bindings
   '(
@@ -502,7 +502,7 @@ Usually called in a hook function."
 	   (eval `(scimax-ob-define-src-key nil ,key ,cmd))))
 
 ;; I think this hook needs to be run at the end.
-(add-hook 'org-mode-hook 'scimax-ob-src-key-bindings t)
+;; (add-hook 'org-mode-hook 'scimax-ob-src-key-bindings t)
 
 (defun scimax-ob-show-src-keys (language)
   "Show a reminder of the keys bound for LANGUAGE blocks."

@@ -29,6 +29,41 @@
               )
   :commands (blink-search))
 
+;;;###autoload
+(defun my/avy-goto-word-start-2 (char1 char2 &optional arg beg end)
+  "jump to word begin with two char"
+  (interactive (list (let ((c1 (read-char "char 1: " t)))
+                       (if (memq c1 '(? ?\b))
+                           (keyboard-quit)
+                         c1))
+                     (let ((c2 (read-char "char 2: " t)))
+                       (cond ((eq c2 ?)
+                              (keyboard-quit))
+                             ((memq c2 avy-del-last-char-by)
+                              (keyboard-escape-quit)
+                              (call-interactively 'avy-goto-char-2))
+                             (t
+                              c2)))
+                     current-prefix-arg
+                     nil nil))
+  (when (eq char1 ?)
+    (setq char1 ?\n))
+  (when (eq char2 ?)
+    (setq char2 ?\n))
+  (let* ((str (format "%s%s" (string char1) (string char2)))
+         (regex (cond ((string= str ".")
+                       "\\.")
+                      ((and avy-word-punc-regexp
+                            (string-match avy-word-punc-regexp str))
+                       (regexp-quote str))
+                      (t
+                       (concat
+                        (if arg "\\_<" "\\b")
+                        str)))))
+    (avy-jump regex
+              :window-flip arg
+              :beg beg
+              :end end)))
 
 (defvar my/search-keymap (make-sparse-keymap)
   "keymap for search")
@@ -75,6 +110,7 @@
   ;; (define-key map (kbd "j") #'ace-pinyin-jump-word)
   (define-key map (kbd "k") #'avy-goto-word-1)
   (define-key map (kbd "j") #'avy-goto-char)
+  (define-key map (kbd "h") #'my/avy-goto-word-start-2)
   (define-key map (kbd "l") #'avy-goto-char-in-line)
   (define-key map (kbd "2") #'avy-goto-char-2)
 

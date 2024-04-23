@@ -158,6 +158,7 @@ Will cancel all other selection, except char selection. "
     (interactive)
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
     (meow-motion-overwrite-define-key
+     (cons "q" my/search-keymap)
      '("j" . meow-next)
      '("k" . meow-prev)
      '("<escape>" . ignore)
@@ -223,7 +224,9 @@ Will cancel all other selection, except char selection. "
      '("2" . meow-expand-2)
      '("1" . meow-expand-1)
      '("-" . negative-argument)
-     '(";" . meow-reverse)
+     ;; '(";" . meow-reverse)
+     '(";" . nil)
+     '(":" . meow-reverse)
      '("," . meow-inner-of-thing)
      '("." . meow-bounds-of-thing)
      '("[" . meow-beginning-of-thing)
@@ -267,6 +270,7 @@ Will cancel all other selection, except char selection. "
      ;; '("U" . meow-undo-in-selection)
      '("U" . undo-redo)
      '("v" . my/meow-visit)
+     '("V" . meow-visit)
      '("w" . meow-mark-word)
      '("W" . meow-mark-symbol)
      '("x" . meow-line)
@@ -545,6 +549,11 @@ Will cancel all other selection, except char selection. "
     (key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit)
     (key-chord-define meow-insert-state-keymap "JK" #'meow-insert-exit)
     (global-set-key (kbd "<f7>") #'my/meow-insert-normal-toggle)
+    (global-set-key (kbd "M-<up>") #'move-text-up)
+    (global-set-key (kbd "M-<down>") #'move-text-down)
+    (global-set-key (kbd "M-K") #'move-text-up)
+    (global-set-key (kbd "M-J") #'move-text-down)
+
     )
   )
 
@@ -567,5 +576,8 @@ Will cancel all other selection, except char selection. "
 ;; * meow mode state list
 (add-to-list 'meow-mode-state-list '(eaf-mode . motion))
 (add-to-list 'meow-mode-state-list '(calc-mode . insert))
+(add-to-list 'meow-mode-state-list '(fanyi-mode . normal))
+(add-to-list 'meow-mode-state-list '(blink-search-mode . insert))
+(add-to-list 'meow-mode-state-list '(eat-mode . insert))
 
 (provide 'init-meow-edit)

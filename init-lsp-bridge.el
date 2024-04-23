@@ -39,6 +39,7 @@
   (setq lsp-bridge-mode-lighter " 橋")
   (setq lsp-bridge-mode-lighter " 🚀")
 
+  (require 'lsp-bridge-peek)
   ;; peek
   (define-key lsp-bridge-peek-keymap (kbd "M-t") #'lsp-bridge-peek-through)
 
@@ -52,7 +53,8 @@
 
     (when lsp-bridge-server
       (if (and (boundp 'doom-modeline-mode) doom-modeline-mode)
-          (doom-modeline-lsp-icon lsp-bridge-mode-lighter mode-face)
+          ;; (doom-modeline-lsp-icon lsp-bridge-mode-lighter mode-face)
+          (doom-modeline-icon 'octicon "nf-oct-rocket" " 🚀" lsp-bridge-mode-lighter :face mode-face)
         (propertize lsp-bridge-mode-lighter 'face mode-face))))
 
   ;; (require 'lsp-bridge)
@@ -64,6 +66,8 @@
   (setq acm-enable-codeium nil)
   (setq acm-enable-preview t)
   (setq lsp-bridge-enable-org-babel t)
+  (setq lsp-bridge-enable-inlay-hint nil) ;; for rust type annotation
+
   (setq lsp-bridge-org-babel-lang-list '("python" "rust" "sh" "java" "c" "c++" "jupyter-python"))
   (setq lsp-bridge-c-lsp-server "ccls"
         lsp-bridge-python-lsp-server "pyright"

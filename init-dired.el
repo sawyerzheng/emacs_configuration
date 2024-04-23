@@ -221,14 +221,14 @@ Version 2018-09-29"
               ("n" . ztree-next-line)))
 
 (use-package dired-rsync
-  :straight t
+  :straight (:type git :host github :repo "stsquad/dired-rsync")
   :after dired
   :bind (:map dired-mode-map
               ("C-c C-r" . dired-rsync)
               ("r" . dired-rsync)))
 
 (use-package dired-rsync-transient
-  :straight t
+  :straight (:type git :host github :repo "stsquad/dired-rsync")
   :bind (:map dired-mode-map
               ("C-c C-x" . dired-rsync-transient)
               ("x" . dired-rsync-transient)))

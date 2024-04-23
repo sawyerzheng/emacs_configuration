@@ -19,12 +19,26 @@ If there is not function elpy-project-root, use xah lee's function"
         (if root
             (message "Not valid file %s" file))))))
 
+
+(defun my/get-python-path ()
+  "make the `PYTHONPATH' env variable for current python project layout"
+  (let* ((root (my/get-project-root))
+         (this-project-root root)
+         (src-folder-dir (file-exists-p (expand-file-name "src" root)))
+         (has-src-folder src-folder-dir)
+         (python-path-list '(".")))
+    (if has-src-folder
+        (add-to-list 'python-path-list src-folder-dir t)
+      (add-to-list 'python-path-list root t))
+    (mapconcat 'identity python-path-list path-separator)))
+
 (defun my/python-which-module ()
   (interactive)
   (let ((file (buffer-file-name))
-        (p-root (my/get-project-root)))
+        (p-root (my/get-project-root))
+        (file-no-init-parent (my/detect-module-root file p-root)))
     (when (and file p-root)
-      (my/python-get-module-name file p-root)))
+      (my/python-get-module-name file file-no-init-parent)))
   )
 
 (defun my/python-get-module-name (file root)
@@ -42,6 +56,29 @@ If there is not function elpy-project-root, use xah lee's function"
         (my/python-get-module-name file root)
       nil)))
 
+
+(defun my/path--detect-file-ext (file-ext folder)
+  "check if folder hash file with given `file-ext', eg: .py"
+  (directory-files folder t (format "%s$" (regexp-quote file-ext))))
+
+
+(defun my/detect-module-root (file project-root)
+  "file the first parent folder not having a __init__.py"
+  (let* ((file-ext "__init__.py")
+         (project-root (expand-file-name project-root))
+         (parent (expand-file-name (file-name-directory file)))
+         (parent-has-init (my/path--detect-file-ext file-ext parent)))
+    (message "init: %s" (my/path--detect-file-ext file-ext parent))
+    (while (and (not (string-match "^\\.\\.\\|\\.$" (file-relative-name file project-root))) parent-has-init)
+      (message "parent: %s" parent)
+
+
+      (setq parent (file-name-parent-directory parent))
+      (message "parent: %s" parent)
+      (setq parent-has-init (my/path--detect-file-ext file-ext parent)))
+
+    parent))
+
 (defun my-elpy/execute-from-project-root (file root)
   "execute current file with `python -m' command"
   ;; save file
@@ -57,14 +94,17 @@ If there is not function elpy-project-root, use xah lee's function"
 
   (let* ((file (expand-file-name file))
          (root (expand-file-name root))
+         (this-project-root root)
+         (file-no-init-parent (my/detect-module-root file root))
          (file-at-src (string= (car (file-name-split (file-relative-name file root)))
                                "src"))
          (src-root (expand-file-name "src" root))
          (root (if file-at-src
                    src-root
                  root))
-         (default-directory root)
          (relative-name (file-relative-name file root))
+         (relative-name (file-relative-name file file-no-init-parent))
+
 
          (module-name (replace-regexp-in-string "/" "." (file-name-sans-extension relative-name)))
          (proj-name (if (project-current)
@@ -72,6 +112,7 @@ If there is not function elpy-project-root, use xah lee's function"
                       (directory-file-name (file-relative-name root (file-name-parent-directory root)))))
          (newBuffName (format "*%s run python*" proj-name))
          (newBuff (get-buffer-create newBuffName))
+         (python-path-list '("."))
          (exec-path (if (and (boundp 'my/conda-project-env)
                              (not (string-empty-p my/conda-project-env)))
                         (progn
@@ -110,24 +151,28 @@ If there is not function elpy-project-root, use xah lee's function"
          ;; (command (format "cd %s\n\n%s" root command))
          )
 
+
     ;; add src path to PYTHONPATH
-    (when (file-exists-p src-root)
-      (setenv "PYTHONPATH" src-root))
+    (if (file-exists-p src-root)
+        (add-to-list 'python-path-list src-root)
+      (add-to-list 'python-path-list this-project-root))
+    (with-environment-variables (("PYTHONPATH" (mapconcat 'identity python-path-list path-separator)))
 
-    (with-current-buffer newBuff
-      (setq major-mode 'compilation-mode)
-      (read-only-mode -1)
-      (setf (buffer-string) "")
+      (with-current-buffer newBuff
+        (setq major-mode 'compilation-mode)
+        (read-only-mode -1)
+        (setf (buffer-string) "")
 
-      (princ (concat "# -*- mode: compilation; command: " command " -*- " "\n\n")
-             newBuff)
+        (princ (concat "# -*- mode: compilation; command: " command " -*- " "\n\n")
+               newBuff)
+        (let ((default-directory file-no-init-parent))
+          (compile command))
 
-      (let ((default-directory root))
-        (compile command))
+        (ignore-errors
+          (read-only-mode -1))
+        (local-set-key (kbd "q") 'quit-window)))
 
-      (ignore-errors
-        (read-only-mode -1))
-      (local-set-key (kbd "q") 'quit-window))))
+    ))
 
 ;; (define-key elpy-mode-map (kbd "C-c r") 'my-elpy/execute-buffer)
 (use-package python
@@ -148,6 +193,8 @@ If there is not function elpy-project-root, use xah lee's function"
 (defun my/python-execute-under-cursor (&optional arg)
   (interactive "P")
   (let* ((module (my/python-which-module))
+         (root (my/get-project-root))
+         (file-no-init-parent (my/detect-module-root (buffer-file-name) root))
          (fun-path (which-function))
          (obj-path (concat module ":" fun-path))
          (python-command "python -c \"import sys; (m, obj) = sys.argv[1].split(':'); obj_path = obj.split('.'); import importlib; m = importlib.import_module(m); fun = getattr(m, obj_path[0]); import functools; fun = functools.reduce(lambda fun, sub_obj: getattr(fun, sub_obj), obj_path[1:], fun); print('\\n' + '='*70 + '\\n'); print('calling_function: --> ' + sys.argv[1] + '\\n\\n' + '='*70 + '\\n' ); fun()\"")
@@ -170,7 +217,8 @@ If there is not function elpy-project-root, use xah lee's function"
                                 (cons venv-bin exec-path)
                               exec-path)))
                       exec-path))
-         (command (format "cd %s\n" (my/get-project-root)))
+         ;; (command (format "cd %s\n" (my/get-project-root)))
+         (command "")
          ;; (command (if (and (boundp 'my/conda-project-env)
          ;;                   (not (string-empty-p my/conda-project-env)))
          ;;              (format "conda activate \n%s"
@@ -184,11 +232,14 @@ If there is not function elpy-project-root, use xah lee's function"
                       (directory-file-name (file-relative-name root (file-name-parent-directory root)))))
          (newBuffName (format "*%s run python*" proj-name))
          (newBuff (get-buffer-create newBuffName)))
-    (cond
-     ((and arg (which-function))
-      (with-current-buffer newBuff
-        (compile command)))
-     (t
-      (my-elpy/execute-buffer)))))
+
+    (with-environment-variables (("PYTHONPATH" (my/get-python-path))
+                                 ("PWD" file-no-init-parent))
+      (cond
+       ((and arg (which-function))
+        (with-current-buffer newBuff
+          (compile command)))
+       (t
+        (my-elpy/execute-buffer))))))
 
 (provide 'init-python-basic)

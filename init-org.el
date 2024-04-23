@@ -243,8 +243,9 @@ prepended to the element after the #+HEADER: tag."
     :hook (org-mode . toc-org-mode))
 
   ;; Add graphical view of agenda
-  (use-package org-timeline
-    :hook (org-agenda-finalize . org-timeline-insert-timeline))
+  ;; (use-package org-timeline
+  ;;   :straight t
+  ;;   :hook (org-agenda-finalize . org-timeline-insert-timeline))
 
   ;; (bind-key "SPC b b" org-babel-map 'xah-fly-command-map)
 
@@ -283,10 +284,7 @@ prepended to the element after the #+HEADER: tag."
 (when (boundp 'native-comp-jit-compilation-deny-list)
   (add-to-list 'native-comp-jit-compilation-deny-list ".*jupyter.*"))
 
-(with-eval-after-load 'org
-  (require 'jupyter)
-  (require 'ob-jupyter)
-  (require 'scimax-jupyter))
+
 
 (use-package jupyter
   :straight (:no-native-compile t)
@@ -323,21 +321,71 @@ prepended to the element after the #+HEADER: tag."
           (org-return indent arg interactive))))
 
     (define-key org-mode-map (kbd "RET") #'my/org-return))
+  (with-eval-after-load 'org
+    (with-eval-after-load 'scimax-ob
+      (remove-hook 'org-mode-hook #'scimax-ob-src-key-bindings)))
+
+
 
   (require 'scimax-jupyter)
   (add-hook 'org-mode-hook #'scimax-jupyter-ansi)
-  (setq scimax-ob-src-key-bindings
+  (setq my/scimax-ob-src-key-bindings
         '(
-          ;; ("<return>" . #'org-return-and-maybe-indent)
           ;; ("<return>" . #'newline-and-indent)
-          ("C-<return>" . #'org-ctrl-c-ctrl-c)
-          ("S-<return>" . #'scimax-ob-execute-and-next-block)
-          ("M-<return>" . (lambda ()
-		            (interactive)
-		            (scimax-ob-execute-and-next-block t)))
-          ("M-S-<return>" . #'scimax-ob-execute-to-point)
-          ("C-M-<return>" . #'org-babel-execute-buffer)
-          ("s-." . #'scimax-ob/body)))
+          ("C-<return>" #'org-ctrl-c-ctrl-c #'org-insert-heading-respect-content)
+          ("S-<return>"  #'scimax-ob-execute-and-next-block #'org-table-copy-down)
+          ("M-<return>"  (lambda ()
+		           (interactive)
+		           (scimax-ob-execute-and-next-block t))
+           nil)
+          ("M-S-<return>" #'scimax-ob-execute-to-point #'org-insert-todo-heading)
+          ("C-M-<return>" #'org-babel-execute-buffer nil)
+          ;; ("s-." . #'scimax-ob/body nil)
+          )
+        )
+
+  (defmacro my/scimax-ob-define-src-key (language key def default-def)
+    "For LANGUAGE (symbol) src blocks, define key sequence KEY as DEF.
+KEY should be a string sequence that will be used in a `kbd' sequence.
+This is like `define-key', except the definition only applies in
+src blocks for a specific LANGUAGE.
+
+If language is nil apply to all src-blocks.
+
+Adapted from
+http://endlessparentheses.com/define-context-aware-keys-in-emacs.html"
+    (declare (indent 3)
+	     (debug (form form form &rest sexp)))
+    ;; ;; store the key in scimax-src-keys
+    ;; (unless (cdr (assoc language scimax-ob-src-keys))
+    ;;   (cl-pushnew (list language '()) scimax-ob-src-keys))
+
+    ;; (cl-pushnew (cons key def) (cdr (assoc language scimax-ob-src-keys)))
+
+    `(define-key org-mode-map ,(kbd key)
+                 '(menu-item
+                   ,(format "maybe-%s" (or (car (cdr-safe def)) def))
+                   nil
+                   :filter (lambda (&optional _)
+		             ,(if language
+		                  `(when (and (org-in-src-block-p)
+				              (string= ,(symbol-name language)
+					               (car (org-babel-get-src-block-info t))))
+			             ,def)
+		                `(cond ((org-in-src-block-p)
+		                        ,def)
+                                       (t
+                                        ,default-def)))))))
+
+  (defun my/scimax-ob-src-key-bindings ()
+    "context key binding, but still use original command when no in a org src code block"
+    ;; These should work in every src-block IMO.
+    (cl-loop for (key  cmd default-cmd) in my/scimax-ob-src-key-bindings
+	     do
+	     (eval `(my/scimax-ob-define-src-key nil ,key ,cmd ,default-cmd))))
+
+  (add-hook 'org-mode-hook #'my/scimax-ob-src-key-bindings)
+
   (define-key org-mode-map (kbd "M-' M-'") #'scimax-jupyter-org-hydra/body)
   (define-key org-mode-map (kbd "M-\"") #'scimax-jupyter-org-hydra/body)
 
@@ -387,6 +435,13 @@ the `jupyter-current-client' local to the buffer."
         (jupyter-repl-interaction-mode))))
 
   )
+
+;; (with-eval-after-load 'org
+;;   (require 'jupyter)
+;;   ;; (require 'ob-jupyter)
+;;   ;; (require 'scimax-jupyter)
+;;   )
+
 (defun my/org-babel-lazy-load-language-advice (orig-fun &rest args)
   (let* ((info (nth 1 args))
 	 (lang (nth 0 info))
@@ -700,7 +755,10 @@ the `jupyter-current-client' local to the buffer."
 (use-package outli
   :straight (:type git :host github :repo "jdtsmith/outli")
   :after (org)
-  :commands (outli-mode))
+  :commands (outli-mode)
+  :hook ((python-base-mode java-mode java-ts-mode rust-mode rust-ts-mode shell-script-mode) . outli-mode)
+  :init
+  (require 'org))
 
 
 (provide 'init-org)
