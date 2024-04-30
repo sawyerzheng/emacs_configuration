@@ -10,6 +10,7 @@
   ;; (key-chord-define org-mode-map "kl" my/org-mode-map)
   (define-key org-mode-map (kbd "C-c C-i") my/org-mode-map))
 
+
 (use-package org
   ;; :straight t
   :straight (:type built-in)
@@ -32,6 +33,8 @@
           org-export-with-sub-superscripts '{}))
   :hook ((org-mode org-babel-after-execute) . org-redisplay-inline-images)
   :hook (org-mode . my/org-mode-conf-settings-fn)
+  :config
+  (setq org-agenda-start-on-weekday 1)
   :init
   (defvar org-mode-local-keymap
     (make-sparse-keymap)

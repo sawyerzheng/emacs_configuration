@@ -225,7 +225,7 @@ Will cancel all other selection, except char selection. "
      '("1" . meow-expand-1)
      '("-" . negative-argument)
      ;; '(";" . meow-reverse)
-     '(";" . nil)
+     '(";" . move-end-of-line)
      '(":" . meow-reverse)
      '("," . meow-inner-of-thing)
      '("." . meow-bounds-of-thing)
@@ -316,6 +316,7 @@ Will cancel all other selection, except char selection. "
       (meow-normal-define-key
        '("0" . back-button-local-backward)
        '(")" . back-button-local-forward)))
+    (global-unset-key (kbd "C-c b"))
     (global-unset-key (kbd "C-c f"))
     (global-unset-key (kbd "C-c j"))
     (global-unset-key (kbd "C-c k"))
@@ -349,6 +350,7 @@ Will cancel all other selection, except char selection. "
      '("l 7" . calc)
      '("l 9" . shell-command)
      '("l ;" . count-matches)
+     '("l a" . org-agenda)
      '("l b" . save-some-buffers)
      '("l c" . flyspell-buffer)
      '("l d" . eshell)
@@ -535,7 +537,7 @@ Will cancel all other selection, except char selection. "
      '("o w" .		apply-macro-to-region-lines)
 
      ;; major mode hydra
-     '("SPC" . major-mode-hydra)
+     '("b" . major-mode-hydra)
      ;; M-x
      '("a" . execute-extended-command)
      )
