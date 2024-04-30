@@ -26,7 +26,7 @@
       ;;                     (font-spec :family "WenQuanYi Micro Hei Mono" :height 128 :width 'normal :weight 'normal)))
       )
      ;; wsl + arch linux + (or wsl linux-vm) + not 4k
-     ((and my/linux-p (or my/wsl-p my/linux-vm-p) my/arch-p)
+     ((and my/linux-p (or my/wsl-p my/linux-vm-p) my/arch-p (not (my/4k-p)))
       (set-face-attribute 'default nil :family "Cascadia Code" :foundry "ADBO" :slant 'normal :weight 'normal :height 128 :width 'normal)
 
       (dolist (charset '(kana han symbol cjk-misc bopomofo))
@@ -49,6 +49,10 @@
      ;; ** linux + 4k + gnome
      ((and my/linux-p (my/4k-p) (string= (getenv "DESKTOP_SESSION") "gnome"))
       (set-face-attribute 'default nil :family "Source Code Pro" :foundry "ADBO" :slant 'normal :weight 'normal :height 128 :width 'normal))
+
+     ;; ** linux + 4k + cinnamon
+     ((and my/linux-p (my/4k-p) (string= (getenv "DESKTOP_SESSION") "cinnamon"))
+      (set-face-attribute 'default nil :family "Source Code Pro" :foundry "ADBO" :slant 'normal :weight 'normal :height 110 :width 'normal))
 
      ;; ;; ** linux + 4k + gnome + daemon
      ((and my/linux-p (my/4k-p) (null (getenv "DESKTOP_SESSION")) (daemonp))
