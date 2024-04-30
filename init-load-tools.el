@@ -56,12 +56,19 @@
                                 ;; "E:/soft/envs/win-conda/envs/tools/python"
                                 "d:/soft/miniconda3/envs/tools/python.exe"
                               (expand-file-name "~/miniconda3/envs/tools/bin/python")))
+;; (defun my/get-linux-distro ()
+;;   "from lsb_release"
+;;   (interactive)
+;;   (when (eq system-type 'gnu/linux)
+;;     (let* ((raw-str (shell-command-to-string "lsb_release -sd")))
+;;       (car (split-string raw-str "\"" t "\"")))))
 (defun my/get-linux-distro ()
   "from lsb_release"
   (interactive)
   (when (eq system-type 'gnu/linux)
-    (let* ((raw-str (shell-command-to-string "lsb_release -sd")))
-      (car (split-string raw-str "\"" t "\"")))))
+    (let* ((raw-str (shell-command-to-string "cat /etc/os-release | head -n 1 |grep -P '(?<=\")[[:alnum:] ]+' -o")))
+      (string-trim raw-str))))
+
 
 (defvar my/arch-p
   (or (equal (my/get-linux-distro) "EndeavourOS Linux")
