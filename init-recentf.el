@@ -10,9 +10,11 @@
         (list "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\)$" "^/tmp/" "^/ssh:"
               "\\.?ido\\.last$" "\\.revive$" "/TAGS$" "^/var/folders/.+$"
               "persp-auto-save" ;; persp-mode
-              ".gpg\\'"       ;; gpg files
+              ".gpg\\'"         ;; gpg files
               ;; ignore private DOOM temp files
               ;; (recentf-apply-filename-handlers doom-local-dir)
+              ;; tramp files
+              "/sshx?:.+"
               ))
 
   (defun doom--recent-file-truename (file)

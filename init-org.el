@@ -35,6 +35,7 @@
   :hook (org-mode . my/org-mode-conf-settings-fn)
   :config
   (setq org-agenda-start-on-weekday 1)
+  (setq calendar-week-start-day 1)
   :init
   (defvar org-mode-local-keymap
     (make-sparse-keymap)
