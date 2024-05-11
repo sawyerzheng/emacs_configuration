@@ -7,7 +7,8 @@
 ;; theme
 (defvar my/theme-to-load
   ;; 'doom-one
-  'tsdh-dark
+  ;; 'tsdh-dark
+  'modus-vivendi-tritanopia
   "tsdh-dark, doom-one")
 (with-eval-after-load 'init-font
   (setq my/theme-to-load 'doom-one))
