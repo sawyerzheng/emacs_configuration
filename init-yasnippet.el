@@ -5,6 +5,8 @@
   :hook (((prog-mode org-mode python-mode java-mode emacs-lisp-mode) . yas-minor-mode)
          ;; (my/startup-hook . yas-global-mode)
          )
+  :bind (:keymap yas-minor-mode
+                 ("C-i" . yas-expand))
   :config
   (use-package yasnippet-snippets
     :straight (:type git :host github :repo "AndreaCrotti/yasnippet-snippets" :files ("*")))

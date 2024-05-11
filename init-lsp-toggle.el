@@ -22,8 +22,8 @@
     css-ts-mode-hook
     html-mode-hook
     html-ts-mode-hook
-    ;; rust-mode-hook
-    ;; rust-ts-mode-hook
+    rust-mode-hook
+    rust-ts-mode-hook
     )
   "auto toggle for lsp-mode and lsp-bridge")
 
@@ -480,10 +480,10 @@
              meghanada-update-server
              ))
 
-(add-hook 'rust-ts-mode-hook #'my-start-eglot-fn)
-(add-hook 'rust-mode-hook #'my-start-eglot-fn)
-(remove-hook 'rust-ts-mode-hook #'my-start-lsp-bridge-fn)
-(remove-hook 'rust-mode-hook #'my-start-lsp-bridge-fn)
+;; (add-hook 'rust-ts-mode-hook #'my-start-eglot-fn)
+;; (add-hook 'rust-mode-hook #'my-start-eglot-fn)
+;; (remove-hook 'rust-ts-mode-hook #'my-start-lsp-bridge-fn)
+;; (remove-hook 'rust-mode-hook #'my-start-lsp-bridge-fn)
 
 
 

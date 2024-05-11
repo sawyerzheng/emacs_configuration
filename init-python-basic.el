@@ -178,11 +178,8 @@ If there is not function elpy-project-root, use xah lee's function"
 (use-package python
   :commands (python-mode)
   :bind (:map python-mode-map
-              ("C-c l r r" . my-elpy/execute-buffer))
-  :mode-hydra
-  (python-mode
-   ("Run"
-    (("r r" my-elpy/execute-buffer "execute buffer")))))
+              ("C-c l r" . my-elpy/execute-buffer))
+  )
 
 ;; (setq python-shell-interpreter "ipython"
 ;; python-shell-interpreter-args "-i --simple-prompt")

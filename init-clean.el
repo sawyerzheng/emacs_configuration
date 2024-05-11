@@ -98,7 +98,7 @@
   ;; * 显示时间
   ;; display with 24 hour format
   (setq display-time-24hr-format t)
-  (display-time-mode 1)
+  (display-time-mode -1)
 
   ;; * 退出 emacs 前，弹出提示
   (setq confirm-kill-emacs 'y-or-n-p)

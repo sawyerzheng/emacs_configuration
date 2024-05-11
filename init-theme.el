@@ -27,6 +27,9 @@
     ;; (load-theme 'modus-vivendi t)
     ))
 
+(use-package kaolin-themes
+  :straight t)
+
 
 
 ;; no save theme prop

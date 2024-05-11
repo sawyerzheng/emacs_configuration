@@ -212,7 +212,8 @@ prepended to the element after the #+HEADER: tag."
 
   ;; agenda
   ;; (setq org-agenda-files (list (expand-file-name "~/org/agenda/work") (expand-file-name "~/org/agenda/life")))
-  (setq org-agenda-files (file-expand-wildcards "~/org/agenda/**/?*.org"))
+  ;; (setq org-agenda-files (file-expand-wildcards "~/org/agenda/**/?*.org"))
+  (setq org-agenda-files '("~/org/agenda/work" "~/org/agenda/life"))
 
   ;; org tempo templates
   (require 'org-tempo)

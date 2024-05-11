@@ -66,7 +66,7 @@
   (setq acm-enable-codeium nil)
   (setq acm-enable-preview t)
   (setq lsp-bridge-enable-org-babel t)
-  (setq lsp-bridge-enable-inlay-hint nil) ;; for rust type annotation
+  (setq lsp-bridge-enable-inlay-hint t) ;; for rust type annotation
 
   (setq lsp-bridge-org-babel-lang-list '("python" "rust" "sh" "java" "c" "c++" "jupyter-python"))
   (setq lsp-bridge-c-lsp-server "ccls"
@@ -238,5 +238,11 @@
               ("M-q" . lsp-bridge-ref-quit))
   :bind (:map lsp-bridge-ref-mode-edit-map
               ("C-c C-c" . lsp-bridge-ref-apply-changed)))
+
+(defun my/lsp-bridge-clean-inlay ()
+  (when lsp-bridge-enable-inlay-hint
+    (my/clean-overlay)))
+
+(add-hook 'lsp-bridge-mode-hook #'my/lsp-bridge-clean-inlay)
 
 (provide 'init-lsp-bridge)
