@@ -761,7 +761,7 @@ the `jupyter-current-client' local to the buffer."
   :straight (:type git :host github :repo "jdtsmith/outli")
   :after (org)
   :commands (outli-mode)
-  :hook ((python-base-mode java-mode java-ts-mode rust-mode rust-ts-mode shell-script-mode) . outli-mode)
+  :hook ((python-base-mode java-mode java-ts-mode rust-mode rust-ts-mode shell-script-mode prog-mode) . outli-mode)
   :init
   (require 'org))
 
