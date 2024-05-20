@@ -41,8 +41,10 @@
    ("Tests"
     (("t" my/pytest-hydra/body "pytest"))
     "Debug"
-    (("d d" dap-hydra "dap-hydra"))))
-  )
+    (("d d" dap-hydra "dap-hydra"))
+    "Run"
+    (("r" my-elpy/execute-buffer "execute buffer")
+     ("b" my/python-execute-under-cursor "execute buffer")))))
 
 (major-mode-hydra-define+ python-base-mode
   (:title "Python Mode" :color blue :quit-key "q")
@@ -53,7 +55,7 @@
    (("d d" dap-hydra "dap-hydra"))
    "Run"
    (("r" my-elpy/execute-buffer "execute buffer")
-    ("SPC" my/python-execute-under-cursor "execute buffer"))))
+    ("b" my/python-execute-under-cursor "execute buffer"))))
 
 
 (use-package python-pytest
