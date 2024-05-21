@@ -1,4 +1,21 @@
 (bind-key "C-c p" project-prefix-map)
+
+
+(defun my/project-switch-project (dir)
+  "\"Switch\" to another project by running an Emacs command.
+The available commands are presented as a dispatch menu
+made from `project-switch-commands'.
+
+When called in a program, it will use the project corresponding
+to directory DIR."
+  (interactive (list (project-prompt-project-dir)))
+  (let ((command (if (symbolp project-switch-commands)
+                     project-switch-commands
+                   (project--switch-project-command))))
+    (let ((default-directory dir)
+          (project-current-directory-override dir))
+      (call-interactively command))))
+
 (use-package project
   ;; :defer t
   :straight (:type built-in)
@@ -6,7 +23,9 @@
   ;; (bind-key "o" #'+treemacs/toggle  project-prefix-map)
   (bind-key "o" #'dired-sidebar-toggle-sidebar project-prefix-map)
   (defun project--find-in-directory (dir)
-    (run-hook-with-args-until-success 'project-find-functions (file-truename dir))))
+    (run-hook-with-args-until-success 'project-find-functions (file-truename dir)))
+
+  (define-key project-prefix-map (kbd "p") #'my/project-switch-project))
 
 (defun my/project-vterm ()
   "start a vterm shell buffer for current project"

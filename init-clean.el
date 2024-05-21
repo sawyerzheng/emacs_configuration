@@ -226,7 +226,7 @@
 
   ;; prog
   (require 'init-highlight-indent-guides)
-  (require 'init-paredit)
+  ;; (require 'init-paredit)
   ;; python
   (require 'init-python)
   (require 'init-ein)
