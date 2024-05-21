@@ -9,12 +9,8 @@
   (defun my/python-init-settings ()
     (interactive)
     (setq-local tab-width 4))
-  :hook ((python-base-mode . my/python-init-settings)
-         )
-  :bind ("<RET>" . electric-newline-and-maybe-indent))
+  :hook ((python-base-mode . my/python-init-settings)))
 
-(use-package electric
-  :hook ((python-base-mode) . electric-indent-local-mode))
 
 (use-package pytest
   :straight t
