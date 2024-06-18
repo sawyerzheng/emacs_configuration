@@ -11,8 +11,7 @@
   ;; :load-path ("~/source/lsp-bridge/" "~/source/lsp-bridge/acm/")
   :commands (lsp-bridge-rename lsp-bridge-mode global-lsp-bridge-mode)
   ;; :hook (my/startup . global-lsp-bridge-mode)
-  :hook ((org-mode
-          emacs-lisp-mode
+  :hook ((emacs-lisp-mode
           lisp-interaction-mode) . lsp-bridge-mode)
   :bind (:map lsp-bridge-mode-map
               ("M-." . lsp-bridge-find-def)

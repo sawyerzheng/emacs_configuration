@@ -103,4 +103,9 @@
     (require lib)
     ))
 
+(defun my/server-open-recentf-file ()
+  (interactive)
+  (recentf-open-most-recent-file 1))
+
+(add-hook 'server-after-make-frame-functions #'my/server-open-recentf-file)
 (provide 'init-server)

@@ -166,12 +166,13 @@ Will cancel all other selection, except char selection. "
      ;; '("v" . my/meow-visit)
 
      '("8" . other-window)
+     '("*" . other-frame)
      '("9" . recenter-top-bottom)
 
      '("\\" . my/meow-quit)
      ;; window
-     ;; '("`" . other-window)
-     ;; '("~" . other-frame)
+     '("`" . other-window)
+     '("~" . other-frame)
      ;; '("|" . split-window-right)
 
      ;; region
@@ -285,7 +286,6 @@ Will cancel all other selection, except char selection. "
      '("\\" . my/meow-quit)
      ;; window
      '("`" . other-window)
-     '(">" . other-window) ;; "."
      '("~" . other-frame)
      '("|" . split-window-right)
 
@@ -546,6 +546,7 @@ Will cancel all other selection, except char selection. "
     (meow-normal-define-key
      ;; window manage
      '("8" . other-window)
+     '("*" . other-frame)
      '("9" . recenter-top-bottom)
      )
 

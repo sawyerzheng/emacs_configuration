@@ -13,6 +13,7 @@
   (corfu-auto-prefix 1)
   (corfu-cycle t)
   ;; (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-separator ?=)          ;; Orderless field separator
   (corfu-preview-current nil) ;; Disable current candidate preview
   (corfu-on-exact-match nil)
   (corfu-quit-no-match 'separator)

@@ -181,8 +181,16 @@ If there is not function elpy-project-root, use xah lee's function"
               ("C-c l r" . my-elpy/execute-buffer))
   )
 
-;; (setq python-shell-interpreter "ipython"
-;; python-shell-interpreter-args "-i --simple-prompt")
+(defun my/python-repl-use-ipython ()
+  (interactive)
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --simple-prompt"))
+
+(defun my/python-repl-use-python ()
+  (interactive)
+  (setq python-shell-interpreter "python"
+        python-shell-interpreter-args "-i"))
+
 (setq python-shell-interpreter "python"
       python-shell-interpreter-args "-i")
 
