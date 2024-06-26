@@ -46,8 +46,12 @@
   :mode (("\\.html?\\'" . web-mode))
   :hook ((html-mode . web-mode)))
 
+(use-package vue-mode
+  :straight (:source (melpa gpu-elpa-mirror))
+  :mode ("\\.vue\\'" . vue-mode)
+  )
 (use-package typescript-mode
-  :straight t
+  :straight (:source (melpa gpu-elpa-mirror))
   :commands (typescript-mode))
 
 ;; ref: https://github.com/ananthakumaran/tide
