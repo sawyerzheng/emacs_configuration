@@ -14,19 +14,21 @@
   :hook (prog-mode . my/devdocs-set-local-docsets)
   :init
   (defvar my/devdocs-major-mode-docs-alist
-    '((c-mode          . ("c"))
-      (c++-mode        . ("cpp"))
-      (python-mode     . ("python~3.9" "numpy~1.22" "pandas~1" "flask~2.2"))
-      (ruby-mode       . ("ruby~3.1"))
-      (go-mode         . ("Go"))
-      (rustic-mode     . ("Rust"))
-      (css-mode        . ("CSS"))
-      (html-mode       . ("HTML"))
-      (js-mode         . ("JavaScript" "JQuery"))
-      (js2-mode        . ("JavaScript" "JQuery"))
-      (emacs-lisp-mode . ("Elisp"))
-      (cmake-mode . ("CMake")))
+    '()
     "Alist of MAJOR-MODE and list of docset names.")
+  (setq my/devdocs-major-mode-docs-alist
+        '((c-mode          . ("c"))
+          (c++-mode        . ("cpp"))
+          (python-mode     . ("python~3.9" "numpy~1.22" "pandas~1" "flask~2.2"))
+          (ruby-mode       . ("ruby~3.1"))
+          (go-mode         . ("Go"))
+          (rustic-mode     . ("Rust"))
+          (css-mode        . ("CSS"))
+          (html-mode       . ("HTML"))
+          ;; (js-mode         . ("javascript" "jquery" "vue~3"))
+          ;; (js2-mode        . ("JavaScript" "JQuery"))
+          (emacs-lisp-mode . ("Elisp"))
+          (cmake-mode . ("CMake"))))
 
 
 
@@ -60,7 +62,8 @@ Install the doc if it's not installed."
                         (mapcar (lambda (it) (cons (alist-get 'slug it) it))
                                 (devdocs--available-docs))))))))
 
-     (alist-get major-mode my/devdocs-major-mode-docs-alist))
+     (alist-get major-mode my/devdocs-major-mode-docs-alist)
+     )
 
     ;; Lookup the symbol at point
     (devdocs-lookup nil (thing-at-point 'symbol t)))

@@ -37,14 +37,29 @@
 ;;   :hook ((js2-mode css-mode html-mode) . skewer-mode)
 ;;   )
 
+(use-package js
+  :mode ("\\.js$" . js-mode))
+
 (use-package js2-mode
   :straight t
-  :mode  ("\\.js\\'" . js2-minor-mode))
+  ;; :mode  ("\\.js\\'" . js2-minor-mode)
+  :hook (js-mode . js2-minor-mode))
 
 (use-package web-mode
   :straight t
   :mode (("\\.html?\\'" . web-mode))
-  :hook ((html-mode . web-mode)))
+  :hook ((html-mode . web-mode))
+  :config
+  (setq web-mode-enable-auto-closing t) ; enable auto close tag in text-mode
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-auto-close-style 2)
+  (setq web-mode-enable-css-colorization t)
+  (setq web-mode-imenu-regexp-list
+        '(("<\\(h[1-9]\\)\\([^>]*\\)>\\([^<]*\\)" 1 3 ">" nil)
+          ("^[ \t]*<\\([@a-z]+\\)[^>]*>? *$" 1 " id=\"\\([a-zA-Z0-9_]+\\)\"" "#" ">")
+          ("^[ \t]*<\\(@[a-z.]+\\)[^>]*>? *$" 1 " contentId=\"\\([a-zA-Z0-9_]+\\)\"" "=" ">")
+          ;; angular imenu
+          (" \\(ng-[a-z]*\\)=\"\\([^\"]+\\)" 1 2 "="))))
 
 ;; (use-package vue-mode
 ;;   :straight (:source (melpa gpu-elpa-mirror))
@@ -93,20 +108,45 @@
   :straight t
   :after (web-mode typescript-mode)
   :config
+  (setq my/tide-enable-hooks '(web-mode-hook
+                               vue-mode-hook
+                               js-mode-hook
+                               js-ts-mode-hook
+                               javascript-mode-hook
+                               javascript-ts-mode-hook
+                               typescript-mode-hook
+                               typescript-ts-mode-hook))
   (defun setup-tide-mode ()
     (interactive)
     (tide-setup)
-    (flycheck-mode +1)
+    (flycheck-mode 1)
     (setq flycheck-check-syntax-automatically '(save mode-enabled))
-    (eldoc-mode +1)
-    (tide-hl-identifier-mode +1)
+    (eldoc-mode 1)
+    (tide-hl-identifier-mode 1)
     ;; company is an optional dependency. You have to
     ;; install it separately via package-install
     ;; `M-x package-install [ret] company`
-    (company-mode +1))
+    (if (featurep 'corfu)
+        ;; use corfu
+        (progn
+          (corfu-mode +1)
+          (unless (fboundp #'cape-company-to-capf)
+            (require 'cape))
+          (add-to-list 'completion-at-point-functions
+                       (cape-company-to-capf #'company-tide)))
+      ;; use company
+      (company-mode 1))
+
+    ;; disable lsp backend
+    (dolist (hook my/tide-enable-hooks)
+
+      (remove-hook hook #'my-start-eglot-fn)
+      (remove-hook hook #'my-start-lsp-bridge-fn)
+      (remove-hook hook #'my-start-lsp-mode-fn)))
 
   ;; if you use typescript-mode
-  (add-hook 'typescript-mode-hook #'setup-tide-mode)
+  (my/enable-tide)
+
 
   ;; aligns annotation to the right hand side
   (setq company-tooltip-align-annotations t)
@@ -116,6 +156,17 @@
 
   ;; enable typescript-tslint checker
   (flycheck-add-mode 'typescript-tslint 'web-mode))
+
+(defun my/enable-tide ()
+  (interactive)
+  (dolist (hook my/tide-enable-hooks)
+    (add-hook hook #'setup-tide-mode)))
+
+
+(defun my/disable-tide ()
+  (interactive)
+  (dolist (hook my/tide-enable-hooks)
+    (remove-hook hook #'setup-tide-mode)))
 
 (use-package indium
   :straight t)

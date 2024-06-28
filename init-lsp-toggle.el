@@ -3,29 +3,35 @@
 
 ;; * config
 (defcustom my/lsp-toggle-mode-hooks
-  '(
-    python-base-mode-hook
-    ;; python-mode-hook
-    ;; python-ts-mode-hook
-    c++-mode-hook
-    c++-ts-mode-hook
-    c-mode-hook
-    c-ts-mode-hook
-    cmake-mode-hook
-    cmake-ts-mode-hook
-    java-mode-hook
-    java-ts-mode-hook
-    web-mode-hook
-    javascript-mode-hook
-    javascript-ts-mode-hook
-    css-mode-hook
-    css-ts-mode-hook
-    html-mode-hook
-    html-ts-mode-hook
-    rust-mode-hook
-    rust-ts-mode-hook
-    )
+  '()
   "auto toggle for lsp-mode and lsp-bridge")
+
+(setq my/lsp-toggle-mode-hooks
+      '(
+        python-base-mode-hook
+        ;; python-mode-hook
+        ;; python-ts-mode-hook
+        c++-mode-hook
+        c++-ts-mode-hook
+        c-mode-hook
+        c-ts-mode-hook
+        cmake-mode-hook
+        cmake-ts-mode-hook
+        java-mode-hook
+        java-ts-mode-hook
+        web-mode-hook
+        js-mode-hook
+        js-ts-mode-hook
+        javascript-mode-hook
+        javascript-ts-mode-hook
+        typescript-mode-hook
+        typescript-ts-mode-hook
+        css-mode-hook
+        css-ts-mode-hook
+        html-mode-hook
+        html-ts-mode-hook
+        rust-mode-hook
+        rust-ts-mode-hook))
 
 (defvar my/lsp-backend-alist '(("lsp-mode" . my-enable-lsp-mode)
                                ("lsp-bridge" . my-enable-lsp-bridge)
