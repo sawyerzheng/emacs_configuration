@@ -42,8 +42,8 @@
 
 (use-package js2-mode
   :straight t
-  ;; :mode  ("\\.js\\'" . js2-minor-mode)
   :hook (js-mode . js2-minor-mode))
+
 
 (use-package web-mode
   :straight t
@@ -60,6 +60,44 @@
           ("^[ \t]*<\\(@[a-z.]+\\)[^>]*>? *$" 1 " contentId=\"\\([a-zA-Z0-9_]+\\)\"" "=" ">")
           ;; angular imenu
           (" \\(ng-[a-z]*\\)=\"\\([^\"]+\\)" 1 2 "="))))
+
+;; (use-package vue-mode
+;;   :straight (:source (melpa gpu-elpa-mirror))
+;;   :mode (("\\.vue\\'" . vue-mode))
+;;   :config
+
+;;   )
+
+;; * define a vue-mode
+(define-derived-mode vue-mode web-mode "Vue"
+  "A major mode derived from web-mode, for editing .vue files with LSP support.")
+
+
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+
+
+(defun vue-eglot-init-options ()
+  (let ((tsdk-path (expand-file-name
+                    "lib"
+                    (string-trim-right (shell-command-to-string "npm list --global --parseable typescript |& head -n1")))))
+    `(:typescript (:tsdk ,tsdk-path
+                         :languageFeatures (:completion
+                                            (:defaultTagNameCase "both"
+                                                                 :defaultAttrNameCase "kebabCase"
+                                                                 :getDocumentNameCasesRequest nil
+                                                                 :getDocumentSelectionRequest nil)
+                                            :diagnostics
+                                            (:getDocumentVersionRequest nil))
+                         :documentFeatures (:documentFormatting
+                                            (:defaultPrintWidth 100
+                                                                :getDocumentPrintWidthRequest nil)
+                                            :documentSymbol t
+                                            :documentColor t)))))
+
+;; Volar
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
 
 ;; (use-package vue-mode
 ;;   :straight (:source (melpa gpu-elpa-mirror))
