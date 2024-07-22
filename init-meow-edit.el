@@ -1,5 +1,7 @@
 ;; * my redefined commands
 
+(defun my/xah-insert-singe-bracket () (interactive) (xah-insert-bracket-pair "<" ">"))
+
 (defun my/meow-visit (arg)
   "visit symbol at point, if want to use `meow-visit', use C-u my/moeow-visi or `SPC j k v'"
   (interactive "P")

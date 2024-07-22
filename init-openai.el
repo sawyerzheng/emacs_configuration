@@ -227,36 +227,70 @@ you have the correctly set the OPENAI_API_KEY variable"
   :straight (:type git :host github :repo "karthink/gptel")
   :commands (gptel gptel-mode)
   :config
-  (load-file "~/org/private/openai.el.gpg")
+  ;; (load-file "~/org/private/openai.el.gpg")
   (setq gptel-default-mode #'org-mode)
-  (setq-default gptel-backend
-                (gptel-make-azure
-                 "Azure-3.5"         ;Name, whatever you'd like
-                 :protocol "https"   ;optional -- https is the default
-                 :host "wei202305.openai.azure.com"
-                 :endpoint "/openai/deployments/gpt-35-turbo-01/chat/completions?api-version=2023-07-01-preview" ;or equivalent
-                 :stream t  ;Enable streaming responses
-                 ;; :key "0b4b1786a1f84e0f9aba1a1ce2eea171"
-                 :models '("gpt-3.5-turbo")))
-  (gptel-make-azure
-   "Azure-3.5-16k"                   ;Name, whatever you'd like
-   :protocol "https"                 ;optional -- https is the default
-   :host "wei202305.openai.azure.com"
-   :endpoint "/openai/deployments/gpt-35-turbo-16k/chat/completions?api-version=2023-07-01-preview" ;or equivalent
-   :stream t                ;Enable streaming responses
-   ;; :key "0b4b1786a1f84e0f9aba1a1ce2eea171"
-   :models '("gpt-3.5-turbo-16k"))
+  (setq
+   gptel--known-backends nil
+   gptel-model "chat-llm"
+   gptel-backend (gptel-make-openai
+                     "vllm-gpu"
+                   :protocol "http"
+                   :host "172.16.10.88:8000"
+                   :endpoint "/v1/chat/completions"
+                   :stream t
+                   :key #'(lambda () "EMPTY")
+                   :models '("chat-llm")))
 
-  (gptel-make-azure
-   "Azure-4"                         ;Name, whatever you'd like
-   :protocol "https"                 ;optional -- https is the default
-   :host "matgene-gpt4-001.openai.azure.com"
-   ;; :endpoint "/openai/deployments/gpt-4/completions?api-version=2023-05-15" ;or equivalent
-   :endpoint "/openai/deployments/gpt-4/chat/completions?api-version=2023-07-01-preview" ;or equivalent
-   :stream t                ;Enable streaming responses
-   ;; :key "9581a3ea60b5419b84db0550b9f408b3"
-   :models '("gpt-4"))
+  ;; (setq-default gptel-backend
+  ;;               (gptel-make-azure
+  ;;                "Azure-3.5"         ;Name, whatever you'd like
+  ;;                :protocol "https"   ;optional -- https is the default
+  ;;                :host "wei202305.openai.azure.com"
+  ;;                :endpoint "/openai/deployments/gpt-35-turbo-01/chat/completions?api-version=2023-07-01-preview" ;or equivalent
+  ;;                :stream t  ;Enable streaming responses
+  ;;                ;; :key "0b4b1786a1f84e0f9aba1a1ce2eea171"
+  ;;                :models '("gpt-3.5-turbo")))
+  ;; (gptel-make-azure
+  ;;  "Azure-3.5-16k"                   ;Name, whatever you'd like
+  ;;  :protocol "https"                 ;optional -- https is the default
+  ;;  :host "wei202305.openai.azure.com"
+  ;;  :endpoint "/openai/deployments/gpt-35-turbo-16k/chat/completions?api-version=2023-07-01-preview" ;or equivalent
+  ;;  :stream t                ;Enable streaming responses
+  ;;  ;; :key "0b4b1786a1f84e0f9aba1a1ce2eea171"
+  ;;  :models '("gpt-3.5-turbo-16k"))
+
+  ;; (gptel-make-azure
+  ;;  "Azure-4"                         ;Name, whatever you'd like
+  ;;  :protocol "https"                 ;optional -- https is the default
+  ;;  :host "matgene-gpt4-001.openai.azure.com"
+  ;;  ;; :endpoint "/openai/deployments/gpt-4/completions?api-version=2023-05-15" ;or equivalent
+  ;;  :endpoint "/openai/deployments/gpt-4/chat/completions?api-version=2023-07-01-preview" ;or equivalent
+  ;;  :stream t                ;Enable streaming responses
+  ;;  ;; :key "9581a3ea60b5419b84db0550b9f408b3"
+  ;;  :models '("gpt-4"))
 
   )
+
+(use-package magit-gptcommit
+  :straight (:type git :host github :repo "douo/magit-gptcommit" :branch "gptel")
+  :demand t
+  :after gptel magit
+  :config
+
+  ;; Enable magit-gptcommit-mode to watch staged changes and generate commit message automatically in magit status buffer
+  ;; This mode is optional, you can also use `magit-gptcommit-generate' to generate commit message manually
+  ;; `magit-gptcommit-generate' should only execute on magit status buffer currently
+  ;; (magit-gptcommit-mode 1)
+
+  ;; Add gptcommit transient commands to `magit-commit'
+  ;; Eval (transient-remove-suffix 'magit-commit '(1 -1)) to remove gptcommit transient commands
+  (magit-gptcommit-status-buffer-setup)
+  :bind (:map git-commit-mode-map
+              ("C-c C-g" . magit-gptcommit-commit-accept))
+  )
+
+;; (use-package consult-omni
+;;   :straight (:type git :host github :repo "armindarvish/consult-omni")
+;;   )
 
 (provide 'init-openai)

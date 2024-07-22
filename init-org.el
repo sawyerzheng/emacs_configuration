@@ -654,7 +654,8 @@ the `jupyter-current-client' local to the buffer."
   :config
   (setq org-modern-hide-stars ".")
   (setq org-modern-table nil)
-  (setq org-modern-block-fringe nil))
+  (setq org-modern-block-fringe nil)
+  (setq org-modern-horizontal-rule nil))
 
 (use-package org-transclusion
   :straight t
