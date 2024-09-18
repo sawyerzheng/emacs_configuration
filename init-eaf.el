@@ -99,7 +99,6 @@
     (eaf-terminal-dark-mode nil)
     (eaf-jupyter-dark-mode nil)
     :config
-    (require 'eaf-vue-demo)
     (require 'eaf-browser)
     (require 'eaf-netease-cloud-music)
     (require 'eaf-markdown-previewer)
@@ -174,7 +173,6 @@
     (require 'eaf-file-manager)
     (require 'eaf-file-browser)
     (require 'eaf-demo)
-    (require 'eaf-vue-demo)
     (require 'eaf-git)
 
 
