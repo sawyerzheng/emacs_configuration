@@ -466,6 +466,33 @@ Nominally unique, but not enforced."
   (if my/wsl-p
       (my/switch-default-browser "wslview")))
 
+(defun my/load-host-config ()
+  (interactive)
+  (when (locate-library "init-host")
+    (require 'init-host)
+    ))
+
+(defun my/remote-explorer ()
+  (interactive)
+  (let* ((win-drive-mount-home "~/win/")
+         (file (buffer-file-name))
+         (folder (if file
+                     (f-dirname file)
+                   default-directory))
+         (dirname-relto-win-drive-home (f-relative  folder win-drive-mount-home))
+         (windows-dirname (mapconcat 'identity (split-string
+                                                (s-replace-regexp
+                                                 "^\\([cdefgh]\\)/" "\\1:/"
+                                                 dirname-relto-win-drive-home)
+                                                "/")
+                                     "\\\\\\\\")))
+
+    (shell-command-to-string (concat "ssh wsl /mnt/c/WINDOWS/explorer.exe "
+                                     windows-dirname))
+    windows-dirname
+    )
+  )
+
 (add-hook 'my/startup-hook #'my/wsl-enable-wslview)
 
 ;; (if (my/windows-p))
