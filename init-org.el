@@ -670,6 +670,7 @@ the `jupyter-current-client' local to the buffer."
 
 
 
+;; 在 cursor 移动到 link, latex 等元素上时，显示可编辑内容，否则显示渲染后的内容
 (use-package org-appear
   :straight t
   :hook (org-mode . org-appear-mode)
@@ -713,6 +714,7 @@ the `jupyter-current-client' local to the buffer."
   :commands (olivetti-mode
              distraction-free))
 
+;; 直接在 org-mode 上显示 latex 公式，上下边等
 (use-package org-fragtog
   :straight t
   :commands (org-fragtog-mode)
@@ -724,12 +726,20 @@ the `jupyter-current-client' local to the buffer."
   :commands (org-pretty-table-mode))
 
 ;; ref: https://gitlab.com/matsievskiysv/math-preview
+;; 1. 生效：手动选择公式区域， `math-preview-region' 预览公式渲染效果
+;; 2. 取消预览：移动cursor 到公式位置，<Enter>
+;; 3. 使用 mathjax 作为熏染工具 math-preview js 命令
 (use-package math-preview
   :straight t
   ;; require: npm install -g git+https://gitlab.com/matsievskiysv/math-preview
   :defer t
   )
 
+;; ref: https://gitlab.com/latex-math-preview/latex-math-preview/-/blob/master/latex-math-preview.el?ref_type=heads
+;;
+;; 1. 使用 `latex' 命令作为渲染工具
+;; 2. 选择区域， `latex-math-preview-expression' 预览
+;; 3.
 (use-package latex-math-preview
   :straight t
   :defer t)
