@@ -92,6 +92,14 @@
 
 (add-hook 'my/startup-hook #'my-load-font)
 
+(defun my/set-font-4k ()
+  (interactive)
+  (set-face-attribute 'default nil :family "Cascadia Code" :foundry "outline" :slant 'normal :weight 'normal :height 128 :width 'normal)
+  (set-face-attribute 'mode-line nil :family "Cascadia Code" :foundry "outline" :slant 'normal :weight 'normal :height 128 :width 'normal)
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font) charset
+                      (font-spec :family "Microsoft YaHei" :height 233 :width 'normal :weight 'normal))))
+
 (use-package mixed-pitch
   :straight t
   :commands (mixed-pitch-mode)
