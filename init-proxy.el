@@ -75,6 +75,8 @@
       (setenv "https_proxy" proxy)
       (message "env http_proxy is %s now" proxy))))
 
+(setenv "no_proxy" "127.0.0.1,localhost,172.16.10.0/24,192.168.0.0/16,10.0.18.0/24,10.8.0.0/24")
+
 (defun enable-proxy-eaf ()
   "remember to restart eaf using: `eaf-restart-process'."
   (interactive)
@@ -96,6 +98,16 @@
 
   (message "env http_proxy is %s now" (concat eaf-proxy-type "://" eaf-proxy-host ":" eaf-proxy-port)))
 
+
+(defun enable-proxy-lan-eaf ()
+  "remember to restart eaf using: `eaf-restart-process'."
+  (interactive)
+  (setq eaf-proxy-host "172.16.10.88"
+        eaf-proxy-type "http"
+        eaf-proxy-port "7890")
+
+  (message "env http_proxy is %s now" (concat eaf-proxy-type "://" eaf-proxy-host ":" eaf-proxy-port)))
+
 (defun disable-proxy-eaf ()
   (interactive)
   (setq eaf-proxy-host ""
@@ -105,12 +117,12 @@
 
 ;; (enable-proxy-eaf)
 
-(if my/wsl-p
-    (progn
-      (enable-proxy-windows)
-      (enable-proxy-windows-eaf))
-  (enable-proxy)
-  (enable-proxy-eaf))
+;; (if my/wsl-p
+;;     (progn
+;;       (enable-proxy-windows)
+;;       (enable-proxy-windows-eaf))
+;;   (enable-proxy)
+;;   (enable-proxy-eaf))
 
 
 (defun my-toggle-eaf-proxy ()

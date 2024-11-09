@@ -14,8 +14,8 @@
   ;; (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
 
   :config
-  (add-hook 'python-mode-hook (lambda ()
-                                (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)))
+  (add-hook 'python-base-mode-hook (lambda ()
+                                     (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)))
   (setq use-dialog-box nil) ;; do not use popup boxes
   ;; get codeium status in the modeline
   (setq codeium-mode-line-enable
@@ -57,6 +57,16 @@
       (when (fboundp backend)
         (add-hook 'completion-at-point-functions backend nil t)))
     (call-interactively #'completion-at-point)))
+
+
+
+(use-package starhugger
+  :straight (:type git :host gitlab :repo "daanturo/starhugger.el" :files (:defaults "*.py"))
+  :config
+  (setq starhugger-ollama-generate-api-url "http://172.16.10.86:11434/api/generate")
+  (setq starhugger-completion-backend-function #'starhugger-ollama-completion-api)
+  (setopt starhugger-model-id "qwen2.5-coder:1.5-base"))
+
 
 
 (provide 'init-ai-code)

@@ -36,8 +36,14 @@
   (require 'major-mode-hydra)
   (require 'init-logging)
 
-  (setq max-lisp-eval-depth 1000000)
-
+  ;; (setq max-lisp-eval-depth 1000000)
+  (setq max-specpdl-size 500
+	max-lisp-eval-depth 300)
+  (setq max-specpdl-size 50000
+	max-lisp-eval-depth 30000)
+  (setq undo-limit 40000
+	undo-outer-limit 8000000
+	undo-strong-limit 100000)
   ;; * 垃圾站
   (setq delete-by-moving-to-trash t)
 
@@ -63,6 +69,8 @@
 			  package-user-dir)))
 	(native-compile-async directory native-compile-async-jobs t))))
 
+  ;; host config
+  (my/load-host-config)
   ;; * 自动换行
   (setq truncate-lines t)
 
@@ -187,13 +195,14 @@
     (require 'init-which-key))
 
   (require 'init-unicode-fonts)
-  (require 'init-folding)
+
 
   ;; tree-sitter
-  ;; (if (>= emacs-major-version 29)
-  ;;     (require 'init-treesit)
-  ;;   (require 'init-tree-sitter))
-
+  (if (>= emacs-major-version 29)
+      (require 'init-treesit)
+    (require 'init-tree-sitter))
+  ;; ** folding should require after treesit **
+  (require 'init-folding)
 
   ;; scroll
   (require 'init-smartparens)
@@ -229,6 +238,7 @@
   ;; (require 'init-paredit)
   ;; python
   (require 'init-python)
+  (require 'init-tabby)
   (require 'init-ein)
   ;; c and cpp
   (require 'init-c)
@@ -341,7 +351,7 @@
 
   (require 'init-exec-path-from-shell)
 
-
+  (require 'init-eww)
   ;; * write org-mode comments
   ;; (require 'init-poporg)
   (require 'init-separedit)
@@ -373,8 +383,8 @@
   )
 
 
-(setq gc-cons-threshold 20000000)
+;; (setq gc-cons-threshold 20000000)
 
-(when (equal emacs-major-version 29)
-  (setq max-specpdl-size 500
-        max-lisp-eval-depth 300))
+;; (when (equal emacs-major-version 29)
+;;   (setq max-specpdl-size 500
+;;         max-lisp-eval-depth 300))

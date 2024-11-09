@@ -46,7 +46,7 @@
   (:title "Python Mode" :color blue :quit-key "q")
   ("Tests"
    (("t" my/pytest-hydra/body "pytest")
-    ("k" python-pytest-function "pytest"))
+    )
    "Debug"
    (("d d" dap-hydra "dap-hydra"))
    "Run"
@@ -61,8 +61,8 @@
              python-pytest-file
              python-pytest-file-dwim
              python-pytest-files
-             python-pytest-function
-             python-pytest-function-dwim
+
+             python-pytest-run-def-or-class-at-point
              python-pytest-last-failed
              python-pytest-repeat
              )
@@ -70,8 +70,9 @@
   (my/pytest-hydra
    (:color teal)
    ("pytest"
-    (("t" python-pytest-function "test one")
-     ("m" python-pytest-file-dwim "test one"))))
+    (("t" python-pytest-run-def-or-class-at-point "test one")
+     ("f" python-pytest-file "test file")
+     ("d" python-pytest-dispatch))))
   :bind (:map python-pytest-mode-map
               ("M-n" . compilation-next-error)
               ("M-p" . compilation-previous-error))

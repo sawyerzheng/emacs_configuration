@@ -2,8 +2,9 @@
   :straight (:type git :host github :repo "alphapapa/ement.el")
   :commands (ement-connect))
 
+
 (use-package plz
-  :straight (:type git :host github :repo "alphapapa/plz.el")
+  :straight (:source (melpa gnu-elpa-mirror))
   :commands (plz)
   :config
   (cl-pushnew "--http1.1" plz-curl-default-args :test #'equal)

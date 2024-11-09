@@ -1,5 +1,6 @@
 ;; M-x `treesit-install-language-grammar` to install language grammar.
 
+;; (defvar my/use-treesit t)
 ;; (use-package treesit
 ;;   :init
 ;;   (setq treesit-language-source-alist

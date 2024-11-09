@@ -223,56 +223,52 @@ you have the correctly set the OPENAI_API_KEY variable"
 ;; (use-package chatgpt-shell
 ;;   :straight (:type git :host github :repo "xenodium/chatgpt-shell" :files ("*")))
 
+(defun my/elisp-load-file-existsp (file)
+  (interactive)
+  (when (file-exists-p file)
+    (load-file file)))
+
 (use-package gptel
   :straight (:type git :host github :repo "karthink/gptel")
   :commands (gptel gptel-mode)
   :config
   ;; (load-file "~/org/private/openai.el.gpg")
   (setq gptel-default-mode #'org-mode)
-  (setq
-   gptel--known-backends nil
-   gptel-model "chat-llm"
-   gptel-backend (gptel-make-openai
-                     "vllm-gpu"
-                   :protocol "http"
-                   :host "172.16.10.88:8000"
-                   :endpoint "/v1/chat/completions"
-                   :stream t
-                   :key #'(lambda () "EMPTY")
-                   :models '("chat-llm")))
 
-  ;; (setq-default gptel-backend
-  ;;               (gptel-make-azure
-  ;;                "Azure-3.5"         ;Name, whatever you'd like
-  ;;                :protocol "https"   ;optional -- https is the default
-  ;;                :host "wei202305.openai.azure.com"
-  ;;                :endpoint "/openai/deployments/gpt-35-turbo-01/chat/completions?api-version=2023-07-01-preview" ;or equivalent
-  ;;                :stream t  ;Enable streaming responses
-  ;;                ;; :key "0b4b1786a1f84e0f9aba1a1ce2eea171"
-  ;;                :models '("gpt-3.5-turbo")))
-  ;; (gptel-make-azure
-  ;;  "Azure-3.5-16k"                   ;Name, whatever you'd like
-  ;;  :protocol "https"                 ;optional -- https is the default
-  ;;  :host "wei202305.openai.azure.com"
-  ;;  :endpoint "/openai/deployments/gpt-35-turbo-16k/chat/completions?api-version=2023-07-01-preview" ;or equivalent
-  ;;  :stream t                ;Enable streaming responses
-  ;;  ;; :key "0b4b1786a1f84e0f9aba1a1ce2eea171"
-  ;;  :models '("gpt-3.5-turbo-16k"))
+  (my/elisp-load-file-existsp "~/org/private/gptel-setup.el")
+  )
 
-  ;; (gptel-make-azure
-  ;;  "Azure-4"                         ;Name, whatever you'd like
-  ;;  :protocol "https"                 ;optional -- https is the default
-  ;;  :host "matgene-gpt4-001.openai.azure.com"
-  ;;  ;; :endpoint "/openai/deployments/gpt-4/completions?api-version=2023-05-15" ;or equivalent
-  ;;  :endpoint "/openai/deployments/gpt-4/chat/completions?api-version=2023-07-01-preview" ;or equivalent
-  ;;  :stream t                ;Enable streaming responses
-  ;;  ;; :key "9581a3ea60b5419b84db0550b9f408b3"
-  ;;  :models '("gpt-4"))
+(use-package gptel-quick
+  :straight (:type git :host github :repo "karthink/gptel-quick")
+  :after gptel
+  :commands (gptel-quick)
+  :config
+  (keymap-set embark-general-map "?" #'gptel-quick)
+  )
 
+(with-eval-after-load 'embark
+  (require 'gptel-quick)
+  (keymap-set embark-general-map "?" #'gptel-quick))
+
+
+(use-package ai-org-chat
+  :straight (:type git :host github :repo "ultronozm/ai-org-chat.el")
+  :after gptel
+  :commands (ai-org-chat-new)
+  :config)
+
+(use-package elysium
+  :straight (:type git :host github :repo "lanceberge/elysium")
+  :after gptel
+  :commands (elysium-query)
+  :config
+  (setq (elysium-window-size 0.33) ; The elysium buffer will be 1/3 your screen
+        (elysium-window-style 'vertical) ; Can be customized to horizontal
+        )
   )
 
 (use-package magit-gptcommit
-  :straight (:type git :host github :repo "douo/magit-gptcommit" :branch "gptel")
+  :straight (:type git :host github :repo "douo/magit-gptcommit")
   :demand t
   :after gptel magit
   :config
@@ -285,6 +281,7 @@ you have the correctly set the OPENAI_API_KEY variable"
   ;; Add gptcommit transient commands to `magit-commit'
   ;; Eval (transient-remove-suffix 'magit-commit '(1 -1)) to remove gptcommit transient commands
   (magit-gptcommit-status-buffer-setup)
+  (setq magit-gptcommit-llm-provider my/llm-provider-deepseek)
   :bind (:map git-commit-mode-map
               ("C-c C-g" . magit-gptcommit-commit-accept))
   )
@@ -293,4 +290,63 @@ you have the correctly set the OPENAI_API_KEY variable"
 ;;   :straight (:type git :host github :repo "armindarvish/consult-omni")
 ;;   )
 
+
+(use-package plz
+  :straight (:source (melpa gnu-elpa-mirror))
+  ;; :straight (:type git :host github :repo "alphapapa/plz.el")
+  :defer t
+  )
+
+(use-package plz-event-source
+  :straight (:type git :host github :repo "r0man/plz-event-source")
+  :defer t
+  )
+
+(use-package plz-media-type
+  :straight (:type git :host github :repo "r0man/plz-media-type")
+  :defer t
+  )
+
+(use-package llm
+  :straight (:type git :host github :repo "ahyatt/llm" :files ("*.el"))
+  :demand t
+  :config
+
+  (my/elisp-load-file-existsp "~/org/private/gptel-setup.el")
+  )
+
+(use-package ellama
+  :straight (:type git :host github :repo "s-kostyaev/ellama")
+  :after llm
+  :init
+  ;; setup key bindings
+  ;; (setopt ellama-keymap-prefix "C-c e")
+  ;; language you want ellama to translate to
+
+  :config
+  (setopt ellama-language "English")
+  (setopt ellama-language "汉语")
+  ;; could be llm-openai for example
+  (setopt ellama-provider my/llm-provider-deepseek)
+  (setopt ellama-providers '(("kimi" . my/llm-provider-kimi)
+                             ("gpu" . my/llm-provider-gpu)
+                             ("deepseek-v2.5" . my/llm-provider-deepseek)))
+  ;; (setopt ellama-naming-provider my/llm-provider)
+  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+  ;; (setopt ellama-translation-provider my/llm-provider)
+  (setopt ellama-keymap-prefix "C-c i a")
+  (with-eval-after-load 'which-key
+    (which-key-add-keymap-based-replacements ellama-command-map
+                                             "a" "ellma ask"))
+
+  (setq my/ellma-code-generate-comment-template "Review the following code and make concise code comments in English:\n```\n%s\n```")
+  (defun my/ellama-code-generate-comment ()
+    "generate coment for the code in selected region or current buffer."
+    (interactive)
+    (let ((text (if (region-active-p)
+		    (buffer-substring-no-properties (region-beginning) (region-end))
+		  (buffer-substring-no-properties (point-min) (point-max)))))
+      (ellama-instant (format my/ellma-code-generate-comment-template text))))
+  (define-key ellama-command-map (kbd "c d") #'my/ellama-code-generate-comment)
+  )
 (provide 'init-openai)

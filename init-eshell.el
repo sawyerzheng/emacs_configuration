@@ -14,3 +14,11 @@
 (use-package eshell-git-prompt
   :straight (:type git :host github :repo "xuchunyang/eshell-git-prompt")
   )
+
+(use-package esh-autosuggest
+  :straight (:source (melpa gpu-elpa-mirror))
+  :hook (eshell-mode . esh-autosuggest-mode)
+  ;; If you have use-package-hook-name-suffix set to nil, uncomment and use the
+  ;; line below instead:
+  ;; :hook (eshell-mode-hook . esh-autosuggest-mode)
+  :ensure t)

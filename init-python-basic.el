@@ -247,4 +247,13 @@ If there is not function elpy-project-root, use xah lee's function"
        (t
         (my-elpy/execute-buffer))))))
 
+(defun my/change-ipython-smartly-ad (orig-fn &rest args)
+  (if (executable-find "ipython")
+      (my/python-repl-use-ipython)
+    (my/python-repl-use-python))
+  (apply orig-fn args))
+
+(with-eval-after-load 'python
+  (advice-add #'run-python :around #'my/change-ipython-smartly-ad))
+
 (provide 'init-python-basic)

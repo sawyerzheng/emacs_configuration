@@ -35,31 +35,43 @@
 ;; no save theme prop
 (setq custom-safe-themes t)
 
-(defun my-selected-theme ()
-  ;; (if (display-graphic-p)
-  ;;     'doom-one
-  ;;   'tsdh-dark)
+(defvar my/selected-theme
   'doom-vibrant
-  ) ;; theme
+  )
+(if (display-graphic-p)
+    'doom-vibrant
+  'modus-vivendi-tritanopia)
 
-(defun my-load-theme ()
+;; (defun my/selected-theme ()
+;;   ;; (if (display-graphic-p)
+;;   ;;     'doom-one
+;;   ;;   'tsdh-dark)
+;;   'doom-vibrant
+;;   )
+;; theme
+
+(defun my/load-theme ()
   (interactive)
-  (load-theme (my-selected-theme) t))
+  (load-theme my/selected-theme t))
 
 (if (daemonp)
     (add-hook 'server-after-make-frame-hook
               (lambda ()
                 ;; first to load theme
-                (my-load-theme)
+                (my/load-theme)
 
                 ;; patch for corfu in terminal
                 (when (facep 'corfu-current)
                   (set-face-attribute 'corfu-current nil :background "#4c4c4c"))
-                (when (facep 'acm-terminal-current-input)
-                  (set-face-attribute 'acm-terminal-current-input nil :background "#4c4c4c"))))
-  (my-load-theme))
 
-;; (add-hook 'my/startup-hook #'my-load-theme)
+                (when (facep 'acm-terminal-current-input)
+                  (set-face-attribute 'acm-terminal-current-input nil :background "#4c4c4c")))
+
+
+              )
+  (my/load-theme))
+
+;; (add-hook 'my/startup-hook #'my/load-theme)
 
 ;; (use-package beacon
 ;;   :straight t

@@ -5,6 +5,8 @@
   ;; :straight (:type git :host github :repo "magit/magit")
   :straight (:source (melpa gpu-elpa-mirror))
   :commands (magit-file-delete)
+  :config
+  (setq magit-diff-refine-hunk 'all) ;; (nil t 'all) 显示单词级别的差异
   )
 
 (use-package transient
@@ -65,5 +67,28 @@
 (use-package git-timemachine
   :straight (:source (melpa gpu-elpa-mirror))
   :commands (git-timemachine))
+
+
+
+;; delta, `magit-diff-refine-hunk' variable as 'all can have similar effect
+;; (use-package magit-delta
+;;   :straight (:source (melpa))
+;;   :hook (magit-mode . magit-delta-mode)
+;;   :config
+;;   (setq magit-delta-hide-plus-minus-markers t)
+;;   (setq magit-delta-default-dark-theme "Monokai Extended")
+;;   (setq magit-delta-default-dark-theme "Monokai Extended Darker")
+;;   (setq magit-delta-default-dark-theme "Monokai Extended Bright")
+;;   (setq magit-delta-default-dark-theme "1337")
+;;   (setq magit-delta-default-dark-theme "Github")
+
+;;   (setq magit-delta-delta-args `("--max-line-distance" "0.6"
+;;                                  "--true-color" ,(if xterm-color--support-truecolor "always" "never")
+;;                                  "--color-only"
+;;                                  ;; "--line-numbers"
+;;                                  ))
+
+;;   )
+
 
 (provide 'init-git)

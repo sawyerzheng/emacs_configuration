@@ -122,15 +122,16 @@
 
 (defun my/get-project-root ()
   "use different tools to find project root"
-  (cond ((boundp 'elpy-project-root)
-         (elpy-project-root))
-        ((and (project-current) (project-current nil (buffer-file-name)))
-         (project-root (project-current)))
-        ((boundp 'projectile-mode)
-         (require 'projectile)
-         (projectile-project-root))
-        (t
-         (vc-root-dir))))
+  (cond ;; ((boundp 'elpy-project-root)
+   ;;  (elpy-project-root))
+   ((and (project-current) ;; (project-current nil (buffer-file-name))
+         )
+    (project-root (project-current)))
+   ((boundp 'projectile-mode)
+    (require 'projectile)
+    (projectile-project-root))
+   (t
+    (vc-root-dir))))
 
 (defun my-toggle-visual-line ()
   (interactive)

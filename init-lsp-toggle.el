@@ -1,4 +1,9 @@
-(defvar my/lsp-backend "eglot"
+(use-package flymake-cursor
+  :straight (:type git :host github :repo "flymake/emacs-flymake-cursor")
+  :commands (flymake-cursor-mode
+             flymake-cursor-show-errors-at-point-now))
+
+(defvar my/lsp-backend "lsp-bridge"
   "use `lsp-bridge' or `lsp-mode' or `eglot'")
 
 ;; * config
@@ -108,6 +113,9 @@
   :straight t
   :defer t
   )
+
+
+;; * lsp-mode config
 (use-package lsp-mode
   :straight t
   :commands (lsp lsp-mode)
@@ -128,13 +136,26 @@
               ("M-." . lsp-find-definition)
               ("M-?" . lsp-find-references))
   :config
+  (setq lsp-pyright-langserver-command "basedpyright")
+
   (setq lsp-diagnostics-provider :flymake)
   ;; (setq lsp-diagnostics-provider :flycheck)
 
   (setq lsp-enable-symbol-highlighting nil)
   (setq lsp-enable-folding nil)
   (setq lsp-enable-text-document-color nil)
+  (setq lsp-headerline-breadcrumb-enable-diagnostics nil)
   )
+
+;; use tabby
+(with-eval-after-load 'lsp-mode
+  (lsp-register-client
+   (make-lsp-client  :new-connection (lsp-stdio-connection '("npx" "tabby-agent" "--stdio"))
+                     ;; you can select languages to enable Tabby language server
+                     :activation-fn (lsp-activate-on "typescript" "javascript" "toml" "python")
+                     :priority 1
+                     :add-on? t
+                     :server-id 'tabby-agent)))
 
 (use-package consult-lsp
   :straight t
@@ -297,7 +318,8 @@
   ;; (setq lsp-completion-enable nil)
   ;; (global-lsp-bridge-mode)
   (dolist (hook my/lsp-toggle-mode-hooks)
-    (add-hook hook #'my-start-lsp-bridge-fn))
+    (add-hook hook #'my-start-lsp-bridge-fn)
+    (add-hook hook #'breadcrumb-local-mode))
   (my-disable-lsp-mode)
   (my-disable-eglot)
   )
@@ -305,7 +327,8 @@
 (defun my-enable-lsp-mode ()
   (interactive)
   (dolist (hook my/lsp-toggle-mode-hooks)
-    (add-hook hook #'my-start-lsp-mode-fn))
+    (add-hook hook #'my-start-lsp-mode-fn)
+    (remove-hook hook #'breadcrumb-local-mode))
   (my-disable-eglot)
   (my-disable-lsp-bridge)
   )
@@ -313,7 +336,8 @@
 (defun my-enable-eglot ()
   (interactive)
   (dolist (hook my/lsp-toggle-mode-hooks)
-    (add-hook hook #'my-start-eglot-fn))
+    (add-hook hook #'my-start-eglot-fn)
+    (add-hook hook #'breadcrumb-local-mode))
   (my-disable-lsp-mode)
   (my-disable-lsp-bridge))
 
@@ -327,11 +351,18 @@
   (dolist (hook my/lsp-toggle-mode-hooks)
     (remove-hook hook #'my-start-lsp-mode-fn)))
 
+(defun my-disable-eglot--managed-mode ()
+  (interactive)
+  (when (and (boundp #'eglot--managed-mode) eglot--managed-mode)
+    (eglot--managed-mode -1)))
+
 (defun my-disable-eglot ()
   (interactive)
   (dolist (hook my/lsp-toggle-mode-hooks)
-    (remove-hook hook #'my-start-eglot-fn))
-  (eglot-shutdown-all))
+    (remove-hook hook #'my-start-eglot-fn)
+    (add-hook hook #'my-disable-eglot--managed-mode))
+  (ignore-errors
+    (eglot-shutdown-all)))
 
 (use-package external-completion
   :straight (:type git :host github :repo "emacs-straight/external-completion")
@@ -362,6 +393,13 @@
 	     eglot--managed-mode
 	     eglot-shutdown-all)
   :config
+
+  ;; add backend lsp server
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode)
+                 "basedpyright-langserver" "--stdio"))
+
+
   (defun my/eglot-completion-fix ()
     (unless (featurep 'cape)
       (require 'init-corfu))
@@ -540,6 +578,7 @@
   (interactive)
   (dolist (lang org-babel-lang-list)
     (eval `(lsp-org-babel-enable ,lang))))
+
 
 
 (provide 'init-lsp-toggle)
