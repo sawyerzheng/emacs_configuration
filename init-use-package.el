@@ -18,6 +18,10 @@
 ;; * like package.el's ":ensure t"  feature
 ;; (setq straight-use-package-by-default t)
 
+;; package.el
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+
 ;; use-package debug
 (setq use-package-verbose t)
 

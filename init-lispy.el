@@ -1,5 +1,6 @@
 (use-package lispy
-  :straight (lispy :files (:defaults "*"))
+  :straight (lispy :source (melpa gnu-elpa-mirror) :files (:defaults "*") :build (:not compile))
+  ;; :ensure t
   ;; :init
   ;; (my/add-extra-folder-to-load-path "lispy" (list "targets" "lispytutor"))
   :commands (special-lispy-tab)

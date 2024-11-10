@@ -308,7 +308,7 @@ you have the correctly set the OPENAI_API_KEY variable"
   )
 
 (use-package llm
-  :straight (:type git :host github :repo "ahyatt/llm" :files ("*.el"))
+  :straight (:type git :host github :repo "ahyatt/llm" :files ("*") :build (:not compile))
   :demand t
   :config
 
