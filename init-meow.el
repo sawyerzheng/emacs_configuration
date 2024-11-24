@@ -87,15 +87,7 @@
   ;; * 退出 emacs 前，弹出提示
   (setq confirm-kill-emacs 'y-or-n-p)
 
-  ;; * 切换默认浏览器工具
-  (use-package browse-url
-    :bind ("C-c t W" . my/switch-default-browser)
-    :config
-    (when my/windows-p
-      (setq browse-url-chrome-program "chrome.exe"))
 
-    ;; (setq browse-url-browser-function #'browse-url-default-browser)
-    )
 
   ;; * language 语言环境设置
   (global-set-key (kbd "C-c t l") #'set-language-environment)

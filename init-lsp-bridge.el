@@ -4,6 +4,28 @@
 (use-package acm-terminal
   ;; :if (and (daemonp) (not (display-graphic-p)))
   :if (not (display-graphic-p))
+  :init
+
+  (defun my/acm-terminal-set-colors ()
+    "set acm terminal face color"
+    (interactive)
+    (unless (fboundp #'acm-terminal-init-colors)
+      (require 'acm-terminal))
+    (acm-terminal-init-colors t) ;; force blend color
+    )
+  :config
+  (defun acm-terminal-init-colors (&optional force)
+    (let* ((is-dark-mode (string-equal (acm-frame-get-theme-mode) "dark"))
+           (blend-background (if is-dark-mode "#555555" "#AAAAAA"))
+           (default-background (acm-terminal-default-background)))
+      ;; Make sure menu follow the theme of Emacs.
+      (when (or force (equal (face-attribute 'acm-terminal-default-face :background) 'unspecified))
+        (set-face-background 'acm-terminal-default-face (acm-frame-color-blend default-background blend-background (if is-dark-mode 0.8 0.9))))
+      (when (or force (equal (face-attribute 'acm-terminal-select-face :background) 'unspecified))
+        (set-face-background 'acm-terminal-select-face (acm-frame-color-blend default-background blend-background 0.6)))
+      (when (or force (equal (face-attribute 'acm-terminal-select-face :foreground) 'unspecified))
+        (set-face-foreground 'acm-terminal-select-face (face-attribute 'font-lock-function-name-face :foreground)))))
+  :hook (lsp-bridge-mode . my/acm-terminal-set-colors)
   :straight (:type git :host github :repo "twlz0ne/acm-terminal")
   :after lsp-bridge)
 
@@ -31,12 +53,14 @@
               ("M-i" . lsp-bridge-popup-complete-menu))
   :bind (:map acm-mode-map
               ("TAB" . acm-select-next)
+              ("<tab>" . acm-select-next)
               ("<backtab>" . acm-select-prev)
+              ("S-<tab>" . acm-select-prev)
               ("M-h" . acm-doc-toggle)
-              ("M-i" . acm-select-prev)
-              ("M-k" . acm-select-next)
               ("M-I" . acm-doc-scroll-up)
               ("M-K" . acm-doc-scroll-down)
+              ("M-k" . acm-doc-scroll-up)
+              ("M-j" . acm-doc-scroll-down)
               ("<return>" . acm-complete)
               ([remap newline] . acm-complete)
               ("RET" . acm-complete)
@@ -160,6 +184,8 @@
     (define-key map (kbd "gr") #'lsp-bridge-return-from-def)
 
     (define-key map (kbd "hh") #'lsp-bridge-popup-documentation)
+    (define-key map (kbd "hk") #'lsp-bridge-popup-documentation-scroll-down)
+    (define-key map (kbd "hj") #'lsp-bridge-popup-documentation-scroll-up)
 
     (define-key map (kbd "rr") #'lsp-bridge-rename)
     ;; (define-key map (kbd "rf") #'lsp-bridge-rename-file)

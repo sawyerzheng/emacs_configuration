@@ -1,7 +1,14 @@
 ;; -*- coding: utf-8; -*-
 (use-package ace-window
-  :straight t 
-  :bind (("M-o" . ace-window)           ; 1) C-u M-o swap 2) C-u C-u M-o delete
+  :straight t
+  :init
+  (defun my/ace-window ()
+    "fix ace-window error which need manually select window when only two window exits at terminal"
+    (interactive)
+    (if (<= (length (window-list)) 2)
+        (call-interactively #'other-window)
+      (call-interactively #'ace-window)))
+  :bind (("M-o" . my/ace-window)  ; 1) C-u M-o swap 2) C-u C-u M-o delete
          ("M-O" . ace-swap-window)
          ("M-D" . ace-delete-window))
   :config

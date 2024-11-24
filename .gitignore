@@ -49,3 +49,4 @@ perl.exe.*
 
 #----------------------------
 custom.d/
+init-host.el

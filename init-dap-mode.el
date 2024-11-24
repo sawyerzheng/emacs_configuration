@@ -113,7 +113,7 @@
             (lambda (arg) (call-interactively #'dap-hydra)))
 
   ;;============ windows
-  (defun my/window-visible (b-name)
+  (defun my/window-visible-p (b-name)
     "Return whether B-NAME is visible."
     (-> (-compose 'buffer-name 'window-buffer)
         (-map (window-list))
@@ -124,10 +124,10 @@
     (let ((lsp--cur-workspace (dap--debug-session-workspace session)))
       (save-excursion
         ;; display locals
-        (unless (my/window-visible dap-ui--locals-buffer)
+        (unless (my/window-visible-p dap-ui--locals-buffer)
           (dap-ui-locals))
         ;; display sessions
-        ;; (unless (my/window-visible dap-ui--sessions-buffer)
+        ;; (unless (my/window-visible-p dap-ui--sessions-buffer)
         ;;   (dap-ui-sessions))
         )))
 

@@ -38,9 +38,13 @@
 (defvar my/selected-theme
   'doom-vibrant
   )
-(if (display-graphic-p)
-    'doom-vibrant
-  'modus-vivendi-tritanopia)
+(setq my/selected-theme
+      (if (display-graphic-p)
+          'doom-vibrant
+        'modus-vivendi
+        ;; 'modus-vivendi-tritanopia
+        ))
+
 
 ;; (defun my/selected-theme ()
 ;;   ;; (if (display-graphic-p)

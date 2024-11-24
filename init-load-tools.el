@@ -133,13 +133,6 @@
    (t
     (vc-root-dir))))
 
-(defun my-toggle-visual-line ()
-  (interactive)
-  (if global-visual-line-mode
-      (global-visual-line-mode -1)
-    (global-visual-line-mode +1)))
-
-(global-set-key (kbd "C-c t w") #'my-toggle-visual-line)
 
 (defun setq-hook (hook var val)
   (add-hook 'hook #'(lambda () (setq-local var val))))
@@ -444,7 +437,7 @@ Nominally unique, but not enforced."
       (funcall-interactively browse-url-browser-function url args)))
 
 ;; * 切换默认浏览器工具
-(defun my/switch-default-browser (&optional selected-choice)
+(defun my/toggle-default-browser (&optional selected-choice)
   (interactive)
 
   (let ((function-assoc '(("default" . browse-url-default-browser)
@@ -453,6 +446,7 @@ Nominally unique, but not enforced."
                           ("eww" . eww-browse-url)
                           ("firefox" . browse-url-firefox)
                           ("chrome" . browse-url-chrome)
+                          ("xwidget". xwidget-webkit-browse-url)
                           ("wslview" . "wslview"))))
 
     (unless selected-choice
@@ -460,12 +454,25 @@ Nominally unique, but not enforced."
     (if (equal selected-choice "wslview")
         (advice-add #'browse-url :override #'my/browse-url-wsl-advice)
       (advice-remove #'browse-url #'my/browse-url-wsl-advice))
+
+    (if (string= selected-choice "xwidget")
+        (setq blink-search-browser-function (cdr (assoc selected-choice function-assoc))))
     (setq browse-url-browser-function (cdr (assoc selected-choice function-assoc)))))
+
+;; * 切换默认浏览器工具
+(use-package browse-url
+  :bind ("C-c t w" . my/toggle-default-browser)
+  :config
+  (when my/windows-p
+    (setq browse-url-chrome-program "chrome.exe"))
+
+  ;; (setq browse-url-browser-function #'browse-url-default-browser)
+  )
 
 (defun my/wsl-enable-wslview ()
   (interactive)
   (if my/wsl-p
-      (my/switch-default-browser "wslview")))
+      (my/toggle-default-browser "wslview")))
 
 (defun my/load-host-config ()
   (interactive)
@@ -494,6 +501,24 @@ Nominally unique, but not enforced."
     )
   )
 
+;; 是否 buffer 被展示在当前 frame
+(defun my/buffer-displayed-in-frame-p (buffer-or-name &optional frame)
+  "Check if BUFFER-OR-NAME is currently displayed in the current frame.
+Returns t if the buffer is displayed in any window in the current frame,
+nil otherwise.
+
+BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
+  (let* ((buffer (get-buffer buffer-or-name))
+         (current-frame (if frame frame (selected-frame))))
+    (when buffer
+      (cl-some (lambda (window)
+                 (with-selected-window window
+                   (and (eq (window-buffer window) buffer)
+                        (window-live-p window)
+                        (-contains-p (window-list) window)
+
+                        (eq (window-frame window) current-frame))))
+               (window-list)))))
 (add-hook 'my/startup-hook #'my/wsl-enable-wslview)
 
 ;; (if (my/windows-p))

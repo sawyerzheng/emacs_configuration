@@ -22,7 +22,7 @@
     ;; Increase size of LaTeX fragment previews
     (plist-put org-format-latex-options :scale 1.5)
 
-    (setq-local tab-width 4)
+    (setq-local tab-width 8)
 
     (setq org-startup-with-inline-images t
           org-image-actual-width '(600)
@@ -713,6 +713,20 @@ the `jupyter-current-client' local to the buffer."
 
   :commands (olivetti-mode
              distraction-free))
+
+(define-minor-mode centaur-read-mode
+  "Minor Mode for better reading experience."
+  :init-value nil
+  :group centaur
+  (if centaur-read-mode
+      (progn
+        (and (fboundp 'olivetti-mode) (olivetti-mode 1))
+        (and (fboundp 'mixed-pitch-mode) (mixed-pitch-mode 1))
+        (text-scale-set +1))
+    (progn
+      (and (fboundp 'olivetti-mode) (olivetti-mode -1))
+      (and (fboundp 'mixed-pitch-mode) (mixed-pitch-mode -1))
+      (text-scale-set 0))))
 
 ;; 直接在 org-mode 上显示 latex 公式，上下边等
 (use-package org-fragtog

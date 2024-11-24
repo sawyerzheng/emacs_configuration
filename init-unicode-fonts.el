@@ -1,4 +1,16 @@
 ;; -*- coding: utf-8; -*-
+(use-package persistent-soft
+  :straight t
+  :config
+  (persistent-soft-store 'hundred 100 "mydatastore")
+  (persistent-soft-fetch 'hundred "mydatastore") ; 100
+  (persistent-soft-fetch 'thousand "mydatastore") ; nil
+
+  ;; quit and restart Emacs
+
+  (persistent-soft-fetch 'hundred "mydatastore") ; 100
+  )
+
 (use-package unicode-fonts
   :straight t
   :hook (my/startup . (lambda () (ignore-errors (unicode-fonts-setup)))))

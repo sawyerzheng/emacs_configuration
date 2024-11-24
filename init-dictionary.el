@@ -86,6 +86,8 @@
          ("h" . my-youdao-dictionary-help)
          ("?" . my-youdao-dictionary-help))
   :config
+  (setq youdao-dictionary-app-key "16f39ae02e5c0a27"
+        youdao-dictionary-secret-key "v6j2BVYJP3M2fOvrW9ZBRx3qUwE3CiBA")
   (defun my-youdao-search-at-point ()
     "youdao search with posframe on gui and with popup on tty"
     (interactive)
@@ -184,7 +186,9 @@ This command switches to browser."
   (require 'popweb-url)
   (require 'popweb-latex)
   (require 'popweb-org-roam-link)
+  (setq popweb-zoom-factor 0.5)
   (setq popweb-python-command my/epc-python-command))
+
 (setq popweb-python-command my/epc-python-command)
 
 (use-package websocket-bridge

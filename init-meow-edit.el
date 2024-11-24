@@ -373,7 +373,9 @@ Will cancel all other selection, except char selection. "
      '("l t" . toggle-truncate-lines)
      '("l u" . xah-toggle-read-novel-mode)
      '("l v" . menu-bar-open)
-     '("l w" . whitespace-mode)
+     '("l W" . whitespace-mode)
+     ;; '("l " . nil)                      ;; uesed as prefix for elfeed
+     '("l x" . xwidget-webkit-browse-url)
 
      '("i /" . revert-buffer-with-coding-system)
      '("i ;" . write-file)

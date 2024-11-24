@@ -15,7 +15,7 @@
     :straight t
     :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . highlight-quoted-mode))
 
-  (require 'init-lispy)
+  ;; (require 'init-lispy)
   (require 'init-helpful))
 
 (use-package rainbow-delimiters
@@ -26,5 +26,10 @@
           python-mode) . rainbow-delimiters-mode))
 
 (defalias 'elisp-mode #'emacs-lisp-mode)
+
+;; (use-package elisp-autofmt
+;;   :straight (:source (melpa gpu-elpa-mirror))
+;;   :hook (emacs-lisp-mode . elisp-autofmt-mode)
+;;   )
 
 (provide 'init-emacs-lisp)

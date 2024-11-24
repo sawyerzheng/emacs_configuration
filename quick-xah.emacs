@@ -491,8 +491,7 @@
   (bind-key "SPC p v" 'magit 'xah-fly-command-map)
   (bind-key "SPC e q" 'my/format-buffer-fn 'xah-fly-command-map)
 
-  ;; web
-  (bind-key "SPC w w" 'my/switch-default-browser 'xah-fly-command-map)
+
 
   ;; lsp
   (require 'init-lsp-toggle)

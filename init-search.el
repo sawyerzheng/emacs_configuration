@@ -128,7 +128,41 @@
 
   ;; C-g
   (define-key map (kbd "g") #'keyboard-quit)
+
+  ;; web
+  (define-key map (kbd "w") #'webjump)
+
   map)
 
+
+
+(use-package webjump
+  :ensure nil
+  :commands (webjump)
+  :init (setq webjump-sites
+              '(;; Emacs
+                ("Emacs Home Page" .
+                 "www.gnu.org/software/emacs/emacs.html")
+                ("Xah Emacs Site" . "ergoemacs.org/index.html")
+                ("(or emacs irrelevant)" . "oremacs.com")
+                ("Mastering Emacs" .
+                 "https://www.masteringemacs.org/")
+
+                ;; Search engines.
+                ("DuckDuckGo" .
+                 [simple-query "duckduckgo.com"
+                               "duckduckgo.com/?q=" ""])
+                ("Google" .
+                 [simple-query "www.google.com"
+                               "www.google.com/search?q=" ""])
+                ("Bing" .
+                 [simple-query "www.bing.com"
+                               "www.bing.com/search?q=" ""])
+
+                ("Baidu" .
+                 [simple-query "www.baidu.com"
+                               "www.baidu.com/s?wd=" ""])
+                ("Wikipedia" .
+                 [simple-query "wikipedia.org" "wikipedia.org/wiki/" ""]))))
 
 (provide 'init-search)

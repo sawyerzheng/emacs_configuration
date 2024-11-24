@@ -1,3 +1,9 @@
+(use-package flymake
+  :straight (:type built-in)
+  :init
+  (setq flymake-margin-indicators-string
+        '((error "‼" compilation-error) (warning "!" compilation-warning)
+          (note "!" compilation-info))))
 (use-package flymake-cursor
   :straight (:type git :host github :repo "flymake/emacs-flymake-cursor")
   :commands (flymake-cursor-mode
@@ -408,7 +414,7 @@
     (setq-local completion-at-point-functions
                 (list
                  #'cape-file
-                 (cape-super-capf
+                 (cape-capf-super
                   #'eglot-completion-at-point
                   #'tempel-expand))))
   (add-hook 'eglot-managed-mode-hook #'my/eglot-completion-fix)

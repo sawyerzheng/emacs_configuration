@@ -113,7 +113,6 @@
 
   ;; * 切换默认浏览器工具
   (use-package browse-url
-    :bind ("C-c t W" . my/switch-default-browser)
     ;; :bind ("C-c t W" . (lambda () (interactive) (customize-set-variable 'browse-url-browser-function 'variable-interactive)))
     :config
     (when my/windows-p
@@ -268,6 +267,8 @@
   ;; tools
   (require 'init-lookup)
   (require 'init-docsets)
+  (defalias 'remove-if-not #'cl-remove-if-not)
+  (defalias 'remove-if #'cl-remove-if)
   (require 'init-dictionary)
   (require 'init-treemacs)
   (require 'init-multiple-cursors)
@@ -275,6 +276,8 @@
   (require 'init-everything)
   (require 'init-eshell)
   (require 'init-shell)
+
+  (require 'init-tty)
 
   ;; workspace
   (require 'init-persp-mode)
@@ -316,11 +319,12 @@
   (require 'init-quickrun)
   (require 'init-format)
 
-  ;; (when (and
-  ;;        ;; my/linux-p
-  ;;        (display-graphic-p))
-  ;;   (require 'init-eaf))
-  (require 'init-eaf)
+  (when (and
+         ;; my/linux-p
+         (display-graphic-p))
+    (require 'init-eaf))
+  ;; (require 'init-eaf)
+  (require 'init-xwidget)
 
   (require 'init-align)
   (require 'init-xref)
