@@ -31,6 +31,8 @@
     (add-to-list 'load-path (expand-file-name "straight/build/use-package" user-emacs-directory) t))
 
   (require 'init-use-package)
+  (require 'init-straight-recipes)
+
   (require 'init-no-littering)
   (require 'init-compat) ;; for compatibility
   (require 'major-mode-hydra)
