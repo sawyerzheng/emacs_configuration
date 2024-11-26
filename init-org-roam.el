@@ -10,11 +10,19 @@
          ("C-c n i" . org-roam-node-insert)
          ("C-c n c" . org-roam-capture)
          ;; Dailies
-         ("C-c n j" . org-roam-dailies-capture-today))
+         ("C-c n j" . org-roam-dailies-capture-today)
+         ("C-c n d g d" . org-roam-dailies-goto-date)
+         ("C-c n d g t" . org-roam-dailies-goto-today)
+         ("C-c n d g y" . org-roam-dailies-goto-yesterday)
+         )
   :defines (my/org-roam-keymap)
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+
+  (setq org-roam-capture-templates '(("d" "default" plain "%?" :target
+                                      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "${title}\n")
+                                      :unnarrowed t)))
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)
@@ -56,6 +64,7 @@
 
   ;; (define-key my/org-roam-keymap (kbd "u") #'org-roam-ui-open)
   :bind (:map my/org-roam-keymap
-              ("u" . org-roam-ui-open)))
+              ("u" . org-roam-ui-open))
+  :bind ("C-c n u" . org-roam-ui-open))
 
 (provide 'init-org-roam)

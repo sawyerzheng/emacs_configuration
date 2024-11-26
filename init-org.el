@@ -791,4 +791,5 @@ the `jupyter-current-client' local to the buffer."
   (require 'org))
 
 
+(require 'init-org-journal)
 (provide 'init-org)

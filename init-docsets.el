@@ -1,5 +1,9 @@
 (provide 'init-docsets)
 
+(use-package mathjax
+  :straight (:type git :host github :repo "astoff/mathjax.el")
+  :defer t)
+
 ;; zeal
 (require 'init-zeal)
 
