@@ -2,12 +2,18 @@
 (use-package impatient-mode
   :straight t
   :after (markdown-mode)
-  ;; :bind (:map markdown-mode-command-map
-  ;; ("p" . impatient-mode))
+  :bind (:map markdown-mode-command-map
+              ("i" . impatient-mode))
   :config
-  (setq httpd-port 18080)
-  (add-hook 'impatient-mode-hook 'httpd-start)
-  (add-hook 'markdown-mode-hook 'impatient-mode)
+  ;;(setq httpd-port 18080)
+  (defun my/impatient-open ()
+    (interactive)
+    (browse-url (format "http://localhost:%s/imp/live/%s" httpd-port (file-name-nondirectory (buffer-file-name)))))
+
+
+  (add-hook 'impatient-mode-hook 'httpd-start 0)
+  (add-hook 'impatient-mode-hook #'my/impatient-open 100)
+  ;;(add-hook 'markdown-mode-hook 'impatient-mode)
 
   ;; markdown filter
   (defun markdown-html (buffer)

@@ -176,6 +176,7 @@ on the Windows platform."
 (with-eval-after-load 'project
   (require 'project-cmake))
 
+;;;###autoload
 (defun my/conan-install ()
   (interactive)
   (let* ((default-directory (my/get-project-root))

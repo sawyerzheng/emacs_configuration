@@ -1,4 +1,7 @@
 ;; -*- coding: utf-8; -*-
+(with-eval-after-load 'simple-httpd
+  (when (daemonp)
+    (setq httpd-port (+ 20000 (random 10000)))))
 
 (use-package markdown-mode
   :straight t
@@ -31,7 +34,7 @@
 
 
   :config
-  (setq markdown-command "multimarkdown")
+  ;; (setq markdown-command "multimarkdown")
   (setq markdown-header-scaling nil)
 
   ;; Highly rust blocks correctly
