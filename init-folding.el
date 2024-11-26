@@ -56,9 +56,9 @@ this."
         hs-set-up-overlay #'+fold-hideshow-set-up-overlay-fn)
 
   (defadvice! +fold--hideshow-ensure-mode-a (&rest _)
-              "Ensure `hs-minor-mode' is enabled when we need it, no sooner or later."
-              :before '(hs-toggle-hiding hs-hide-block hs-hide-level hs-show-all hs-hide-all)
-              (+fold--ensure-hideshow-mode))
+    "Ensure `hs-minor-mode' is enabled when we need it, no sooner or later."
+    :before '(hs-toggle-hiding hs-hide-block hs-hide-level hs-show-all hs-hide-all)
+    (+fold--ensure-hideshow-mode))
 
 
   ;; extra folding support for more languages
@@ -99,7 +99,8 @@ this."
 
 (use-package ts-fold
   :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
-  :after (tree-sitter init-treesit)
+  :after (init-treesit)
+  ;; :after (tree-sitter init-treesit)
   :demand t
   :config
   (setq ts-fold-replacement +fold-ellipsis)

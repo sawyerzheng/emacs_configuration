@@ -98,5 +98,6 @@
 
 ;; (global-set-key (kbd "C-h r f") #'my-straight-make-sure-freeze-packages)
 
+(require 'init-straight-recipes)
 
 (provide 'init-straight)
