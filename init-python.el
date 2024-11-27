@@ -177,7 +177,9 @@
 (defun my/venv-activate ()
   (interactive)
   (let* ((root (project-root (project-current t)))
-         (local-python (cond ((file-exists-p (expand-file-name "./venv/bin/python" root))
+         (local-python (cond ((and (string> my/conda-project-env "") (file-exists-p my/conda-project-env))
+                              my/conda-project-env)
+                             ((file-exists-p (expand-file-name "./venv/bin/python" root))
                               (expand-file-name "./venv/" root))
                              ((file-exists-p (expand-file-name "./.venv/bin/python" root))
                               (expand-file-name "./.venv/" root))
@@ -187,5 +189,8 @@
                               (expand-file-name "./.venv/" root))
                              (t nil))))
     (if local-python
-        (pyvenv-activate local-python)
+        (progn
+          (message "activate venv: %s" local-python)
+          (pyvenv-activate local-python))
+
       (call-interactively #'pyvenv-activate))))
