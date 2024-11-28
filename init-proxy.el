@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8; -*-
 
-(defcustom my/proxy-use-remote-p t
+(defcustom my/proxy-use-remote-p nil
   "if to use remove proxy"
   :type 'boolean)
 
@@ -76,6 +76,7 @@
       (message "env http_proxy is %s now" proxy))))
 
 (setenv "no_proxy" "127.0.0.1,localhost,172.16.10.0/24,192.168.0.0/16,10.0.18.0/24,10.8.0.0/24")
+(setenv "NO_PROXY" "127.0.0.1,localhost,172.16.10.0/24,192.168.0.0/16,10.0.18.0/24,10.8.0.0/24")
 
 (defun enable-proxy-eaf ()
   "remember to restart eaf using: `eaf-restart-process'."

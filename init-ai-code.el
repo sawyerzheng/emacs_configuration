@@ -1,3 +1,6 @@
+(defvar my/use-codeium t
+  "if to use codeium"
+  )
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist"))
   :defer t)
@@ -10,12 +13,18 @@
              codeium-diagnose
              codeium-kill-last-auth-url
              codeium-completion-at-point)
-  ;; :init
-  ;; (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
-
+  :after prog-mode
+  :init
+  (if my/use-codeium
+      (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
+  
   :config
-  (add-hook 'python-base-mode-hook (lambda ()
-                                     (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)))
+  (when my/use-codeium
+    (add-hook 'eglot--managed-mode-hook (lambda ()
+                                          (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)))
+    (add-hook 'lsp-managed-mode-hook (lambda ()
+                                       (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))))
+  
   (setq use-dialog-box nil) ;; do not use popup boxes
   ;; get codeium status in the modeline
   (setq codeium-mode-line-enable

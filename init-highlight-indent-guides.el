@@ -47,7 +47,7 @@
   (my/highlight-indent-guides-set-faces-fn)
   (unless (display-graphic-p)
     ;;(setq highlight-indent-guides-auto-enabled nil)
-    (setq highlight-indent-guides-suppress-auto-error t)
+    ;; (setq highlight-indent-guides-suppress-auto-error t)
     )
 
   )

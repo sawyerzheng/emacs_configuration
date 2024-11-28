@@ -144,11 +144,11 @@
 
 
   ;; * 默认shell
-  (when my/windows-p
-    (setq explicit-shell-file-name "pwsh")
-    (setq default-process-coding-system '(gb18030 . utf-8-dos))
-    ;; (setq default-process-coding-system '(utf-8-dos . utf-8-unix))
-    )
+  ;; (when my/windows-p
+  ;;   (setq explicit-shell-file-name "pwsh")
+  ;;   (setq default-process-coding-system '(gb18030 . utf-8-dos))
+  ;;   ;; (setq default-process-coding-system '(utf-8-dos . utf-8-unix))
+  ;;   )
 
 
 
@@ -199,9 +199,11 @@
 
 
   ;; tree-sitter
-  (if (>= emacs-major-version 29)
-      (require 'init-treesit)
-    (require 'init-tree-sitter))
+  (unless my/windows-p
+    (if (>= emacs-major-version 29)
+        (require 'init-treesit)
+      (require 'init-tree-sitter)))
+
   ;; ** folding should require after treesit **
   (require 'init-folding)
 

@@ -29,10 +29,7 @@
   :straight (:type git :host github :repo "twlz0ne/acm-terminal")
   :after lsp-bridge)
 
-(use-package flymake-bridge
-  :straight (:type git :host github :repo "liuyinz/flymake-bridge")
-  :after lsp-bridge
-  :hook (lsp-bridge-mode . flymake-bridge-setup))
+
 
 
 (use-package lsp-bridge
@@ -323,9 +320,17 @@
   :bind (:map lsp-bridge-ref-mode-edit-map
               ("C-c C-c" . lsp-bridge-ref-apply-changed)))
 
+(use-package flymake-bridge
+  :straight (:type git :host github :repo "liuyinz/flymake-bridge")
+  :after lsp-bridge
+  :hook (lsp-bridge-mode . flymake-bridge-setup))
+
+
 (defun my/lsp-bridge-clean-inlay ()
-  (when lsp-bridge-enable-inlay-hint
-    (my/clean-overlay)))
+  (with-eval-after-load 'lsp-bridge
+    (when lsp-bridge-enable-inlay-hint
+      (my/clean-overlay)))
+  )
 
 (add-hook 'lsp-bridge-mode-hook #'my/lsp-bridge-clean-inlay)
 

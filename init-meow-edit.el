@@ -105,10 +105,31 @@ Will cancel all other selection, except char selection. "
 
 
 ;; * use-package
-(use-package meow
-  :straight t
-  :commands (meow-quit meow-setup meow-global-mode meow-thing-register)
-  :config
+
+(straight-use-package '(meow :source (gnu-elpa-mirror melpa) :build t))
+(add-to-list 'load-path (expand-file-name "straight/build/meow" user-emacs-directory))
+
+(progn
+  ;; native comp + straight + gui emacs --> lead to load (require 'meow) -->  void-variable meow-keypad error
+  ;; so I do not build with straight, native build meow manually with ap/package-native-compile-async
+  ;; :straight (:source (gnu-elpa-mirror melpa) :build t)
+  ;; :load-path (lambda () (expand-file-name "straight/repos/meow" user-emacs-directory))
+  ;; :commands (meow-quit meow-setup meow-global-mode meow-thing-register)
+  ;; :config
+  (require 'meow-var)
+  (require 'meow-face)
+  (require 'meow-keymap)
+  (require 'meow-helpers)
+  (require 'meow-util)
+  (require 'meow-keypad)
+  (require 'meow-command)
+  (require 'meow-core)
+  (require 'meow-cheatsheet)
+  (require 'meow-tutor)
+
+  (when (native-comp-available-p)
+    (ap/package-native-compile-async "meow"))
+  ;; :config
   ;; * add new editing thing
   (defun my/meow--inner-of-filename ()
     (bounds-of-thing-at-point 'filename))
@@ -132,7 +153,7 @@ Will cancel all other selection, except char selection. "
   (meow-thing-register 'url #'my/meow--inner-of-url #'my/meow--thing-url)
   (add-to-list 'meow-char-thing-table '(?f . filename))
   (add-to-list 'meow-char-thing-table '(?u . url))
-  :config
+  ;; :config
   (setq meow-use-clipboard t)
   (require 'init-xah-fly-keys-core)
   (require 'init-key-chord)

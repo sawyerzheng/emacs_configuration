@@ -45,7 +45,13 @@
 
   ;; (require 'corfu-indexed)
 
-  (require 'kind-icon)
+  (use-package nerd-icons-corfu
+    :straight (:source (melpa))
+    :hook (corfu-mode . (lambda ()
+                          (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))))
+
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+  ;; (require 'kind-icon)
   (use-package corfu-history
     :hook (corfu-mode . corfu-history-mode)
     :config
@@ -147,108 +153,108 @@
 
 
 
-(use-package kind-icon
-  :straight t
-  :defer t
-  :custom
-  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+;; (use-package kind-icon
+;;   :straight t
+;;   :defer t
+;;   :custom
+;;   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
 
-  ;; vscode icons
-  (use-package vscode-icon
-    :straight t)
+;;   ;; vscode icons
+;;   (use-package vscode-icon
+;;     :straight t)
 
-  ;; (setq kind-icon-mapping
-  ;;       '((array          "a"   :icon "symbol-array"       :face font-lock-type-face              :collection "vscode")
-  ;;         (boolean        "b"   :icon "symbol-boolean"     :face font-lock-builtin-face           :collection "vscode")
-  ;;         (color          "#"   :icon "symbol-color"       :face success                          :collection "vscode")
-  ;;         (command        "cm"  :icon "chevron-right"      :face default                          :collection "vscode")
-  ;;         (constant       "co"  :icon "symbol-constant"    :face font-lock-constant-face          :collection "vscode")
-  ;;         (class          "c"   :icon "symbol-class"       :face font-lock-type-face              :collection "vscode")
-  ;;         (constructor    "cn"  :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
-  ;;         (enum           "e"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
-  ;;         (enummember     "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
-  ;;         (enum-member    "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
-  ;;         (event          "ev"  :icon "symbol-event"       :face font-lock-warning-face           :collection "vscode")
-  ;;         (field          "fd"  :icon "symbol-field"       :face font-lock-variable-name-face     :collection "vscode")
-  ;;         (file           "f"   :icon "symbol-file"        :face font-lock-string-face            :collection "vscode")
-  ;;         (folder         "d"   :icon "folder"             :face font-lock-doc-face               :collection "vscode")
-  ;;         (function       "f"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
-  ;;         (interface      "if"  :icon "symbol-interface"   :face font-lock-type-face              :collection "vscode")
-  ;;         (keyword        "kw"  :icon "symbol-keyword"     :face font-lock-keyword-face           :collection "vscode")
-  ;;         (macro          "mc"  :icon "lambda"             :face font-lock-keyword-face)
-  ;;         (magic          "ma"  :icon "lightbulb-autofix"  :face font-lock-builtin-face           :collection "vscode")
-  ;;         (method         "m"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
-  ;;         (module         "{"   :icon "file-code-outline"  :face font-lock-preprocessor-face)
-  ;;         (numeric        "nu"  :icon "symbol-numeric"     :face font-lock-builtin-face           :collection "vscode")
-  ;;         (operator       "op"  :icon "symbol-operator"    :face font-lock-comment-delimiter-face :collection "vscode")
-  ;;         (param          "pa"  :icon "gear"               :face default                          :collection "vscode")
-  ;;         (property       "pr"  :icon "symbol-property"    :face font-lock-variable-name-face     :collection "vscode")
-  ;;         (reference      "rf"  :icon "library"            :face font-lock-variable-name-face     :collection "vscode")
-  ;;         (snippet        "S"   :icon "symbol-snippet"     :face font-lock-string-face            :collection "vscode")
-  ;;         (string         "s"   :icon "symbol-string"      :face font-lock-string-face            :collection "vscode")
-  ;;         (struct         "%"   :icon "symbol-structure"   :face font-lock-variable-name-face     :collection "vscode")
-  ;;         (text           "tx"  :icon "symbol-key"         :face font-lock-doc-face               :collection "vscode")
-  ;;         (typeparameter  "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
-  ;;         (type-parameter "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
-  ;;         (unit           "u"   :icon "symbol-ruler"       :face font-lock-constant-face          :collection "vscode")
-  ;;         (value          "v"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
-  ;;         (variable       "va"  :icon "symbol-variable"    :face font-lock-variable-name-face     :collection "vscode")
-  ;;         (t              "."   :icon "question"           :face font-lock-warning-face           :collection "vscode")))
+;;   ;; (setq kind-icon-mapping
+;;   ;;       '((array          "a"   :icon "symbol-array"       :face font-lock-type-face              :collection "vscode")
+;;   ;;         (boolean        "b"   :icon "symbol-boolean"     :face font-lock-builtin-face           :collection "vscode")
+;;   ;;         (color          "#"   :icon "symbol-color"       :face success                          :collection "vscode")
+;;   ;;         (command        "cm"  :icon "chevron-right"      :face default                          :collection "vscode")
+;;   ;;         (constant       "co"  :icon "symbol-constant"    :face font-lock-constant-face          :collection "vscode")
+;;   ;;         (class          "c"   :icon "symbol-class"       :face font-lock-type-face              :collection "vscode")
+;;   ;;         (constructor    "cn"  :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+;;   ;;         (enum           "e"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
+;;   ;;         (enummember     "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
+;;   ;;         (enum-member    "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
+;;   ;;         (event          "ev"  :icon "symbol-event"       :face font-lock-warning-face           :collection "vscode")
+;;   ;;         (field          "fd"  :icon "symbol-field"       :face font-lock-variable-name-face     :collection "vscode")
+;;   ;;         (file           "f"   :icon "symbol-file"        :face font-lock-string-face            :collection "vscode")
+;;   ;;         (folder         "d"   :icon "folder"             :face font-lock-doc-face               :collection "vscode")
+;;   ;;         (function       "f"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+;;   ;;         (interface      "if"  :icon "symbol-interface"   :face font-lock-type-face              :collection "vscode")
+;;   ;;         (keyword        "kw"  :icon "symbol-keyword"     :face font-lock-keyword-face           :collection "vscode")
+;;   ;;         (macro          "mc"  :icon "lambda"             :face font-lock-keyword-face)
+;;   ;;         (magic          "ma"  :icon "lightbulb-autofix"  :face font-lock-builtin-face           :collection "vscode")
+;;   ;;         (method         "m"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+;;   ;;         (module         "{"   :icon "file-code-outline"  :face font-lock-preprocessor-face)
+;;   ;;         (numeric        "nu"  :icon "symbol-numeric"     :face font-lock-builtin-face           :collection "vscode")
+;;   ;;         (operator       "op"  :icon "symbol-operator"    :face font-lock-comment-delimiter-face :collection "vscode")
+;;   ;;         (param          "pa"  :icon "gear"               :face default                          :collection "vscode")
+;;   ;;         (property       "pr"  :icon "symbol-property"    :face font-lock-variable-name-face     :collection "vscode")
+;;   ;;         (reference      "rf"  :icon "library"            :face font-lock-variable-name-face     :collection "vscode")
+;;   ;;         (snippet        "S"   :icon "symbol-snippet"     :face font-lock-string-face            :collection "vscode")
+;;   ;;         (string         "s"   :icon "symbol-string"      :face font-lock-string-face            :collection "vscode")
+;;   ;;         (struct         "%"   :icon "symbol-structure"   :face font-lock-variable-name-face     :collection "vscode")
+;;   ;;         (text           "tx"  :icon "symbol-key"         :face font-lock-doc-face               :collection "vscode")
+;;   ;;         (typeparameter  "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
+;;   ;;         (type-parameter "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
+;;   ;;         (unit           "u"   :icon "symbol-ruler"       :face font-lock-constant-face          :collection "vscode")
+;;   ;;         (value          "v"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
+;;   ;;         (variable       "va"  :icon "symbol-variable"    :face font-lock-variable-name-face     :collection "vscode")
+;;   ;;         (t              "."   :icon "question"           :face font-lock-warning-face           :collection "vscode")))
 
-  ;; ;; nerd-icons
-  (when my/4k-p
-    (setq kind-icon-use-icons nil)
-    (setq kind-icon-mapping
-          `(
-            (array ,(nerd-icons-codicon "nf-cod-symbol_array") :face font-lock-type-face)
-            (boolean ,(nerd-icons-codicon "nf-cod-symbol_boolean") :face font-lock-builtin-face)
-            (class ,(nerd-icons-codicon "nf-cod-symbol_class") :face font-lock-type-face)
-            (color ,(nerd-icons-codicon "nf-cod-symbol_color") :face success)
-            (command ,(nerd-icons-codicon "nf-cod-terminal") :face default)
-            (constant ,(nerd-icons-codicon "nf-cod-symbol_constant") :face font-lock-constant-face)
-            (constructor ,(nerd-icons-codicon "nf-cod-triangle_right") :face font-lock-function-name-face)
-            (enummember ,(nerd-icons-codicon "nf-cod-symbol_enum_member") :face font-lock-builtin-face)
-            (enum-member ,(nerd-icons-codicon "nf-cod-symbol_enum_member") :face font-lock-builtin-face)
-            (enum ,(nerd-icons-codicon "nf-cod-symbol_enum") :face font-lock-builtin-face)
-            (event ,(nerd-icons-codicon "nf-cod-symbol_event") :face font-lock-warning-face)
-            (field ,(nerd-icons-codicon "nf-cod-symbol_field") :face font-lock-variable-name-face)
-            (file ,(nerd-icons-codicon "nf-cod-symbol_file") :face font-lock-string-face)
-            (folder ,(nerd-icons-codicon "nf-cod-folder") :face font-lock-doc-face)
-            (interface ,(nerd-icons-codicon "nf-cod-symbol_interface") :face font-lock-type-face)
-            (keyword ,(nerd-icons-codicon "nf-cod-symbol_keyword") :face font-lock-keyword-face)
-            (macro ,(nerd-icons-codicon "nf-cod-symbol_misc") :face font-lock-keyword-face)
-            (magic ,(nerd-icons-codicon "nf-cod-wand") :face font-lock-builtin-face)
-            (method ,(nerd-icons-codicon "nf-cod-symbol_method") :face font-lock-function-name-face)
-            (function ,(nerd-icons-codicon "nf-cod-symbol_method") :face font-lock-function-name-face)
-            (module ,(nerd-icons-codicon "nf-cod-file_submodule") :face font-lock-preprocessor-face)
-            (numeric ,(nerd-icons-codicon "nf-cod-symbol_numeric") :face font-lock-builtin-face)
-            (operator ,(nerd-icons-codicon "nf-cod-symbol_operator") :face font-lock-comment-delimiter-face)
-            (param ,(nerd-icons-codicon "nf-cod-symbol_parameter") :face default)
-            (property ,(nerd-icons-codicon "nf-cod-symbol_property") :face font-lock-variable-name-face)
-            (reference ,(nerd-icons-codicon "nf-cod-references") :face font-lock-variable-name-face)
-            (snippet ,(nerd-icons-codicon "nf-cod-symbol_snippet") :face font-lock-string-face)
-            (string ,(nerd-icons-codicon "nf-cod-symbol_string") :face font-lock-string-face)
-            (struct ,(nerd-icons-codicon "nf-cod-symbol_structure") :face font-lock-variable-name-face)
-            (text ,(nerd-icons-codicon "nf-cod-text_size") :face font-lock-doc-face)
-            (typeparameter ,(nerd-icons-codicon "nf-cod-list_unordered") :face font-lock-type-face)
-            (type-parameter ,(nerd-icons-codicon "nf-cod-list_unordered") :face font-lock-type-face)
-            (unit ,(nerd-icons-codicon "nf-cod-symbol_ruler") :face font-lock-constant-face)
-            (value ,(nerd-icons-codicon "nf-cod-symbol_field") :face font-lock-builtin-face)
-            (variable ,(nerd-icons-codicon "nf-cod-symbol_variable") :face font-lock-variable-name-face)
-            (t ,(nerd-icons-codicon "nf-cod-code") :face font-lock-warning-face))))
+;;   ;; ;; nerd-icons
+;;   (when my/4k-p
+;;     (setq kind-icon-use-icons nil)
+;;     (setq kind-icon-mapping
+;;           `(
+;;             (array ,(nerd-icons-codicon "nf-cod-symbol_array") :face font-lock-type-face)
+;;             (boolean ,(nerd-icons-codicon "nf-cod-symbol_boolean") :face font-lock-builtin-face)
+;;             (class ,(nerd-icons-codicon "nf-cod-symbol_class") :face font-lock-type-face)
+;;             (color ,(nerd-icons-codicon "nf-cod-symbol_color") :face success)
+;;             (command ,(nerd-icons-codicon "nf-cod-terminal") :face default)
+;;             (constant ,(nerd-icons-codicon "nf-cod-symbol_constant") :face font-lock-constant-face)
+;;             (constructor ,(nerd-icons-codicon "nf-cod-triangle_right") :face font-lock-function-name-face)
+;;             (enummember ,(nerd-icons-codicon "nf-cod-symbol_enum_member") :face font-lock-builtin-face)
+;;             (enum-member ,(nerd-icons-codicon "nf-cod-symbol_enum_member") :face font-lock-builtin-face)
+;;             (enum ,(nerd-icons-codicon "nf-cod-symbol_enum") :face font-lock-builtin-face)
+;;             (event ,(nerd-icons-codicon "nf-cod-symbol_event") :face font-lock-warning-face)
+;;             (field ,(nerd-icons-codicon "nf-cod-symbol_field") :face font-lock-variable-name-face)
+;;             (file ,(nerd-icons-codicon "nf-cod-symbol_file") :face font-lock-string-face)
+;;             (folder ,(nerd-icons-codicon "nf-cod-folder") :face font-lock-doc-face)
+;;             (interface ,(nerd-icons-codicon "nf-cod-symbol_interface") :face font-lock-type-face)
+;;             (keyword ,(nerd-icons-codicon "nf-cod-symbol_keyword") :face font-lock-keyword-face)
+;;             (macro ,(nerd-icons-codicon "nf-cod-symbol_misc") :face font-lock-keyword-face)
+;;             (magic ,(nerd-icons-codicon "nf-cod-wand") :face font-lock-builtin-face)
+;;             (method ,(nerd-icons-codicon "nf-cod-symbol_method") :face font-lock-function-name-face)
+;;             (function ,(nerd-icons-codicon "nf-cod-symbol_method") :face font-lock-function-name-face)
+;;             (module ,(nerd-icons-codicon "nf-cod-file_submodule") :face font-lock-preprocessor-face)
+;;             (numeric ,(nerd-icons-codicon "nf-cod-symbol_numeric") :face font-lock-builtin-face)
+;;             (operator ,(nerd-icons-codicon "nf-cod-symbol_operator") :face font-lock-comment-delimiter-face)
+;;             (param ,(nerd-icons-codicon "nf-cod-symbol_parameter") :face default)
+;;             (property ,(nerd-icons-codicon "nf-cod-symbol_property") :face font-lock-variable-name-face)
+;;             (reference ,(nerd-icons-codicon "nf-cod-references") :face font-lock-variable-name-face)
+;;             (snippet ,(nerd-icons-codicon "nf-cod-symbol_snippet") :face font-lock-string-face)
+;;             (string ,(nerd-icons-codicon "nf-cod-symbol_string") :face font-lock-string-face)
+;;             (struct ,(nerd-icons-codicon "nf-cod-symbol_structure") :face font-lock-variable-name-face)
+;;             (text ,(nerd-icons-codicon "nf-cod-text_size") :face font-lock-doc-face)
+;;             (typeparameter ,(nerd-icons-codicon "nf-cod-list_unordered") :face font-lock-type-face)
+;;             (type-parameter ,(nerd-icons-codicon "nf-cod-list_unordered") :face font-lock-type-face)
+;;             (unit ,(nerd-icons-codicon "nf-cod-symbol_ruler") :face font-lock-constant-face)
+;;             (value ,(nerd-icons-codicon "nf-cod-symbol_field") :face font-lock-builtin-face)
+;;             (variable ,(nerd-icons-codicon "nf-cod-symbol_variable") :face font-lock-variable-name-face)
+;;             (t ,(nerd-icons-codicon "nf-cod-code") :face font-lock-warning-face))))
 
 
-  ;; (add-hook 'my-completion-ui-mode-hook
-  ;;  	    (lambda ()
-  ;;  	      (setq completion-in-region-function
-  ;;  		    (kind-icon-enhance-completion
-  ;;  		     completion-in-region-function))))
-  )
+;;   ;; (add-hook 'my-completion-ui-mode-hook
+;;   ;;  	    (lambda ()
+;;   ;;  	      (setq completion-in-region-function
+;;   ;;  		    (kind-icon-enhance-completion
+;;   ;;  		     completion-in-region-function))))
+;;   )
 
-(with-eval-after-load 'corfu
-  (require 'kind-icon))
+;; (with-eval-after-load 'corfu
+;;   (require 'kind-icon))
 ;; (with-eval-after-load 'minibuffer
 ;;   (require 'kind-icon))
 
