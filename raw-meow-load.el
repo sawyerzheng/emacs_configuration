@@ -14,6 +14,9 @@
 (global-treesit-auto-mode)
 (require 'init-font)
 
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+
 (if (display-graphic-p)
     (load-theme 'modus-vivendi t)
   (load-theme 'tsdh-dark t))
