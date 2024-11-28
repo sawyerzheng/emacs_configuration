@@ -1,6 +1,9 @@
 ;; -*- coding: utf-8; -*-
+(when (featurep 'straight)
+  (straight-use-package 'doom-modeline))
+
 (use-package doom-modeline
-  :straight t
+  ;; :straight t
   :init
   (setq doom-modeline-support-imenu t)
   :config

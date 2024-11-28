@@ -2,17 +2,22 @@
 ;; emacs -q -L /home/sawyer/.conf.d -L /home/sawyer/.emacs.d.clean29/straight/repos/meow -L /home/sawyer/.emacs.d.clean29/straight/repos/vertico -L /home/sawyer/.emacs.d.clean29/straight/repos/consult   -L /home/sawyer/.emacs.d.clean29/straight/repos/orderless -L /home/sawyer/.emacs.d.clean29/straight/repos/cape -L /home/sawyer/.emacs.d.clean29/straight/repos/embark -L /home/sawyer/.emacs.d.clean29/straight/repos/marginalia -l ~/.conf.d/raw-meow-load.el
 ;;; Codes
 (require 'init-load-tools)
-(dolist (package '(meow vertico consult orderless cape embark marginalia treesit-auto compat))
-  (if my/linux-p
-      (add-to-list 'load-path (expand-file-name (symbol-name package) "/home/sawyer/.emacs.d.clean29/straight/build"))
-    (add-to-list 'load-path (expand-file-name (symbol-name package) "d:/home/.emacs.d.clean29/straight/build")))
-  )
+(dolist (package '(meow vertico consult orderless cape embark marginalia treesit-auto compat doom-modeline lsp-bridge nerd-icons shrink-path dash s f eglot-booster))
+  (let ((package-load-prefix   (if my/linux-p
+                                   "/home/sawyer/.emacs.d.clean29/straight/build"
+                                 "d:/home/.emacs.d.clean29/straight/build"
+                                 )))
+    (add-to-list 'load-path (expand-file-name (symbol-name package) package-load-prefix))
+    ))
+
 (require 'init-vertico)
 (require 'init-consult)
 (require 'init-embark)
 (require 'init-treesit)
 (global-treesit-auto-mode)
 (require 'init-font)
+(require 'init-doom-modeline)
+(require 'init-lsp-bridge)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -1130,3 +1135,189 @@ Will cancel all other selection, except char selection. "
   ;; (add-hook 'eglot-managed-mode-hook #'my/capf-use-ai-code)
 
   )
+
+
+;;; lsp toggle
+(defvar my/lsp-backend "lsp-bridge"
+  "use `lsp-bridge' or `eglot'")
+
+
+
+(setq my/lsp-toggle-mode-hooks
+      '(
+        python-base-mode-hook
+        ;; python-mode-hook
+        ;; python-ts-mode-hook
+        c++-mode-hook
+        c++-ts-mode-hook
+        c-mode-hook
+        c-ts-mode-hook
+        cmake-mode-hook
+        cmake-ts-mode-hook
+        java-mode-hook
+        java-ts-mode-hook
+        web-mode-hook
+        js-mode-hook
+        js-ts-mode-hook
+        javascript-mode-hook
+        javascript-ts-mode-hook
+        typescript-mode-hook
+        typescript-ts-mode-hook
+        css-mode-hook
+        css-ts-mode-hook
+        html-mode-hook
+        html-ts-mode-hook
+        rust-mode-hook
+        rust-ts-mode-hook))
+
+(defvar my/lsp-backend-alist '(
+                               ("lsp-bridge" . my-enable-lsp-bridge)
+                               ("eglot" . my-enable-eglot))
+  "backend name <--> backend enable function")
+
+(setq my/lsp-basic-map
+      (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "ee") '("consult errors" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (consult-flymake))
+                                             (flycheck-mode
+                                              (consult-lsp-diagnostics))
+                                             (lsp-bridge-mode
+                                              (lsp-bridge-list-diagnostics))
+                                             (t
+                                              nil)))) )
+        (define-key map (kbd "el") '("list errors" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (flymake-show-buffer-diagnostics))
+                                             (flycheck-mode
+                                              (flycheck-list-errors))
+                                             (lsp-bridge-mode
+                                              (lsp-bridge-list-diagnostics))
+                                             (t
+                                              nil))
+                                       )))
+        (define-key map (kbd "en") '("next error" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (flymake-goto-next-error))
+                                             (flycheck-mode
+                                              (flycheck-next-error))
+                                             (lsp-bridge-mode
+                                              (lsp-bridge-jump-to-next-diagnostic))
+                                             (t
+                                              nil)))))
+        (define-key map (kbd "ep") '("prev error" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (flymake-goto-prev-error))
+                                             (flycheck-mode
+                                              (flycheck-previous-error))
+                                             (lsp-bridge-mode
+                                              (lsp-bridge-jump-to-prev-diagnostic))
+                                             (t
+                                              nil)))))
+        (define-key map (kbd "es") '("error at point" .
+                                     (lambda ()
+                                       (interactive)
+                                       (cond (flymake-mode
+                                              (flymake-show-diagnostic (point)))
+                                             (flycheck-mode
+                                              (flycheck-explain-error-at-point))
+                                             (lsp-bridge-mode ;; no support
+                                              nil)
+                                             (t
+                                              nil))
+                                       )))
+        (define-key map (kbd "dd") '("dap debug" .
+                                     my/dap-hydra))
+        map))
+
+
+(defun my-start-lsp-bridge-fn ()
+  (interactive)
+  (lsp-bridge-mode))
+
+(defun my-start-eglot-fn ()
+  (interactive)
+  (eglot-ensure))
+
+
+(defun my-enable-lsp-bridge ()
+  (interactive)
+  ;; (setq lsp-completion-enable nil)
+  ;; (global-lsp-bridge-mode)
+  (dolist (hook my/lsp-toggle-mode-hooks)
+    (add-hook hook #'my-start-lsp-bridge-fn)
+    (add-hook hook #'breadcrumb-local-mode))
+  (my-disable-eglot)
+  )
+
+(defun my-enable-eglot ()
+  (interactive)
+  (dolist (hook my/lsp-toggle-mode-hooks)
+    (add-hook hook #'my-start-eglot-fn)
+    (add-hook hook #'breadcrumb-local-mode))
+  (my-disable-lsp-bridge))
+
+(defun my-disable-lsp-bridge ()
+  (interactive)
+  (dolist (hook my/lsp-toggle-mode-hooks)
+    (remove-hook hook #'my-start-lsp-bridge-fn)))
+
+
+(defun my-disable-eglot--managed-mode ()
+  (interactive)
+  (when (and (boundp #'eglot--managed-mode) eglot--managed-mode)
+    (eglot--managed-mode -1)))
+
+(defun my-disable-eglot ()
+  (interactive)
+  (dolist (hook my/lsp-toggle-mode-hooks)
+    (remove-hook hook #'my-start-eglot-fn)
+    (add-hook hook #'my-disable-eglot--managed-mode))
+  (ignore-errors
+    (eglot-shutdown-all)))
+
+
+(when (featurep 'straight)
+  (straight-use-package '(eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")))
+
+(use-package eglot-booster
+  ;; :straight (:type git :host github :repo "jdtsmith/eglot-booster")
+  :after eglot
+  :config
+  (if   (executable-find "emacs-lsp-booster")
+      (eglot-booster-mode)
+    (message "Error: not find executable emacs-lsp-booster"))
+  )
+
+
+
+(defun my-lsp-toggle ()
+  (interactive)
+  (let* ((lsp-backends my/lsp-backend-alist)
+         (backend-name (completing-read
+                        "choose lsp backend:" (mapcar #'car lsp-backends)))
+         (selected-backend (cdr
+                            (assoc backend-name lsp-backends))))
+    (setq my/lsp-backend backend-name)
+    (funcall selected-backend)
+    (message "selected backend: %s" backend-name)))
+
+
+
+(defun my/enable-given-lsp-backend (backend-name)
+  "enable lsp backend with given name."
+  (funcall (cdr
+            (assoc backend-name my/lsp-backend-alist))))
+
+;; enable default backend
+(my/enable-given-lsp-backend my/lsp-backend)
+
+(global-set-key (kbd "C-c t l")  #'my-lsp-toggle)
