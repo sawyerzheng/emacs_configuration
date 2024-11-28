@@ -111,7 +111,7 @@
   (define-key map (kbd "k") #'avy-goto-word-1)
   (define-key map (kbd "j") #'avy-goto-char)
   (define-key map (kbd "h") #'my/avy-goto-word-start-2)
-  (define-key map (kbd "l") #'avy-goto-char-in-line)
+  (define-key map (kbd "l") #'avy-goto-line)
   (define-key map (kbd "2") #'avy-goto-char-2)
 
   ;; * line jump

@@ -1,6 +1,8 @@
 ;; -*- coding: utf-8; -*-
+(when (featurep 'straight)
+  (straight-use-package 'vertico))
+
 (use-package vertico
-  :straight t
   :commands (vertico-mode)
   :init
   (my/add-extra-folder-to-load-path "vertico" '("extensions"))
@@ -27,8 +29,10 @@
               ("M-;" . #'vertico-quick-exit)
               )
   :config
+  (when (featurep 'straight)
+    (straight-use-package 'orderless))
   (use-package orderless
-    :straight t
+    ;;    :straight t
     :init
     ;; Configure a custom style dispatcher (see the Consult wiki)
     ;; (setq orderless-style-dispatchers '(+orderless-dispatch)

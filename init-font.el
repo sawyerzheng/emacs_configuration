@@ -100,8 +100,11 @@
     (set-fontset-font (frame-parameter nil 'font) charset
                       (font-spec :family "Microsoft YaHei" :height 233 :width 'normal :weight 'normal))))
 
+(when (featurep 'straight)
+  (straight-use-package 'mixed-pitch))
+
 (use-package mixed-pitch
-  :straight t
+  ;; :straight t
   :commands (mixed-pitch-mode)
   :config
   (setq mixed-pitch-variable-pitch-cursor nil))
