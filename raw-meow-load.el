@@ -2,7 +2,7 @@
 ;; emacs -q -L /home/sawyer/.conf.d -L /home/sawyer/.emacs.d.clean29/straight/repos/meow -L /home/sawyer/.emacs.d.clean29/straight/repos/vertico -L /home/sawyer/.emacs.d.clean29/straight/repos/consult   -L /home/sawyer/.emacs.d.clean29/straight/repos/orderless -L /home/sawyer/.emacs.d.clean29/straight/repos/cape -L /home/sawyer/.emacs.d.clean29/straight/repos/embark -L /home/sawyer/.emacs.d.clean29/straight/repos/marginalia -l ~/.conf.d/raw-meow-load.el
 ;;; Codes
 (require 'init-load-tools)
-(dolist (package '(meow vertico consult orderless cape embark marginalia treesit-auto))
+(dolist (package '(meow vertico consult orderless cape embark marginalia treesit-auto compat))
   (if my/linux-p
       (add-to-list 'load-path (expand-file-name (symbol-name package) "/home/sawyer/.emacs.d.clean29/straight/build"))
     (add-to-list 'load-path (expand-file-name (symbol-name package) "d:/home/.emacs.d.clean29/straight/build")))
