@@ -1,5 +1,7 @@
+(when (featurep 'straight)
+  (straight-use-package 'embark))
 (use-package embark
-  :straight (:type git :host github :repo "oantolin/embark" :files ("*"))
+  ;; :straight (:type git :host github :repo "oantolin/embark" :files ("*"))
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
    ;; ("C-;" . embark-dwim)        ;; good alternative: M-.
@@ -17,14 +19,20 @@
                  nil
                  (window-parameters (mode-line-format . none))))
 
+  (when (featurep 'straight)
+    (straight-use-package 'marginalia))
+
   (use-package marginalia
-    :straight t
+    ;; :straight t
     :demand t
     :config
     (marginalia-mode))
 
+  (when (featurep 'straight)
+    (straight-use-package 'embark-consult))
+
   (use-package embark-consult
-    :straight t
+    ;; :straight t
     :after (embark consult)
     :demand t              ; only necessary if you have the hook below
     ;; if you want to have consult previews as you move around an

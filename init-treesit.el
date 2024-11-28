@@ -90,14 +90,20 @@
 ;;          (toml-ts-mode . (lambda () (treesit-parser-create 'toml)))
 ;;          (python-ts-mode . (lambda () (treesit-parser-create 'python)))
 ;;          (python-mode . (lambda () (treesit-parser-create 'python)))))
+(when (featurep 'straight)
+  (straight-use-package '(treesit-auto :type git :host github :repo "renzmann/treesit-auto")))
 
 (use-package treesit-auto
-  :straight (:type git :host github :repo "renzmann/treesit-auto")
+  ;; :straight (:type git :host github :repo "renzmann/treesit-auto")
   :commands (global-treesit-auto-mode)
   :hook (my/startup . global-treesit-auto-mode)
   :config
   (global-treesit-auto-mode)
   (setq treesit-auto-install 'prompt)
+
+  (add-to-list 'auto-mode-alist
+               '("\\.ya?ml\\'" . yaml-ts-mode))
+
   ;; (setq major-mode-remap-alist
   ;;       '((c-mode . c-ts-mode)
   ;;         (c++-mode . c++-ts-mode)

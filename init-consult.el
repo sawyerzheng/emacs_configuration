@@ -1,7 +1,9 @@
+(when (featurep 'straight)
+  (straight-use-package 'consult))
+
 (use-package consult
-  :straight t
   ;; :after (project projectile)
-  :commands (consult-line +default/search-buffer)
+  :commands (consult-line +default/search-buffer consult-xref)
   :bind
   (([remap recentf-open-files] . consult-recent-file)
    ([remap project-list-buffers] . consult-project-buffer)
@@ -146,6 +148,7 @@ input and search the whole buffer for it."
   ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (require 'consult-xref)
   (consult-customize
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
@@ -169,7 +172,7 @@ input and search the whole buffer for it."
 
 
 (use-package window
-  :straight (:type built-in)
+  ;; :straight (:type built-in)
   :bind (("C-c b x" . my/switch-to-scratch-fn)
          ("C-c b p" . switch-to-prev-buffer)
          ("C-c b n" . switch-to-next-buffer))
@@ -178,7 +181,7 @@ input and search the whole buffer for it."
     (interactive) (switch-to-buffer "*scratch*")))
 
 (use-package files
-  :straight (:type built-in)
+  ;; :straight (:type built-in)
   :bind
   ("C-c b r" . revert-buffer)
   ("C-c b s" . save-buffer))
@@ -189,48 +192,23 @@ input and search the whole buffer for it."
 ;;   ("C-c o f" . make-frame-command))
 
 
-(use-package consult-yasnippet
-  :straight t
-  :commands (consult-yasnippet
-             consult-yasnippet-visit-snippet-file))
+(when (featurep 'straight)
+  (straight-use-package 'consult-yasnippet)
+  (use-package consult-yasnippet
+    ;; :straight t
+    :commands (consult-yasnippet
+               consult-yasnippet-visit-snippet-file))
+  (straight-use-package 'consult-dir)
+  (use-package consult-dir
+    ;;:straight t
+    :bind (("C-x C-d" . consult-dir)
+           :map minibuffer-local-completion-map
+           ("C-x C-d" . consult-dir)
+           ("C-x C-j" . consult-dir-jump-file)))
 
-(use-package consult-dir
-  :straight t
-  :bind (("C-x C-d" . consult-dir)
-         :map minibuffer-local-completion-map
-         ("C-x C-d" . consult-dir)
-         ("C-x C-j" . consult-dir-jump-file)))
-
-(use-package consult-tramp
-  :straight (:type git :host github :repo "Ladicle/consult-tramp")
-  :commands (consult-tramp))
-
-
-;; consult-fd
-;; (with-eval-after-load 'consult
-;;   (defvar consult--fd-command nil)
-;;   (defun consult--fd-builder (input)
-;;     (unless consult--fd-command
-;;       (setq consult--fd-command
-;;             (if (eq 0 (call-process-shell-command "fdfind"))
-;;                 "fdfind"
-;;               "fd")))
-;;     (pcase-let* ((`(,arg . ,opts) (consult--command-split input))
-;;                  (`(,re . ,hl) (funcall consult--regexp-compiler
-;;                                         arg 'extended t)))
-;;       (when re
-;;         (list :command (append
-;;                         (list consult--fd-command
-;;                               "--color=never" "--full-path"
-;;                               (consult--join-regexps re 'extended))
-;;                         opts)
-;;               :highlight hl))))
-
-;;   (defun consult-fd (&optional dir initial)
-;;     (interactive "P")
-;;     (let* ((prompt-dir (consult--directory-prompt "Fd" dir))
-;;            (default-directory (cdr prompt-dir)))
-;;       (find-file (consult--find (car prompt-dir) #'consult--fd-builder initial))))
-;;   (global-set-key (kbd "M-s f") #'consult-fd))
+  (straight-use-package '(consult-tramp :type git :host github :repo "Ladicle/consult-tramp"))
+  (use-package consult-tramp
+    ;;:straight (:type git :host github :repo "Ladicle/consult-tramp")
+    :commands (consult-tramp)))
 
 (provide 'init-consult)
