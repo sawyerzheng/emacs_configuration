@@ -1,14 +1,15 @@
 (provide 'init-major-modes)
 
-(straight-use-package 'yaml-mode)
-(straight-use-package 'web-mode)
-(straight-use-package 'js2-mode)
+
+(my/straight-if-use 'yaml-mode)
+(my/straight-if-use 'web-mode)
+(my/straight-if-use 'js2-mode)
+(my/straight-if-use 'lua-mode)
 (use-package lua-mode
-  :straight t
   :mode ("\\.lua\\'" . lua-mode))
 
+(my/straight-if-use 'json-mode)
 (use-package json-mode
-  :straight t
   :commands (json-mode json-to-single-line)
   :mode (("\\(?:\\(?:\\.\\(?:b\\(?:\\(?:abel\\|ower\\)rc\\)\\|json\\(?:ld\\)?\\)\\|composer\\.lock\\)\\'\\)" . json-mode)
          ("\\.jsonc\\'" . jsonc-mode))
@@ -30,21 +31,24 @@
   :mode (("\\.jam\\'" . jam-mode)
           ("[Jj]amfile\\'" . jam-mode)))
 
+(my/straight-if-use 'powershell)
 (use-package powershell
-  :straight t
   :mode (("\\.ps1\\'" . powershell-mode)))
 
+(my/straight-if-use 'yaml-mode)
 (use-package yaml-mode
   :straight t
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.yaml\\'" . yaml-mode)))
 
+(my/straight-if-use 'typescript-mode)
 (use-package typescript-mode
   :straight t
   :mode (("\\.ts\\'" . typescript-mode)))
 
+(my/straight-if-use '(dockerfile-mode :type git :host github :repo "spotify/dockerfile-mode"))
 (use-package dockerfile-mode
-  :straight (:type git :host github :repo "spotify/dockerfile-mode")
+  :straight 
   :mode (("[Dd]ockerfile.*" . dockerfile-mode)))
 
 (add-to-list 'auto-mode-alist
@@ -58,6 +62,7 @@
 (add-to-list 'auto-mode-alist
              '(".mbsyncrc\\'" . conf-mode))
 
+(my/straight-if-use 'markdown-mode)
 (use-package markdown-mode
   :config
   (require 'init-markdown)

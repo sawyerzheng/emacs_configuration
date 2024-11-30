@@ -6,7 +6,7 @@
 (add-to-list 'load-path (expand-file-name "extra.d" (file-name-parent-directory (locate-library "init-load-tools"))))
 (require 'init-logging)
 ;; (require 'init-esup)
-(defvar my/install-packages-p t
+(defvar my/install-packages-p nil
   "install packages")
 (defvar my/install-packages
   '(meow vertico consult orderless cape embark embark-consult marginalia treesit-auto compat doom-modeline markdown-mode lsp-bridge acm-terminal popon flymake-bridge nerd-icons shrink-path dash s f eglot-booster projectile project-x yasnippet yasnippet-snippets auto-yasnippet))
@@ -61,8 +61,8 @@
        (straight-base-dir prefix)
        (packages my/install-packages)
        (installed-packages (cl-remove-if-not (lambda (p) (file-exists-p (my/find-package-path p))) packages))
-       (enable-straight-p (< (seq-length installed-packages)
-			     (seq-length packages)))
+       (enable-straight-p (or my/install-packages-p (< (seq-length installed-packages)
+			     (seq-length packages))))
        )
   (when enable-straight-p
     (my/enable-straight))
@@ -72,7 +72,9 @@
       ;;(straight-use-package package)
       )
     (add-to-list 'load-path (my/find-package-path package))
-    ))
+    )
+  (add-subdirs-to-load-path (expand-file-name "straight/build/" prefix))
+  )
 
 (require 'xah-fly-keys-core)
 (require 'init-vertico)
@@ -85,6 +87,7 @@
 (require 'init-doom-modeline)
 (require 'init-yasnippet)
 (require 'init-lsp-bridge)
+(require 'init-major-modes)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
