@@ -1,6 +1,8 @@
 ;; -*- coding: utf-8; -*-
 (when (featurep 'straight)
-;;  (straight-use-package '(acm :type git :host github :repo "manateelazycat/lsp-bridge" :files ("acm/*") :build nil))
+  ;;  (straight-use-package '(acm :type git :host github :repo "manateelazycat/lsp-bridge" :files ("acm/*") :build nil))
+  (straight-use-package '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build t ;;(:not compile)
+				     ))
   (straight-use-package '(acm-terminal :type git :host github :repo "twlz0ne/acm-terminal"))
   (straight-use-package 'popon)
   (straight-use-package '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge"))
@@ -10,7 +12,6 @@
 (use-package acm-terminal
   ;; :if (and (daemonp) (not (display-graphic-p)))
   :if (not (display-graphic-p))
-
   :init
 
   (defun my/acm-terminal-set-colors ()
@@ -36,14 +37,7 @@
   ;; :straight (:type git :host github :repo "twlz0ne/acm-terminal")
   :after lsp-bridge)
 
-
-(when (featurep 'straight)
-  (straight-use-package '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build (:not compile)
-				     )))
-
 (use-package lsp-bridge
-  ;; :straight (lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build (:not compile))
-  ;; :load-path ("~/source/lsp-bridge/" "~/source/lsp-bridge/acm/")
   :commands (lsp-bridge-rename lsp-bridge-mode global-lsp-bridge-mode)
   ;; :hook (my/startup . global-lsp-bridge-mode)
   :hook ((emacs-lisp-mode

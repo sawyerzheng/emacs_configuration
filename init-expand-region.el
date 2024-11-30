@@ -1,5 +1,5 @@
+(my/straight-if-use 'expand-region)
 (use-package expand-region
-  :straight t
   :bind ( ("C-=" . er/expand-region)
           ("C--" . er/contract-region)))
 

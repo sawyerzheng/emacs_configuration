@@ -1,11 +1,10 @@
 (provide 'init-regexp)
 
+(my/straight-if-use 'visual-regexp)
 (use-package visual-regexp
-  :straight t
   :defer t)
-
+(my/straight-if-use 'visual-regexp-steroids)
 (use-package visual-regexp-steroids
-  :straight t
   :init
   (setq vr/engine 'python)
   :commands (vr/mc-mark

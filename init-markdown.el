@@ -3,8 +3,10 @@
   (when (daemonp)
     (setq httpd-port (+ 20000 (random 10000)))))
 
+(my/straight-if-use 'markdown-mode)
+(my/straight-if-use 'markdown-toc)
+(my/straight-if-use 'edit-indirect)
 (use-package markdown-mode
-  :straight t
   :mode (("/README\\(?:\\.md\\)?\\'" . gfm-mode)
          ("\\.md\\'" . gfm-mode))
   :init
@@ -58,12 +60,10 @@
                                  (setq-local imenu-create-index-function
                                              #'markdown-imenu-create-nested-index)))
     :after markdown-mode
-    :straight t
     :config
     )
 
   (use-package edit-indirect
-    :straight t
     :after markdown-mode)
 
   ;; https://stackoverflow.com/questions/36183071/how-can-i-preview-markdown-in-emacs-in-real-time/36189456?noredirect=1#comment104784050_36189456
@@ -75,15 +75,15 @@
 
   ;; * markdown buffer `dnd' image handling -------------------------------------------
   (use-package org-download
-    :straight t)
+    )
 
   (require '+my-markdown-download)
   (setq markdown-download-image-dir "./img/")
 
   ;; (require 'markdown-preview-mode)
+  (my/straight-if-use '(markdown-dnd-images :type git :host github :repo "mooreryan/markdown-dnd-images"))
   (use-package markdown-dnd-images
     :demand t
-    :straight (markdown-dnd-images :type git :host github :repo "mooreryan/markdown-dnd-images")
     :config
     (setq dnd-save-directory "./img/")
     (setq dnd-save-buffer-name nil))
@@ -116,15 +116,15 @@
               ("i c" . markdown-download-clipboard)
               ("i s" . markdown-download-screenshot)))
 
+(my/straight-if-use 'gh-md)
 (use-package gh-md
-  :straight t
   :commands (gh-md-render-buffer
              gh-md-render-region))
 
-(use-package markdown-soma
-  :straight (:type git :host github :repo "jasonm23/markdown-soma" :files  ("*")
+(my/straight-if-use '(markdown-soma :type git :host github :repo "jasonm23/markdown-soma" :files  ("*")
                    ;; :pre-build (("cargo install --path ."))
-                   )
+                   ))
+(use-package markdown-soma
   :bind (:map markdown-mode-command-map
               ("p" . markdown-soma-mode)
               ("C-p" . markdown-soma-mode))

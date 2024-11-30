@@ -1,8 +1,7 @@
 ;; -*- coding: utf-8; -*-
 
-
+(my/straight-if-use 'pyim)
 (use-package pyim
-  :straight t
   :delight
   (pyim-isearch-mode)
   :commands (my-pyim-forward-mode)
@@ -38,12 +37,14 @@
   ;; 手动安装 posframe 包。
   ;; 使用默认配置，兼容 terminal
   ;; (setq pyim-page-tooltip 'posframe)
+  (my/straight-if-use 'posframe)
   (use-package posframe
     :if (or (daemonp) (display-graphic-p))
-    :straight t)
+    )
+  (my/straight-if-use 'popup)
   (use-package popup
     :unless (display-graphic-p)
-    :straight t)
+    )
 
 
   ;; 选词框显示5个候选词
@@ -121,8 +122,8 @@
 
     (advice-add 'pyim-input-method :around #'rime--enable-key-chord-fun)))
 
+(my/straight-if-use 'pyim-basedict)
 (use-package pyim-basedict
-  :straight t
   :defer t
   :requires pyim
   ;; 激活 basedict 拼音词库，五笔用户请继续阅读 README

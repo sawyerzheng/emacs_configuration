@@ -1,5 +1,5 @@
+(my/straight-if-use 'grip-mode)
 (use-package grip-mode
-  :straight t  
   :commands (grip-mode)
   :after markdown-mode
   :bind (:map markdown-mode-command-map

@@ -3,8 +3,8 @@
   :load-path (lambda () (expand-file-name "emacs-web-server/" my/extra.d-dir))
   :defer t)
 
+(my/straight-if-use 'markdown-preview-mode)
 (use-package markdown-preview-mode
-  :straight t
   :commands (markdown-preview-mode)
   :after markdown-mode
   :bind (:map markdown-mode-command-map

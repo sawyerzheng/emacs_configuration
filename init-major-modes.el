@@ -37,18 +37,15 @@
 
 (my/straight-if-use 'yaml-mode)
 (use-package yaml-mode
-  :straight t
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.yaml\\'" . yaml-mode)))
 
 (my/straight-if-use 'typescript-mode)
 (use-package typescript-mode
-  :straight t
   :mode (("\\.ts\\'" . typescript-mode)))
 
 (my/straight-if-use '(dockerfile-mode :type git :host github :repo "spotify/dockerfile-mode"))
 (use-package dockerfile-mode
-  :straight 
   :mode (("[Dd]ockerfile.*" . dockerfile-mode)))
 
 (add-to-list 'auto-mode-alist

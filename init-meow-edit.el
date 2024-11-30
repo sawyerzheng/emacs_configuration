@@ -199,7 +199,7 @@ Will cancel all other selection, except char selection. "
      ;; '("|" . split-window-right)
 
      ;; region
-     '("=" . er/expand-region)
+     '("\"" . er/expand-region)
 
      ;; pair jump
      '("/" . xah-goto-matching-bracket) ;; "/"
@@ -313,7 +313,7 @@ Will cancel all other selection, except char selection. "
      '("|" . split-window-right)
 
      ;; region
-     '("=" . er/expand-region)
+     '("\"" . er/expand-region)
 
      ;; pair jump
      '("/" . xah-goto-matching-bracket) ;; "/"
@@ -338,8 +338,8 @@ Will cancel all other selection, except char selection. "
 
     (with-eval-after-load 'back-button
       (meow-normal-define-key
-       '("0" . back-button-local-backward)
-       '(")" . back-button-local-forward)))
+       '("=" . back-button-local-backward)
+       '("+" . back-button-local-forward)))
     (global-unset-key (kbd "C-c b"))
     (global-unset-key (kbd "C-c f"))
     (global-unset-key (kbd "C-c j"))

@@ -1,16 +1,14 @@
 (setq my/git-everywhere nil)
-
+(my/straight-if-use 'magit)
 (use-package magit
   :bind ("C-x g" . magit-status)
-  ;; :straight (:type git :host github :repo "magit/magit")
-  :straight (:source (melpa gpu-elpa-mirror))
   :commands (magit-file-delete)
   :config
   (setq magit-diff-refine-hunk 'all) ;; (nil t 'all) 显示单词级别的差异
   )
 
+(my/straight-if-use 'transient)
 (use-package transient
-  :straight (:source (melpa gpu-elpa-mirror))
   :after magit
   )
 
@@ -25,30 +23,27 @@
 ;;     :straight t)
 ;;   )
 
+(my/straight-if-use 'magit-gitflow)
 (use-package magit-gitflow
   :after magit
-  ;; :straight t
-  :straight (:source (melpa gpu-elpa-mirror))
   :hook (magit-mode . turn-on-magit-gitflow))
 
+(my/straight-if-use 'magit-todos)
 (use-package magit-todos
   :after magit
-  ;; :straight t
-  :straight (:source (melpa gpu-elpa-mirror))
   :config
   (setq magit-todos-keyword-suffix "\\(?:([^)]+)\\)?:?") ; make colon optional
   (define-key magit-todos-section-map "j" nil))
 
 ;; git gutter(git diff highlight)
+(my/straight-if-use 'git-gutter)
+(my/straight-if-use 'git-gutter-fringe)
 (use-package git-gutter
   :hook (find-file . git-gutter-mode)
-  ;; :straight t
-  :straight (:source (melpa gpu-elpa-mirror))
   :config
   ;; add beautiful support in GUI.
   (when (or (daemonp) (display-graphic-p))
     (use-package git-gutter-fringe
-      :straight t
       :config
       (if my/4k-p
           (progn
@@ -64,8 +59,8 @@
                                                   (require 'git-gutter))))
   (add-hook 'my/startup-hook #'(lambda () (require 'git-gutter))))
 
+(my/straight-if-use 'git-timemachine)
 (use-package git-timemachine
-  :straight (:source (melpa gpu-elpa-mirror))
   :commands (git-timemachine))
 
 

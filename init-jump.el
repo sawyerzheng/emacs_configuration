@@ -2,7 +2,6 @@
 
 
 (use-package dumb-jump
-  :straight t
   :requires xref
   :hook (prog-mode . my/dumb-jump-add-activate-fn)
   :functions (my/dumb-jump-add-activate-fn)
@@ -13,15 +12,13 @@
     (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)))
 
 (use-package ace-pinyin
-  :straight t
   :commands (ace-pinyin-dwim ace-pinyin-jump-word)
   :config
   (setq ace-pinyin--jump-word-timeout 1.5)
   (ace-pinyin-global-mode +1))
 
 (use-package ace-link
-  :straight t
-  :commands (ace-link)
+    :commands (ace-link)
   :init
   (defun my/bind-ace-link ()
     (local-set-key (kbd "o") #'ace-link))
@@ -31,14 +28,12 @@
           Custom-mode) . my/bind-ace-link))
 
 (use-package back-button
-  :straight t
-  :commands (back-button-mode)
+    :commands (back-button-mode)
   :demand t
   :config (back-button-mode +1))
 
 (use-package bm
-  :straight t
-  :commands (bm-toggle
+    :commands (bm-toggle
              bm-next
              bm-previous)
   :init

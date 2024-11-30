@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8; -*-
+(my/straight-if-use 'impatient-mode)
 (use-package impatient-mode
-  :straight t
   :after (markdown-mode)
   :bind (:map markdown-mode-command-map
               ("i" . impatient-mode))
