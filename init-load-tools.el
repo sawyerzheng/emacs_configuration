@@ -19,6 +19,8 @@
 ;;
 ;;; Code:
 
+(provide 'init-load-tools)
+
 (defvar my/use-head-face-scaling t
   "if use different font size for headline levels")
 
@@ -154,9 +156,11 @@
 ;;     (setq (expand-file-name folder eaf-path))))
 
 ;; copy from lazycat emacs
-(require 'cl-lib)
+
 (defun add-subdirs-to-load-path (search-dir)
   (interactive)
+  (unless (fboundp 'cl-remove-if)
+    (require 'cl-lib))
   (let* ((dir (file-name-as-directory search-dir)))
     (dolist (subdir
              ;; 过滤出不必要的目录，提升Emacs启动速度
@@ -213,7 +217,7 @@
 (defvar my/arch-p (equal (my/get-linux-distro) "Arch Linux")
   "is arch linux distrobution")
 
-(provide 'init-load-tools)
+
 
 ;; ref: https://github.com/alphapapa/unpackaged.el#reload-a-packages-features
 ;;;###autoload
@@ -522,5 +526,10 @@ BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
                (window-list)))))
 (add-hook 'my/startup-hook #'my/wsl-enable-wslview)
 
+(defun my/straight-if-use (recipe-or-package)
+  "only when straight is available, then install the given package"
+  (when (featurep 'straight)
+    (straight-use-package recipe-or-package))
+  )
 ;; (if (my/windows-p))
 ;; (add-to-list 'exec-path )

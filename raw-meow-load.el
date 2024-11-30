@@ -1,22 +1,89 @@
 ;;; Command Usage
-;; emacs -q -L /home/sawyer/.conf.d -L /home/sawyer/.emacs.d.clean29/straight/repos/meow -L /home/sawyer/.emacs.d.clean29/straight/repos/vertico -L /home/sawyer/.emacs.d.clean29/straight/repos/consult   -L /home/sawyer/.emacs.d.clean29/straight/repos/orderless -L /home/sawyer/.emacs.d.clean29/straight/repos/cape -L /home/sawyer/.emacs.d.clean29/straight/repos/embark -L /home/sawyer/.emacs.d.clean29/straight/repos/marginalia -l ~/.conf.d/raw-meow-load.el
+;; emacs -Q -L /home/sawyer/.conf.d -l raw-meow-load.el --init-directory /home/sawyer/.emacs.d.raw -nw $@
+
 ;;; Codes
 (require 'init-load-tools)
-(dolist (package '(meow vertico consult orderless cape embark marginalia treesit-auto compat doom-modeline lsp-bridge nerd-icons shrink-path dash s f eglot-booster))
-  (let ((package-load-prefix   (if my/linux-p
-                                   "/home/sawyer/.emacs.d.clean29/straight/build"
-                                 "d:/home/.emacs.d.clean29/straight/build"
-                                 )))
-    (add-to-list 'load-path (expand-file-name (symbol-name package) package-load-prefix))
+(add-to-list 'load-path (expand-file-name "extra.d" (file-name-parent-directory (locate-library "init-load-tools"))))
+(require 'init-logging)
+;; (require 'init-esup)
+(defvar my/install-packages-p t
+  "install packages")
+(defvar my/install-packages
+  '(meow vertico consult orderless cape embark embark-consult marginalia treesit-auto compat doom-modeline markdown-mode lsp-bridge acm-terminal popon flymake-bridge nerd-icons shrink-path dash s f eglot-booster projectile project-x yasnippet yasnippet-snippets auto-yasnippet))
+
+(use-package savehist
+  :init
+  (savehist-mode))
+
+(use-package recentf
+  :defer 4
+  :config
+  (if (file-exists-p recentf-save-file)
+      (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
+    )
+  (setq recentf-max-saved-items 1000)
+  (add-to-list 'recentf-exclude  ".gpg\\'")
+  (recentf-mode 1))
+
+(defvar bootstrap-version)
+
+(defun my/enable-straight ()
+  (when my/install-packages-p
+    (let ((bootstrap-file
+	   (expand-file-name
+	    "straight/repos/straight.el/bootstrap.el"
+	    (or (bound-and-true-p straight-base-dir)
+		user-emacs-directory)))
+	  (bootstrap-version 7))
+      (unless (file-exists-p bootstrap-file)
+	(with-current-buffer
+	    (url-retrieve-synchronously
+	     "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	     'silent 'inhibit-cookies)
+	  (goto-char (point-max))
+	  (eval-print-last-sexp)))
+      (load bootstrap-file nil 'nomessage))
+
+    (straight-use-package 'meow)
+    ;;    (require 'init-lsp-bridge)
     ))
 
+(defun my/find-package-path (package)
+  "package name is a symbol"
+  (expand-file-name (symbol-name package)
+		    (expand-file-name "straight/build" prefix)) ;; package build prefix
+  )
+(let* ((prefix   (if my/linux-p
+                     "/home/sawyer/.emacs.d.raw"
+                   "d:/home/.emacs.d"
+                   ))
+       (prefix user-emacs-directory)
+       (straight-base-dir prefix)
+       (packages my/install-packages)
+       (installed-packages (cl-remove-if-not (lambda (p) (file-exists-p (my/find-package-path p))) packages))
+       (enable-straight-p (< (seq-length installed-packages)
+			     (seq-length packages)))
+       )
+  (when enable-straight-p
+    (my/enable-straight))
+  
+  (dolist (package packages)
+    (when my/install-packages-p
+      ;;(straight-use-package package)
+      )
+    (add-to-list 'load-path (my/find-package-path package))
+    ))
+
+(require 'xah-fly-keys-core)
 (require 'init-vertico)
 (require 'init-consult)
 (require 'init-embark)
 (require 'init-treesit)
 (global-treesit-auto-mode)
 (require 'init-font)
+(require 'init-project)
 (require 'init-doom-modeline)
+(require 'init-yasnippet)
 (require 'init-lsp-bridge)
 
 (menu-bar-mode -1)
@@ -537,26 +604,26 @@ Will cancel all other selection, except char selection. "
 (require 'meow)
 
 (meow-thing-register 'filename #'my/meow--inner-of-filename #'my/meow--bounds-of-filename)
-  (meow-thing-register 'url #'my/meow--inner-of-url #'my/meow--thing-url)
-  (add-to-list 'meow-char-thing-table '(?f . filename))
-  (add-to-list 'meow-char-thing-table '(?u . url))
+(meow-thing-register 'url #'my/meow--inner-of-url #'my/meow--thing-url)
+(add-to-list 'meow-char-thing-table '(?f . filename))
+(add-to-list 'meow-char-thing-table '(?u . url))
 
-  (setq meow-use-clipboard t)
+(setq meow-use-clipboard t)
 
-  (defun my/meow-quit (&optional arg)
-    "Quit current window or buffer."
-    (interactive "P")
-    (cond
-     ((derived-mode-p 'lsp-bridge-ref-mode) (lsp-bridge-ref-quit))
-     (t (call-interactively #'meow-quit))))
+(defun my/meow-quit (&optional arg)
+  "Quit current window or buffer."
+  (interactive "P")
+  (cond
+   ((derived-mode-p 'lsp-bridge-ref-mode) (lsp-bridge-ref-quit))
+   (t (call-interactively #'meow-quit))))
 
-  (defun my/meow-insert-normal-toggle ()
-    (interactive)
-    (cond ((meow-insert-mode-p)
-           (call-interactively #'meow-escape-or-normal-modal))
-          (t
-           (call-interactively #'meow-insert))))
-  
+(defun my/meow-insert-normal-toggle ()
+  (interactive)
+  (cond ((meow-insert-mode-p)
+         (call-interactively #'meow-escape-or-normal-modal))
+        (t
+         (call-interactively #'meow-insert))))
+
 (defun meow-setup ()
   (interactive)
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)

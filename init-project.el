@@ -55,8 +55,10 @@ to directory DIR."
       (eat-other-window))
     (switch-to-buffer project-shell-name)))
 
+(when (featurep 'straight)
+  (straight-use-package 'projectile))
 (use-package projectile
-  :straight t
+  ;; :straight t
   ;; :after project
   :bind (:map project-prefix-map
               ("P" . projectile-test-project)
@@ -86,9 +88,10 @@ to directory DIR."
 (autoload 'projectile-command-map "projectile")
 (bind-key "C-x p" 'projectile-command-map)
 
-
+(when (featurep 'straight)
+  (straight-use-package '(project-x :type git :host github :repo "karthink/project-x")))
 (use-package project-x
-  :straight (:type git :host github :repo "karthink/project-x")
+  ;; :straight (:type git :host github :repo "karthink/project-x")
   :after project
   :config
   (add-hook 'project-find-functions 'project-x-try-local 90))
