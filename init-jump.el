@@ -1,6 +1,6 @@
 (provide 'init-jump)
 
-
+(my/straight-if-use 'dumb-jump)
 (use-package dumb-jump
   :requires xref
   :hook (prog-mode . my/dumb-jump-add-activate-fn)
@@ -11,12 +11,14 @@
   (defun my/dumb-jump-add-activate-fn ()
     (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)))
 
+(my/straight-if-use 'ace-pinyin)
 (use-package ace-pinyin
   :commands (ace-pinyin-dwim ace-pinyin-jump-word)
   :config
   (setq ace-pinyin--jump-word-timeout 1.5)
   (ace-pinyin-global-mode +1))
 
+(my/straight-if-use 'ace-link)
 (use-package ace-link
     :commands (ace-link)
   :init
@@ -27,11 +29,13 @@
           grep-mode
           Custom-mode) . my/bind-ace-link))
 
+(my/straight-if-use 'back-button)
 (use-package back-button
     :commands (back-button-mode)
   :demand t
   :config (back-button-mode +1))
 
+(my/straight-if-use 'bm)
 (use-package bm
     :commands (bm-toggle
              bm-next
