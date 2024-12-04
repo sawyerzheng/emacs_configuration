@@ -1,8 +1,8 @@
 (require 'init-doom-themes)
 
 ;; modus- themes
+(my/straight-if-use '(modus-themes :type git :host github :repo "protesilaos/modus-themes"))
 (use-package modus-themes
-  :straight (:type git :host github :repo "protesilaos/modus-themes")
   :config
   (progn
     (setq modus-themes-headings
@@ -27,8 +27,7 @@
     ;; (load-theme 'modus-vivendi t)
     ))
 
-(use-package kaolin-themes
-  :straight t)
+(my/straight-if-use 'kaolin-themes)
 
 
 
