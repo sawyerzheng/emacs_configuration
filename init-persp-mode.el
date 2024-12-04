@@ -1,6 +1,5 @@
+(my/straight-if-use 'persp-mode)
 (use-package persp-mode
-  :straight t
-  :diminish
   :unless noninteractive
   :commands (persp-switch-to-buffer persp-mode)
   :defines (recentf-exclude)
@@ -83,8 +82,8 @@
 
 
 ;; integration with project.el-------------------------------------------------
+(my/straight-if-use 'persp-mode-project-bridge)
 (use-package persp-mode-project-bridge
-  :straight t
   :hook
   (persp-mode-project-bridge-mode . (lambda ()
                                       (if persp-mode-project-bridge-mode

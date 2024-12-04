@@ -86,6 +86,7 @@
 (require 'init-consult)
 (require 'init-embark)
 (require 'init-corfu)
+(require 'init-persp-mode)
 (require 'init-treesit)
 (global-treesit-auto-mode)
 (require 'init-font)
@@ -98,6 +99,8 @@
 (require 'init-expand-region)
 (require 'init-pyim)
 (require 'init-git)
+(require 'init-line-number)
+(require 'init-ws-butler)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
