@@ -2,6 +2,7 @@
 ;; emacs -Q -L /home/sawyer/.conf.d -l raw-meow-load.el --init-directory /home/sawyer/.emacs.d.raw -nw $@
 
 ;;; Codes
+(add-to-list 'load-path (file-name-parent-directory load-file-name))
 (require 'init-load-tools)
 (add-to-list 'load-path (expand-file-name "extra.d" (file-name-parent-directory (locate-library "init-load-tools"))))
 (require 'init-logging)
