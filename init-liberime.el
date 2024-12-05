@@ -11,11 +11,10 @@
 
 
 
+(my/straight-if-use 'liberime)
 (use-package liberime
   :commands (liberime-build liberime-sync liberime-load liberime-deploy)
   :after pyim
-  :straight t
-
   :init
   (setq liberime-user-data-dir (expand-file-name "rime" no-littering-var-directory))
 

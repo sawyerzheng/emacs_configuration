@@ -1,7 +1,6 @@
 ;; -*- coding: utf-8; -*-
 (when (featurep 'straight)
-  ;;  (straight-use-package '(acm :type git :host github :repo "manateelazycat/lsp-bridge" :files ("acm/*") :build nil))
-  (straight-use-package '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build t ;;(:not compile)
+  (straight-use-package '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile)
 				     ))
   (straight-use-package '(acm-terminal :type git :host github :repo "twlz0ne/acm-terminal"))
   (straight-use-package 'popon)
@@ -327,7 +326,6 @@
 (when (featurep 'straight)
   (straight-use-package '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge")))
 (use-package flymake-bridge
-  ;; :straight (:type git :host github :repo "liuyinz/flymake-bridge")
   :after lsp-bridge
   :hook (lsp-bridge-mode . flymake-bridge-setup))
 

@@ -22,7 +22,6 @@
   (savehist-mode))
 
 (use-package recentf
-  :defer 2
   :config
   (if (file-exists-p recentf-save-file)
       (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
@@ -82,32 +81,43 @@
     )
   (add-subdirs-to-load-path (expand-file-name "straight/build/" prefix))
   )
-
+(require 'init-no-littering)
 (require 'init-hydra)
 (require 'xah-fly-keys-core)
 (require 'init-vertico)
 (require 'init-consult)
 (require 'init-embark)
-(require 'init-corfu)
+(use-package init-corfu
+  :after eglot)
 (require 'init-persp-mode)
 (require 'init-treesit)
 (global-treesit-auto-mode)
 (require 'init-font)
 (require 'init-project)
-(require 'init-doom-modeline)
+;; (require 'init-doom-modeline)
+(require 'init-ui)
 (use-package init-yasnippet
   :defer 3)
-(require 'init-lsp-bridge)
+(use-package prog
+  :init
+  (require 'init-lsp-bridge)
+)
 (require 'init-major-modes)
 (require 'init-jump)
 (require 'init-expand-region)
-(use-package init-pyim
-  :defer 5)
+(require 'init-pyim)
+(require 'init-liberime)
 (require 'init-git)
 (require 'init-line-number)
 (require 'init-ws-butler)
 (require 'init-key-chord)
 (require 'init-python)
+(when (locate-library "init-host")
+  (require 'init-host))
+(use-package org
+  :init
+  (require 'init-org)
+  :mode (("\\.org\\'" . org-mode)))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -1116,5 +1126,10 @@ Will cancel all other selection, except char selection. "
 (my/enable-given-lsp-backend my/lsp-backend)
 
 (global-set-key (kbd "C-c t l")  #'my-lsp-toggle)
+
+;; * fix pyim
+(with-eval-after-load 'pyim
+  (add-to-list 'pyim-english-input-switch-functions #'meow-normal-mode-p))
+
 
 (provide 'raw-meow-load)

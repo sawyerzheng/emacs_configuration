@@ -611,4 +611,8 @@ Will cancel all other selection, except char selection. "
 (add-to-list 'meow-mode-state-list '(blink-search-mode . insert))
 (add-to-list 'meow-mode-state-list '(eat-mode . insert))
 
+;; * fix pyim
+(with-eval-after-load 'pyim
+  (add-to-list 'pyim-english-input-switch-functions #'meow-normal-mode-p))
+
 (provide 'init-meow-edit)
