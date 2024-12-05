@@ -1,7 +1,6 @@
 ;; -*- coding: utf-8; -*-
-
+(my/straight-if-use '(org-journal :source (melpa gpu-elpa-mirror)))
 (use-package org-journal
-  :straight (:source (melpa gpu-elpa-mirror))
   :init
   (with-eval-after-load 'org-agenda
     (dolist (item '(("jj" "new entry"

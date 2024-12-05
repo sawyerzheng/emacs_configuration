@@ -237,14 +237,14 @@ prepended to the element after the #+HEADER: tag."
 
 
   ;; rich yank, for copy source code
+  (my/straight-if-use 'org-rich-yank)
   (use-package org-rich-yank
-    :straight t
     :bind (:map org-mode-map
                 ("C-M-y" . org-rich-yank)))
 
   ;; Table of contents
+  (my/straight-if-use 'toc-org)
   (use-package toc-org
-    :straight t
     :hook (org-mode . toc-org-mode))
 
   ;; Add graphical view of agenda
@@ -273,15 +273,13 @@ prepended to the element after the #+HEADER: tag."
                                     (octave . t)
                                     (python . t)))
 
-
+(my/straight-if-use 'ob-go)
 (use-package ob-go
-  :straight t
   :init (cl-pushnew '(go . t) my/org-babel-language-alist)
   :defer t)
 
-
+(my/straight-if-use 'ob-async)
 (use-package ob-async
-  :straight t
   :defer t
   :config
   (setq ob-async-no-async-languages-alist '("jupyter-python" "jupyter-julia")))
@@ -291,8 +289,8 @@ prepended to the element after the #+HEADER: tag."
 
 
 
+(my/straight-if-use '(jupyter :no-native-compile t))
 (use-package jupyter
-  :straight (:no-native-compile t)
   :defer t
   :config
 
@@ -476,10 +474,9 @@ the `jupyter-current-client' local to the buffer."
 
 
 ;; Presentation
+(my/straight-if-use 'org-tree-slide)
 (use-package org-tree-slide
   :commands (org-tree-slide-mode)
-  :straight t
-  :diminish
   :functions (org-display-inline-images
               org-remove-inline-images)
   ;; :bind (:map org-mode-map
@@ -510,8 +507,8 @@ the `jupyter-current-client' local to the buffer."
   :hook (org-mode . org-indent-mode))
 
 ;; org-download
+(my/straight-if-use 'org-download)
 (use-package org-download
-  :straight t
   :after org
   :hook ((org-mode dired-mode) . org-download-enable)
   :bind (:map org-mode-map
@@ -584,8 +581,8 @@ the `jupyter-current-client' local to the buffer."
 
 
 ;; url
+(my/straight-if-use 'org-cliplink)
 (use-package org-cliplink
-  :straight t
   :commands (org-cliplink org-cliplink-capture)
   :bind (:map org-mode-map
               ("C-c l c" . org-cliplink)
@@ -601,8 +598,8 @@ the `jupyter-current-client' local to the buffer."
   :after org)
 
 ;; clip
+(my/straight-if-use 'org-rich-yank)
 (use-package org-rich-yank
-  :straight t
   :after org
   :bind (:map org-mode-map
               ("C-M-y" . org-rich-yank))
@@ -613,40 +610,32 @@ the `jupyter-current-client' local to the buffer."
     (("m y" org-rich-yank)))))
 
 ;; beatify
-(use-package org-superstar
-  :straight t
-  :unless my/use-org-modern-p
-  :after org
-  :hook (org-mode . org-superstar-mode))
-
+(my/straight-if-use 'org-fancy-priorities)
 (use-package org-fancy-priorities
-  :straight t
   :after org
-  :hook
-  (org-mode . org-fancy-priorities-mode)
+  :hook ((org-mode . org-fancy-priorities-mode))
   :config
   ;; (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")
   )
 
+(my/straight-if-use '(ox :type built-in))
+(my/straight-if-use 'ox-pandoc)
 (use-package ox
-  :straight (:type built-in)
   :commands (org-export-dispatch)
   :config
   (use-package ox-pandoc
-    :straight t
     :demand t))
 
+(my/straight-if-use 'org-preview-html)
 (use-package org-preview-html
-  :straight t
   :commands (org-preview-html-mode)
   :mode-hydra
   (org-mode
    ("Misc"
     (("m p" org-preview-html-mode "html preview")))))
 
+(my/straight-if-use 'org-modern)
 (use-package org-modern
-  :straight t
-  :if my/use-org-modern-p
   :commands
   (org-modern-mode)
   :hook ((org-mode . org-modern-mode)
@@ -657,22 +646,22 @@ the `jupyter-current-client' local to the buffer."
   (setq org-modern-block-fringe nil)
   (setq org-modern-horizontal-rule nil))
 
+(my/straight-if-use 'org-transclusion)
 (use-package org-transclusion
-  :straight t
   :commands (org-transclusion-mode
              org-transclusion-add))
 
+(my/straight-if-use '(org-pandoc-import :host github
+					:repo "tecosaur/org-pandoc-import"
+					:files ("*.el" "filters" "preprocessors")))
 (use-package org-pandoc-import
-  :straight (:host github
-                   :repo "tecosaur/org-pandoc-import"
-                   :files ("*.el" "filters" "preprocessors"))
   :commands (org-pandoc-import-markdown-as-org))
 
 
 
 ;; 在 cursor 移动到 link, latex 等元素上时，显示可编辑内容，否则显示渲染后的内容
+(my/straight-if-use 'org-appear)
 (use-package org-appear
-  :straight t
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autolinks t
@@ -682,14 +671,14 @@ the `jupyter-current-client' local to the buffer."
         org-appear-inside-latex t)
   )
 
+(my/straight-if-use '(org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent"))
 (use-package org-modern-indent
-  :straight (:type git :host github :repo "jdtsmith/org-modern-indent")
   ;; :hook (org-indent-mode . org-modern-indent-mode)
   :defer t
   )
 
+(my/straight-if-use 'olivetti)
 (use-package olivetti
-  :straight t
   :init
   (setq olivetti-body-width 0.67)
   :config
@@ -729,22 +718,22 @@ the `jupyter-current-client' local to the buffer."
       (text-scale-set 0))))
 
 ;; 直接在 org-mode 上显示 latex 公式，上下边等
+(my/straight-if-use 'org-fragtog)
 (use-package org-fragtog
-  :straight t
   :commands (org-fragtog-mode)
   :hook (org-mode . org-fragtog-mode)
   )
 
+(my/straight-if-use '(org-pretty-table :type git :host github :repo "Fuco1/org-pretty-table"))
 (use-package org-pretty-table
-  :straight (:type git :host github :repo "Fuco1/org-pretty-table")
   :commands (org-pretty-table-mode))
 
 ;; ref: https://gitlab.com/matsievskiysv/math-preview
 ;; 1. 生效：手动选择公式区域， `math-preview-region' 预览公式渲染效果
 ;; 2. 取消预览：移动cursor 到公式位置，<Enter>
 ;; 3. 使用 mathjax 作为熏染工具 math-preview js 命令
+(my/straight-if-use 'math-preview)
 (use-package math-preview
-  :straight t
   ;; require: npm install -g git+https://gitlab.com/matsievskiysv/math-preview
   :defer t
   )
@@ -754,13 +743,12 @@ the `jupyter-current-client' local to the buffer."
 ;; 1. 使用 `latex' 命令作为渲染工具
 ;; 2. 选择区域， `latex-math-preview-expression' 预览
 ;; 3.
+(my/straight-if-use 'latex-math-preview)
 (use-package latex-math-preview
-  :straight t
   :defer t)
 
-
+(my/straight-if-use '(org-ol-tree :type git :host github :repo "Townk/org-ol-tree"))
 (use-package org-ol-tree
-  :straight (:type git :host github :repo "Townk/org-ol-tree")
   :commands (org-ol-tree))
 
 ;; hugo-blog
@@ -776,14 +764,12 @@ the `jupyter-current-client' local to the buffer."
   (add-hook 'after-save-hook #'my/hugo-org-update-timestamp nil))
 
 
-
+(my/straight-if-use '(ox-ipynb :type git :host github :repo "jkitchin/ox-ipynb"))
 (use-package ox-ipynb
-  :straight (:type git :host github :repo "jkitchin/ox-ipynb")
   :after ox)
 
-
+(my/straight-if-use '(outli :type git :host github :repo "jdtsmith/outli"))
 (use-package outli
-  :straight (:type git :host github :repo "jdtsmith/outli")
   :after (org)
   :commands (outli-mode)
   :hook ((python-base-mode java-mode java-ts-mode rust-mode rust-ts-mode shell-script-mode dockerfile-mode dockerfile-ts-mode prog-mode) . outli-mode)
