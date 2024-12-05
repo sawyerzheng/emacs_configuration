@@ -1,5 +1,5 @@
+(my/straight-if-use 'nav-flash)
 (use-package nav-flash
-  :straight t
   :autoload (nav-flash-show)
   :hook ((imenu-after-jump
           better-jumper-post-jump

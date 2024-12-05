@@ -1,5 +1,5 @@
+(my/straight-if-use 'solaire-mode)
 (use-package solaire-mode
-  :straight t
   :hook (my/startup . solaire-global-mode)
   )
 

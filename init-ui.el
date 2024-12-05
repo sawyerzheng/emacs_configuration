@@ -7,13 +7,12 @@
 
 (my/straight-if-use 'nerd-icons-completion)
 (use-package nerd-icons-completion
-  :hook ()
+  :hook (marginalia-mode . nerd-icons-completion-marginalia-setup)
   :config
   (nerd-icons-completion-mode))
 
 (my/straight-if-use 'nerd-icons-ibuffer)
 (use-package nerd-icons-ibuffer
-  :straight (:type git :host github :repo "seagle0128/nerd-icons-ibuffer")
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
 (my/straight-if-use 'breadcrumb)
@@ -36,23 +35,23 @@
           java-mode
           java-ts-mode) . breadcrumb-local-mode))
 
+(my/straight-if-use 'yascroll)
 (use-package yascroll
-  :straight t
   :commands (yascroll-bar-mode
              global-yascroll-bar-mode))
 
+(my/straight-if-use 'anzu)
 (use-package anzu
-  :straight t
   :hook (my/startup . global-anzu-mode))
 
+(my/straight-if-use '(awesome-tray :type git :host github :repo "manateelazycat/awesome-tray"))
 (use-package awesome-tray
-  :straight (:type git :host github :repo "manateelazycat/awesome-tray")
   :commands (awesome-tray-mode)
   :config
   )
 
+(my/straight-if-use '(hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe"))
 (use-package hydra-posframe
-  :straight (:type git :host github :repo "Ladicle/hydra-posframe")
   :commands (hydra-posframe-mode)
   :config)
 
@@ -61,8 +60,8 @@
 ;;   :straight (:type git :host github :repo "Bad-ptr/common-header-mode-line.el")
 ;;   :config)
 
+(my/straight-if-use '(holo-layer :type git :host github :repo "manateelazycat/holo-layer" :files ("*")))
 (use-package holo-layer
-  :straight (:type git :host github :repo "manateelazycat/holo-layer" :files ("*"))
   :commands (my/holo-layer-enable
              my/holo-layer-disable)
   :config

@@ -444,6 +444,9 @@ Will cancel all other selection, except char selection. "
 (meow-motion-overwrite-define-key
  (cons "q" my/search-keymap))
 
+(meow-motion-overwrite-define-key
+ (cons "q" my/search-keymap))
+
 (meow-leader-define-key
  (cons "q q"  '("kill emacs" . my/kill-emacs-save-or-server-edit)))
 (global-unset-key (kbd "C-c b"))
