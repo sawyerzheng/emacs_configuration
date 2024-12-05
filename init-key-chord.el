@@ -1,5 +1,5 @@
+(my/straight-if-use 'key-chord)
 (use-package key-chord
-  :straight t
   :commands (key-chord-define)
   ;; :defer t
   :config

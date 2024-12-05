@@ -83,6 +83,7 @@
   (add-subdirs-to-load-path (expand-file-name "straight/build/" prefix))
   )
 
+(require 'init-hydra)
 (require 'xah-fly-keys-core)
 (require 'init-vertico)
 (require 'init-consult)
@@ -105,6 +106,7 @@
 (require 'init-git)
 (require 'init-line-number)
 (require 'init-ws-butler)
+(require 'init-key-chord)
 (require 'init-python)
 
 (menu-bar-mode -1)
@@ -773,6 +775,9 @@ Will cancel all other selection, except char selection. "
  ;; insert space
  '("P" . xah-insert-space-after)
  )
+(key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit)
+(key-chord-define meow-insert-state-keymap "JK" #'meow-insert-exit)
+
 (meow-global-mode 1)
 
 ;; * meow mode state list

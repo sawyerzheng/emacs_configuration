@@ -16,8 +16,8 @@
   :straight (:type git :host github :repo "seagle0128/nerd-icons-ibuffer")
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
+(my/straight-if-use 'breadcrumb)
 (use-package breadcrumb
-  :straight (:type git :host github :repo "joaotavora/breadcrumb")
   :commands (breadcrumb-mode breadcrumb-local-mode)
   :config
   (setq breadcrumb-imenu-max-length 100)
