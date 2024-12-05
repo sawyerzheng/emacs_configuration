@@ -1,5 +1,5 @@
+(my/straight-if-use 'live-py-mode)
 (use-package live-py-plugin
-  :straight (live-py-mode) 
   :init
   :commands (live-py-mode))
 

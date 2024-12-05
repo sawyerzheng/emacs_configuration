@@ -1,22 +1,23 @@
 ;; load snippet tables  -*- coding: utf-8; -*-
 
 (my/straight-if-use 'yasnippet)
+(my/straight-if-use 'yasnippet-snippets)
 (use-package yasnippet
-  ;; :straight t
-  :hook (((prog-mode org-mode python-mode java-mode emacs-lisp-mode) . yas-minor-mode)
-         ;; (my/startup-hook . yas-global-mode)
-         )
+  :init
+  (defun my/enable-yas-local-fn ()
+    (unless (fboundp #'yas-reload-all)
+      (require 'yasnippet))
+    (yas-reload-all)
+    (yas-minor-mode 1))
+  :commands (my/enable-yas-local-fn)
+  :hook (((prog-mode org-mode) . my/enable-yas-local-fn))
   :config
-  (my/straight-if-use 'yasnippet-snippets)
-  ;; (use-package yasnippet-snippets
-  ;;   :straight (:type git :host github :repo "AndreaCrotti/yasnippet-snippets" :files ("*")))
   (require 'yasnippet-snippets)
   (add-to-list 'yas-snippet-dirs "~/.conf.d/custom.d/snippets")
-  (yas-reload-all))
+  )
 
 (my/straight-if-use 'auto-yasnippet)
 (use-package auto-yasnippet
-  ;; :straight t
   :commands (aya-create
              aya-expand
              aya-expand-from-history

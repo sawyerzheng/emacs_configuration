@@ -1,16 +1,17 @@
 (provide 'init-ui)
 
 
-
+(my/straight-if-use 'nerd-icons)
 (use-package nerd-icons
-  :straight (:type git :host github :repo "rainstormstudio/nerd-icons.el" :files (:defaults "*"))
   :commands (nerd-icons-install-fonts))
 
+(my/straight-if-use 'nerd-icons-completion)
 (use-package nerd-icons-completion
-  :straight (:type git :host github :repo "rainstormstudio/nerd-icons-completion")
+  :hook ()
   :config
   (nerd-icons-completion-mode))
 
+(my/straight-if-use 'nerd-icons-ibuffer)
 (use-package nerd-icons-ibuffer
   :straight (:type git :host github :repo "seagle0128/nerd-icons-ibuffer")
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))

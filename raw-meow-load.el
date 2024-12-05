@@ -2,7 +2,9 @@
 ;; emacs -Q -L /home/sawyer/.conf.d -l raw-meow-load.el --init-directory /home/sawyer/.emacs.d.raw -nw $@
 
 ;;; Codes
+(add-to-list 'load-path (file-name-parent-directory load-file-name))
 (require 'init-load-tools)
+(require 'init-proxy)
 (add-to-list 'load-path (expand-file-name "extra.d" (file-name-parent-directory (locate-library "init-load-tools"))))
 (require 'init-logging)
 ;; (require 'init-esup)
@@ -92,15 +94,18 @@
 (require 'init-font)
 (require 'init-project)
 (require 'init-doom-modeline)
-(require 'init-yasnippet)
+(use-package init-yasnippet
+  :defer 3)
 (require 'init-lsp-bridge)
 (require 'init-major-modes)
 (require 'init-jump)
 (require 'init-expand-region)
-(require 'init-pyim)
+(use-package init-pyim
+  :defer 5)
 (require 'init-git)
 (require 'init-line-number)
 (require 'init-ws-butler)
+(require 'init-python)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -433,6 +438,8 @@ Will cancel all other selection, except char selection. "
  '("<escape>" . ignore))
 
 (meow-normal-define-key
+ (cons "q" my/search-keymap))
+(meow-motion-overwrite-define-key
  (cons "q" my/search-keymap))
 
 (meow-leader-define-key
@@ -1101,3 +1108,5 @@ Will cancel all other selection, except char selection. "
 (my/enable-given-lsp-backend my/lsp-backend)
 
 (global-set-key (kbd "C-c t l")  #'my-lsp-toggle)
+
+(provide 'raw-meow-load)

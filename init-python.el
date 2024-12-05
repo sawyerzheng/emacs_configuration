@@ -12,8 +12,8 @@
   :hook ((python-base-mode . my/python-init-settings)))
 
 
+(my/straight-if-use 'pytest)
 (use-package pytest
-  :straight t
   :commands (pytest-one
              pytest-all
              pytest-pdb-one)
@@ -54,8 +54,8 @@
     ("b" my/python-execute-under-cursor "execute buffer"))))
 
 
+(my/straight-if-use 'python-pytest)
 (use-package python-pytest
-  :straight t
   :commands (
              python-pytest
              python-pytest-file
@@ -78,8 +78,8 @@
               ("M-p" . compilation-previous-error))
   )
 
+(my/straight-if-use 'code-cells)
 (use-package code-cells
-  :straight t
   :commands (code-cells-mode-maybe
              code-cells-mode)
   :hook (python-mode . code-cells-mode-maybe)
@@ -142,36 +142,6 @@
 
               ))
 
-(use-package pipenv
-  :straight t
-  :commands (pipenv-mode
-             pipenv-activate
-             pipenv-deactivate))
-
-(use-package poetry
-  :straight t
-  :commands (poetry-venv-workon
-             poetry-venv-deactivate
-             poetry-shell
-             poetry-new
-             poetry-run
-             poetry-init
-             poetry-lock
-             poetry-show
-             poetry-build
-             poetry-check
-             poetry-remove
-             poetry-update
-             poetry-add-dep
-             poetry-publish
-             poetry-add-dev-dep
-             poetry-add-opt-dep
-             poetry-self-update
-             poetry-venv-toggle
-             poetry-tracking-mode
-             poetry-install-install
-             poetry-edit-pyproject-toml
-             ))
 
 
 (defun my/venv-activate ()

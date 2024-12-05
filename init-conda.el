@@ -27,8 +27,8 @@
   "extra conda env store path"
   :type 'directory)
 
+(my/straight-if-use 'conda)
 (use-package conda
-  :straight t
   :init
 
   ;; :hook (my/startup . conda-env-autoactivate-mode)
