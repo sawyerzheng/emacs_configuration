@@ -124,8 +124,7 @@
 
 (my/straight-if-use 'pyim-basedict)
 (use-package pyim-basedict
-  :defer t
-  :requires pyim
+  :after pyim
   ;; 激活 basedict 拼音词库，五笔用户请继续阅读 README
   :config
   (pyim-basedict-enable)

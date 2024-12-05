@@ -105,8 +105,10 @@
 (require 'init-major-modes)
 (require 'init-jump)
 (require 'init-expand-region)
-(require 'init-pyim)
-(require 'init-liberime)
+(use-package init-pyim
+  :config
+  (use-package init-liberime))
+
 (require 'init-git)
 (require 'init-line-number)
 (require 'init-ws-butler)
