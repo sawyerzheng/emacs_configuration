@@ -12,6 +12,16 @@
   :hook ((python-base-mode . my/python-init-settings)))
 
 
+;;; venv
+(my/straight-if-use 'pyvenv)
+(use-package pyvenv
+  :commands (pyvenv-activate
+	     pyvenv-workon
+	     pyvenv-create
+	     pyvenv-deactivate
+	     pyvenv-restart-python))
+
+;;; python unittest
 (my/straight-if-use 'pytest)
 (use-package pytest
   :commands (pytest-one
@@ -78,6 +88,7 @@
               ("M-p" . compilation-previous-error))
   )
 
+;;; Code Cells
 (my/straight-if-use 'code-cells)
 (use-package code-cells
   :commands (code-cells-mode-maybe
@@ -139,7 +150,6 @@
               ("C-c C-a" . code-cells-my-insert-ahead)
               ("C-c C-b" . code-cells-my-insert-after)
               ("C-c C-d" . my/code-cells-delete-cell)
-
               ))
 
 

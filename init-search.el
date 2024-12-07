@@ -1,11 +1,10 @@
+(my/straight-if-use '(blink-search :type git :host github :repo "manateelazycat/blink-search" :files ("*")))
 (use-package blink-search
   :init
   ;; (setq blink-search-browser-function browse-url-browser-function)
-  :straight (:type git :host github :repo "manateelazycat/blink-search" :files ("*"))
   :config
   (setq blink-search-python-command my/epc-python-command)
   (setq blink-search-quick-keys '("h" "l" "u" "y" "," "." ";" "/" "'" "r" "v" "g" "t" "c" "7" "8" "9" "0" "H" "L" "U" "I" "Y" "s" "a" "e" "q" "1" "2" "3" "4" "[" "]"))
-
 
   (progn
     ;; source
@@ -29,6 +28,10 @@
               )
   :commands (blink-search))
 
+(my/straight-if-use 'avy)
+(require 'avy-autoloads)
+(use-package avy
+  :commands ())
 ;;;###autoload
 (defun my/avy-goto-word-start-2 (char1 char2 &optional arg beg end)
   "jump to word begin with two char"

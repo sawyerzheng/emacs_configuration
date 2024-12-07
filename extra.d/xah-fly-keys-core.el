@@ -197,6 +197,7 @@ Version: 2021-08-12"
 
 ;; cursor movement
 
+;;;###autoload
 (defun xah-pop-local-mark-ring ()
   "Move cursor to last mark position of current buffer.
 Call this repeatedly will cycle all positions in `mark-ring'.
@@ -206,6 +207,7 @@ Version: 2016-04-04"
   (interactive)
   (set-mark-command t))
 
+;;;###autoload
 (defun xah-beginning-of-line-or-block ()
   "Move cursor to beginning of line or previous block.
 
@@ -232,7 +234,7 @@ Version: 2018-06-04 2021-03-16 2022-03-30 2022-07-03 2022-07-06"
           (back-to-indentation)
           (when (eq xp (point))
             (beginning-of-line)))))))
-
+;;;###autoload
 (defun xah-end-of-line-or-block ()
   "Move cursor to end of line or next block.
 
@@ -264,6 +266,7 @@ Version: 2018-06-04 2021-03-16 2022-03-05"
 (defconst xah-punctuation-regex "[!?\".,`'#$%&*+:;=@^|~]+"
   "A regex string for the purpose of moving cursor to a punctuation.")
 
+;;;###autoload
 (defun xah-forward-punct (&optional n)
   "Move cursor to the next occurrence of punctuation.
 The list of punctuations to jump to is defined by `xah-punctuation-regex'
@@ -273,6 +276,7 @@ Version: 2017-06-26"
   (interactive "p")
   (re-search-forward xah-punctuation-regex nil t n))
 
+;;;###autoload
 (defun xah-backward-punct (&optional n)
   "Move cursor to the previous occurrence of punctuation.
 See `xah-forward-punct'
@@ -281,6 +285,7 @@ Version: 2017-06-26"
   (interactive "p")
   (re-search-backward xah-punctuation-regex nil t n))
 
+;;;###autoload
 (defun xah-backward-left-bracket ()
   "Move cursor to the previous occurrence of left bracket.
 The list of brackets to jump to is defined by `xah-left-brackets'.
@@ -290,6 +295,7 @@ Version: 2015-10-01"
   (interactive)
   (re-search-backward (regexp-opt xah-left-brackets) nil t))
 
+;;;###autoload
 (defun xah-forward-right-bracket ()
   "Move cursor to the next occurrence of right bracket.
 The list of brackets to jump to is defined by `xah-right-brackets'.
@@ -299,6 +305,7 @@ Version: 2015-10-01"
   (interactive)
   (re-search-forward (regexp-opt xah-right-brackets) nil t))
 
+;;;###autoload
 (defun xah-goto-matching-bracket ()
   "Move cursor to the matching bracket.
 If cursor is not on a bracket, call `backward-up-list'.
@@ -318,6 +325,7 @@ Version: 2016-11-22"
       (backward-sexp))
      (t (backward-up-list 1 'ESCAPE-STRINGS 'NO-SYNTAX-CROSSING)))))
 
+;;;###autoload
 (defun xah-forward-quote ()
   "Move cursor to the next occurrence of \".
 If there are consecutive quotes of the same char, keep moving until none.
@@ -332,6 +340,7 @@ Version: 2016-07-23"
       (message "No more quotes after cursor..")
       nil)))
 
+;;;###autoload
 (defun xah-forward-quote-twice ()
   "Call `xah-forward-quote' twice.
 Returns `t' if found, else `nil'.
@@ -342,6 +351,7 @@ Version: 2016-07-23"
   (when (xah-forward-quote)
     (xah-forward-quote)))
 
+;;;###autoload
 (defun xah-forward-quote-smart ()
   "Move cursor to the current or next string quote.
 Place cursor at the position after the left quote.
@@ -360,6 +370,7 @@ Version: 2016-11-22"
     (when (<= (point) xpos)
       (progn (re-search-forward "\\\"" nil t)))))
 
+;;;###autoload
 (defun xah-sort-lines ()
   "Like `sort-lines' but if no region, do the current block.
 Version 2022-01-22 2022-01-23"
@@ -368,6 +379,7 @@ Version 2022-01-22 2022-01-23"
     (let ((xbds (xah-get-bounds-of-block-or-region))) (setq xp1 (car xbds) xp2 (cdr xbds)))
     (sort-lines current-prefix-arg xp1 xp2)))
 
+;;;###autoload
 (defun xah-narrow-to-region ()
   "Same as `narrow-to-region', but if no selection, narrow to the current block.
 Version 2022-01-22"
@@ -379,6 +391,7 @@ Version 2022-01-22"
 
 ;; editing commands
 
+;;;###autoload
 (defun xah-copy-line-or-region ()
   "Copy current line or selection.
 When called repeatedly, append copy subsequent lines.
@@ -416,6 +429,7 @@ Version: 2010-05-21 2022-10-03"
               (end-of-line)
               (forward-char))))))))
 
+;;;###autoload
 (defun xah-cut-line-or-region ()
   "Cut current line or selection.
 When `universal-argument' is called first, cut whole buffer (respects `narrow-to-region').
@@ -431,6 +445,7 @@ Version: 2010-05-21 2015-06-10"
                (kill-region (region-beginning) (region-end) t)
              (kill-region (line-beginning-position) (line-beginning-position 2))))))
 
+;;;###autoload
 (defun xah-copy-all-or-region ()
   "Copy buffer or selection content to `kill-ring'.
 Respects `narrow-to-region'.
@@ -446,6 +461,7 @@ Version: 2015-08-22"
       (kill-new (buffer-string))
       (message "Buffer content copied."))))
 
+;;;###autoload
 (defun xah-cut-all-or-region ()
   "Cut buffer or selection content to `kill-ring'.
 Respects `narrow-to-region'.
@@ -461,6 +477,7 @@ Version: 2015-08-22"
       (kill-new (buffer-string))
       (delete-region (point-min) (point-max)))))
 
+;;;###autoload
 (defun xah-copy-all ()
   "Put the whole buffer content into the `kill-ring'.
 (respects `narrow-to-region')
@@ -469,6 +486,7 @@ Version: 2016-10-06"
   (kill-new (buffer-string))
   (message "Buffer content copied."))
 
+;;;###autoload
 (defun xah-cut-all ()
   "Cut the whole buffer content into the `kill-ring'.
 Respects `narrow-to-region'.
@@ -477,6 +495,7 @@ Version: 2017-01-03"
   (kill-new (buffer-string))
   (delete-region (point-min) (point-max)))
 
+;;;###autoload
 (defun xah-paste-or-paste-previous ()
   "Paste. When called repeatedly, paste previous.
 This command calls `yank', and if repeated, call `yank-pop'.
@@ -500,6 +519,7 @@ Version: 2017-07-25 2020-09-08"
 (defconst xah-show-kill-ring-separator "\n\nSfR2h________________________________________________________________________\n\n"
   "A line divider for `xah-show-kill-ring'.")
 
+;;;###autoload
 (defun xah-show-kill-ring ()
   "Insert all `kill-ring' content in a new buffer named *copy history*.
 
@@ -517,6 +537,7 @@ Version: 2019-12-02 2021-07-03"
        kill-ring))
     (goto-char (point-min))))
 
+;;;###autoload
 (defun xah-move-block-up ()
   "Swap the current text block with the previous.
 After this command is called, press <up> or <down> to move. Any other key to exit.
@@ -552,6 +573,7 @@ Version 2022-03-04"
        (define-key xkmap (kbd "<down>") #'xah-move-block-down)
        xkmap))))
 
+;;;###autoload
 (defun xah-move-block-down ()
   "Swap the current text block with the next.
 After this command is called, press <up> or <down> to move. Any other key to exit.
@@ -587,6 +609,7 @@ Version 2022-03-04"
      (define-key xkmap (kbd "<down>") #'xah-move-block-down)
      xkmap)))
 
+;;;###autoload
 (defun xah-delete-left-char-or-selection ()
   "Delete backward 1 character, or selection.
 Version: 2022-01-22"
@@ -595,6 +618,7 @@ Version: 2022-01-22"
       (progn (delete-region (region-beginning) (region-end)))
     (delete-char -1)))
 
+;;;###autoload
 (defun xah-delete-backward-char-or-bracket-text ()
   "Delete 1 character or delete quote/bracket pair and inner text.
 If the char to the left of cursor is a matching pair, delete it alone with inner text, push the deleted text to `kill-ring'.
@@ -664,6 +688,7 @@ Version: 2017-07-02 2022-06-23 2023-02-02"
      (t
       (delete-char -1)))))
 
+;;;###autoload
 (defun xah-delete-backward-bracket-text ()
   "Delete the matching brackets/quotes to the left of cursor, including the inner text.
 
@@ -679,6 +704,7 @@ Version: 2017-09-21"
     (mark-sexp)
     (kill-region (region-beginning) (region-end))))
 
+;;;###autoload
 (defun xah-delete-backward-bracket-pair ()
   "Delete the matching brackets/quotes to the left of cursor.
 After call, mark is set at the matching bracket position, so you can `exchange-point-and-mark' to select it.
@@ -700,6 +726,7 @@ Version: 2017-07-02"
     (push-mark (point) t)
     (goto-char (- xp0 2))))
 
+;;;###autoload
 (defun xah-delete-forward-bracket-pairs ( &optional DeleteInnerTextQ)
   "Delete the matching brackets/quotes to the right of cursor.
 If DeleteInnerTextQ is true, also delete the inner text.
@@ -724,6 +751,7 @@ Version: 2017-07-02"
       (goto-char xpt)
       (delete-char 1))))
 
+;;;###autoload
 (defun xah-change-bracket-pairs (FromChars ToChars)
   "Change bracket pairs to another type or none.
 For example, change all parenthesis () to square brackets [].
@@ -818,6 +846,7 @@ Version: 2020-11-01 2022-04-07 2022-07-05 2023-03-31"
                   (overlay-put (make-overlay (match-beginning 0) (match-end 0)) 'face 'highlight)
                   (replace-match xtoR t t))))))))))
 
+;;;###autoload
 (defun xah-toggle-letter-case ()
   "Toggle the letter case of current word or selection.
 Always cycle in this order: Init Caps, ALL CAPS, all lower.
@@ -851,6 +880,7 @@ Version: 2020-06-26"
 ;; test-case
 ;; tes▮t-case
 
+;;;###autoload
 (defun xah-toggle-previous-letter-case ()
   "Toggle the letter case of the letter to the left of cursor.
 
@@ -864,6 +894,7 @@ Version: 2015-12-22"
      ((looking-at "[[:upper:]]") (downcase-region (point) (1+ (point)))))
     (right-char)))
 
+;;;###autoload
 (defun xah-upcase-sentence ()
   "Upcase first letters of sentences of current block or selection.
 
@@ -902,6 +933,7 @@ Version: 2020-12-08 2020-12-24 2021-08-13 2022-05-16 2022-08-27"
       (goto-char (point-max)))
     (skip-chars-forward " \n\t")))
 
+;;;###autoload
 (defun xah-title-case-region-or-line (&optional Begin End)
   "Title case text between nearest brackets, or current line or selection.
 Capitalize first letter of each word, except words like {to, of, the, a, in, or, and, …}. If a word already contains cap letters such as HTTP, URL, they are left as is.
@@ -964,6 +996,7 @@ Version: 2017-01-11 2021-03-30 2021-09-19"
                (replace-match (aref xx 1) t t)))
            xstrPairs))))))
 
+;;;###autoload
 (defun xah-add-space-after-comma ()
   "Add a space after comma of current block or selection.
 and highlight changes made.
@@ -982,6 +1015,7 @@ Version 2022-01-20"
           (match-beginning 0)
           (match-end 0)) 'face 'highlight)))))
 
+;;;###autoload
 (defun xah-delete-blank-lines ()
   "Delete all newline around cursor.
 
@@ -995,6 +1029,7 @@ Version: 2018-04-02"
     (setq xp4 (point))
     (delete-region xp3 xp4)))
 
+;;;###autoload
 (defun xah-fly-delete-spaces ()
   "Delete space, tab, IDEOGRAPHIC SPACE (U+3000) around cursor.
 Version: 2019-06-13"
@@ -1006,6 +1041,7 @@ Version: 2019-06-13"
     (setq p1 (point))
     (delete-region p1 p2)))
 
+;;;###autoload
 (defun xah-shrink-whitespaces ()
   "Remove whitespaces around cursor .
 
@@ -1057,6 +1093,7 @@ Version: 2014-10-21 2021-11-26 2021-11-30"
      (t (progn
           (message "nothing done. logic error 40873. shouldn't reach here"))))))
 
+;;;###autoload
 (defun xah-toggle-read-novel-mode ()
   "Setup current frame to be suitable for reading long novel/article text.
 • Set frame width to 70
@@ -1081,6 +1118,7 @@ Version: 2019-01-30 2021-01-16"
       (setq word-wrap t)))
   (redraw-frame (selected-frame)))
 
+;;;###autoload
 (defun xah-fill-or-unfill ()
   "Reformat current block or selection to short/long line.
 First call will break into multiple short lines. Repeated call toggles between short and long lines.
@@ -1100,6 +1138,7 @@ Version: 2020-11-22 2021-08-13"
         (fill-region xp1 xp2)))
     (put this-command 'longline-p (not xisLongline))))
 
+;;;###autoload
 (defun xah-unfill-paragraph ()
   "Replace newline chars in current paragraph by single spaces.
 This command does the inverse of `fill-paragraph'.
@@ -1110,6 +1149,7 @@ Version: 2010-05-12 2022-05-20"
   (let ((fill-column 90002000))
     (fill-paragraph)))
 
+;;;###autoload
 (defun xah-unfill-region (Begin End)
   "Replace newline chars in region by single spaces.
 This command does the inverse of `fill-region'.
@@ -1120,6 +1160,7 @@ Version: 2010-05-12 2022-05-20"
   (let ((fill-column 90002000))
     (fill-region Begin End)))
 
+;;;###autoload
 (defun xah-change-newline-chars-to-one (Begin End)
   "Replace newline char sequence by just one.
 
@@ -1132,6 +1173,7 @@ Version: 2021-07-06"
       (goto-char (point-min))
       (while (re-search-forward "\n\n+" nil 1) (replace-match "\n")))))
 
+;;;###autoload
 (defun xah-reformat-whitespaces-to-one-space (Begin End)
   "Replace whitespaces by one space.
 
@@ -1148,6 +1190,7 @@ Version: 2017-01-11 2022-01-08"
     (while (re-search-forward " +" nil 1) (replace-match " "))
     (goto-char (point-max))))
 
+;;;###autoload
 (defun xah-reformat-to-multi-lines ( &optional Begin End MinLength)
   "Replace spaces by a newline at ~70 chars, on current block or selection.
 If `universal-argument' is called first, ask user for max width.
@@ -1168,6 +1211,7 @@ Version: 2018-12-16 2021-07-06 2021-08-12"
           (when (> (- (point) (line-beginning-position)) xminlen)
             (replace-match "\n" )))))))
 
+;;;###autoload
 (defun xah-reformat-lines (&optional Width)
   "Reformat current block or selection into short lines or 1 long line.
 When called for the first time, change to one line. Second call change it to multi-lines. Repeated call toggles.
@@ -1193,6 +1237,7 @@ Version: 2021-07-05 2021-08-13 2022-03-12 2022-05-16 2022-12-24"
           (xah-reformat-whitespaces-to-one-space xp1 xp2))))
     (put this-command 'is-long-p (not xisLong))))
 
+;;;###autoload
 (defun xah-reformat-to-sentence-lines ()
   "Reformat current block or selection into multiple lines by ending period.
 Move cursor to the beginning of next text block.
@@ -1222,6 +1267,7 @@ Version: 2020-12-02 2022-03-22 2022-12-11 2023-03-22"
   (set-transient-map (let ((xkmap (make-sparse-keymap))) (define-key xkmap (or xah-repeat-key (kbd "DEL")) this-command) xkmap))
   (set-transient-map (let ((xkmap (make-sparse-keymap))) (define-key xkmap (kbd "DEL") this-command) xkmap)))
 
+;;;###autoload
 (defun xah-space-to-newline ()
   "Replace space sequence to a newline char in current block or selection.
 
@@ -1237,6 +1283,7 @@ Version: 2017-08-19 2021-11-28"
       (while (re-search-forward " +" nil t)
         (replace-match "\n")))))
 
+;;;###autoload
 (defun xah-slash-to-backslash (&optional Begin End)
   "Replace slash by backslash on current line or region.
 Version: 2021-07-14 2021-09-12"
@@ -1254,6 +1301,7 @@ Version: 2021-07-14 2021-09-12"
         (while (search-forward "/" nil t)
           (replace-match "\\\\"))))))
 
+;;;###autoload
 (defun xah-backslash-to-slash (&optional Begin End)
   "Replace backslash by slash on current line or region.
 Version: 2021-09-11"
@@ -1271,6 +1319,7 @@ Version: 2021-09-11"
         (while (search-forward "\\" nil t)
           (replace-match "/"))))))
 
+;;;###autoload
 (defun xah-double-backslash (&optional Begin End)
   "Replace backslash by two backslash on current line or region.
 Version: 2021-11-09"
@@ -1288,6 +1337,7 @@ Version: 2021-11-09"
         (while (search-forward "\\" nil t)
           (replace-match "\\\\\\\\"))))))
 
+;;;###autoload
 (defun xah-double-backslash-to-single (&optional Begin End)
   "Replace double backslash by single backslash on current line or region.
 Version: 2021-11-09"
@@ -1305,6 +1355,7 @@ Version: 2021-11-09"
         (while (search-forward "\\\\"  nil t)
           (replace-match "\\\\"))))))
 
+;;;###autoload
 (defun xah-slash-to-double-backslash (&optional Begin End)
   "Replace slash by double backslash on current line or region.
 Version: 2021-07-14"
@@ -1322,6 +1373,7 @@ Version: 2021-07-14"
         (while (search-forward "/" nil t)
           (replace-match "\\\\\\\\"))))))
 
+;;;###autoload
 (defun xah-double-backslash-to-slash (&optional Begin End)
   "Replace double backslash by slash on current line or region.
 Version: 2021-07-14"
@@ -1339,6 +1391,7 @@ Version: 2021-07-14"
         (while (search-forward "\\\\" nil t)
           (replace-match "/"))))))
 
+;;;###autoload
 (defun xah-comment-dwim ()
   "Like `comment-dwim', but toggle comment if cursor is not at end of line.
 
@@ -1359,6 +1412,7 @@ Version: 2016-10-25"
             (comment-or-uncomment-region xlbp xlep)
             (forward-line )))))))
 
+;;;###autoload
 (defun xah-quote-lines (Begin End QuoteL QuoteR Sep)
   "Add quotes/brackets and separator (comma) to lines.
 Act on current block or selection.
@@ -1443,6 +1497,7 @@ Version: 2020-06-26 2021-09-15 2022-04-07 2022-04-13 2023-03-04"
                 (throw 'EndReached t)
               (forward-char))))))))
 
+;;;###autoload
 (defun xah-escape-quotes (Begin End)
   "Add slash before double quote in current line or selection.
 Double quote is codepoint 34.
@@ -1460,6 +1515,7 @@ Version: 2017-01-11"
       (while (search-forward "\"" nil t)
         (replace-match "\\\"" t t)))))
 
+;;;###autoload
 (defun xah-unescape-quotes (Begin End)
   "Replace  「\\\"」 by 「\"」 in current line or selection.
 See also: `xah-escape-quotes'
@@ -1477,6 +1533,7 @@ Version: 2017-01-11"
       (while (search-forward "\\\"" nil t)
         (replace-match "\"" t t)))))
 
+;;;###autoload
 (defun xah-cycle-hyphen-lowline-space (&optional Begin End)
   "Cycle hyphen/lowline/space chars in selection or inside quote/bracket or line, in that order.
 After this command is called, press `xah-repeat-key' to repeat it.
@@ -1519,6 +1576,7 @@ Version: 2019-02-12 2021-08-20 2022-03-22 2022-10-20"
     (put 'xah-cycle-hyphen-lowline-space 'state (% (+ xnowState 1) xn)))
   (set-transient-map (let ((xkmap (make-sparse-keymap))) (define-key xkmap (or xah-repeat-key (kbd "DEL")) this-command) xkmap)))
 
+;;;###autoload
 (defun xah-copy-file-path (&optional DirPathOnlyQ)
   "Copy current buffer file path or dired path.
 Result is full path.
@@ -1551,6 +1609,7 @@ Version: 2018-06-18 2021-09-30"
          (message "File path copied: %s" xfpath)
          xfpath )))))
 
+;;;###autoload
 (defun xah-delete-current-text-block ()
   "Delete the current text block plus blank lines, or selection, and copy to `kill-ring'.
 
@@ -1569,6 +1628,7 @@ Version: 2017-07-09 2021-08-14 2022-07-31"
           (setq xp2 (point-max)))))
     (kill-region xp1 xp2)))
 
+;;;###autoload
 (defun xah-copy-to-register-1 ()
   "Copy current line or selection to register 1.
 
@@ -1588,6 +1648,7 @@ Version: 2012-07-17 2022-10-03 2023-04-07"
     (copy-to-register ?1 xp1 xp2)
     (message "Copied to register 1: [%s]." (buffer-substring-no-properties xp1 xp2))))
 
+;;;###autoload
 (defun xah-append-to-register-1 ()
   "Append current line or selection to register 1.
 When no selection, append current line, with newline char.
@@ -1610,6 +1671,7 @@ Version: 2015-12-08 2020-09-08 2023-04-07"
                       (append-to-register ?1 (point-min) (point-max)))
     (message "Appended to register 1: [%s]." (buffer-substring-no-properties xp1 xp2))))
 
+;;;###autoload
 (defun xah-paste-from-register-1 ()
   "Paste text from register 1.
 
@@ -1626,6 +1688,7 @@ Version: 2015-12-08 2023-04-07"
     (delete-region (region-beginning) (region-end)))
   (insert-register ?1 t))
 
+;;;###autoload
 (defun xah-clear-register-1 ()
   "Clear register 1.
 
@@ -1642,6 +1705,7 @@ Version: 2015-12-08 2023-04-07"
     (copy-to-register ?1 (point-min) (point-min))
     (message "Cleared register 1.")))
 
+;;;###autoload
 (defun xah-copy-rectangle-to-kill-ring (Begin End)
   "Copy region as column (rectangle region) to `kill-ring'
 See also: `kill-rectangle', `copy-to-register'.
@@ -1656,6 +1720,7 @@ version 2016-07-17"
 
 ;; insertion commands
 
+;;;###autoload
 (defun xah-insert-date ()
   "Insert current date time.
 Insert date in this format: yyyy-mm-dd.
@@ -1704,6 +1769,7 @@ Version 2013-05-10 2022-04-07 2023-01-01"
       ((string-match "^usa mdy short" xstyle) (format-time-string "%b %d, %Y"))
       (t (format-time-string "%Y-%m-%d"))))))
 
+;;;###autoload
 (defun xah-insert-bracket-pair (LBracket RBracket &optional WrapMethod)
   "Insert brackets around selection, word, at point, and maybe move cursor in between.
 
@@ -1781,60 +1847,90 @@ Version: 2017-01-17 2021-08-12"
             (insert LBracket)
             (goto-char (+ xp2 (length LBracket)))))))))
 
+;;;###autoload
 (defun xah-insert-paren () (interactive) (xah-insert-bracket-pair "(" ")") )
+
+;;;###autoload
 (defun xah-insert-square-bracket () (interactive) (xah-insert-bracket-pair "[" "]") )
+
+;;;###autoload
 (defun xah-insert-brace () (interactive) (xah-insert-bracket-pair "{" "}") )
 
+;;;###autoload
 (defun xah-insert-markdown-quote () (interactive) (xah-insert-bracket-pair "`" "`") )
+
+;;;###autoload
 (defun xah-insert-markdown-triple-quote () (interactive) (xah-insert-bracket-pair "```\n" "\n```"))
 
+;;;###autoload
 (defun xah-insert-double-curly-quote () (interactive) (xah-insert-bracket-pair "“" "”") )
+;;;###autoload
 (defun xah-insert-curly-single-quote () (interactive) (xah-insert-bracket-pair "‘" "’") )
+
+;;;###autoload
 (defun xah-insert-single-angle-quote () (interactive) (xah-insert-bracket-pair "‹" "›") )
+;;;###autoload
 (defun xah-insert-double-angle-quote () (interactive) (xah-insert-bracket-pair "«" "»") )
+;;;###autoload
 (defun xah-insert-ascii-double-quote () (interactive) (xah-insert-bracket-pair "\"" "\"") )
+;;;###autoload
 (defun xah-insert-ascii-single-quote () (interactive) (xah-insert-bracket-pair "'" "'") )
+;;;###autoload
 (defun xah-insert-emacs-quote () (interactive) (xah-insert-bracket-pair "`" "'") )
+;;;###autoload
 (defun xah-insert-corner-bracket () (interactive) (xah-insert-bracket-pair "「" "」" ) )
+;;;###autoload
 (defun xah-insert-white-corner-bracket () (interactive) (xah-insert-bracket-pair "『" "』") )
+;;;###autoload
 (defun xah-insert-angle-bracket () (interactive) (xah-insert-bracket-pair "〈" "〉") )
+;;;###autoload
 (defun xah-insert-double-angle-bracket () (interactive) (xah-insert-bracket-pair "《" "》") )
+;;;###autoload
 (defun xah-insert-white-lenticular-bracket () (interactive) (xah-insert-bracket-pair "〖" "〗") )
+;;;###autoload
 (defun xah-insert-black-lenticular-bracket () (interactive) (xah-insert-bracket-pair "【" "】") )
+;;;###autoload
 (defun xah-insert-tortoise-shell-bracket () (interactive) (xah-insert-bracket-pair "〔" "〕" ) )
 
+;;;###autoload
 (defun xah-insert-hyphen ()
   "Insert a HYPHEN-MINUS character."
   (interactive)
   (insert "-"))
 
+;;;###autoload
 (defun xah-insert-low-line ()
   "Insert a LOW LINE character."
   (interactive)
   (insert "_"))
 
+;;;###autoload
 (defun xah-insert-string-assignment ()
   "Insert =\"\""
   (interactive)
   (progn (insert "=\"\"")
          (left-char)))
 
+;;;###autoload
 (defun xah-insert-space-before ()
   "Insert space before cursor."
   (interactive)
   (insert " "))
 
+;;;###autoload
 (defun xah-insert-space-after ()
   "Insert space after cursor"
   (interactive)
   (insert " ")
   (left-char))
 
+;;;###autoload
 (defun xah-insert-formfeed ()
   "Insert a form feed char (codepoint 12)"
   (interactive)
   (insert "\n\u000c\n"))
 
+;;;###autoload
 (defun xah-show-formfeed-as-line ()
   "Display the formfeed ^L char as line.
 
@@ -1849,6 +1945,7 @@ Version: 2018-08-30"
           (vconcat (make-list 70 (make-glyph-code ?─ 'font-lock-comment-face))))
     (redraw-frame)))
 
+;;;###autoload
 (defun xah-insert-column-az ()
   "Insert letters A to Z vertically, similar to `rectangle-number-lines'.
 The commpand will prompt for a start char, and number of chars to insert.
@@ -1868,6 +1965,7 @@ Version: 2013-06-12 2019-03-07"
         (beginning-of-line)
         (forward-char xcolpos)))))
 
+;;;###autoload
 (defvar xah-unicode-list
   '(
     ;;
@@ -1921,6 +2019,7 @@ Version: 2013-06-12 2019-03-07"
 Each item is a string.
 The first part of string before last space, is used as name of a unicode char, the last part before last space, is the unicode Unicode character to insert. (can be more than 1 char).")
 
+;;;###autoload
 (defun xah-insert-unicode ()
   "Insert a unicode from a custom list `xah-unicode-list'.
 URL `http://xahlee.info/emacs/emacs/emacs_insert_unicode.html'
@@ -1931,9 +2030,11 @@ Version: 2021-01-05 2022-04-07 2022-10-30"
           "Insert:" xah-unicode-list)))
     (insert (car (last (split-string xstr " " t))))))
 
+
 
 ;; text selection
 
+;;;###autoload
 (defun xah-select-block ()
   "Select the current/next block plus 1 blankline.
 If region is active, extend selection downward by block.
@@ -1950,6 +2051,7 @@ Version: 2019-12-26 2021-04-04 2021-08-13"
       (push-mark (point) t t)
       (re-search-forward "\n[ \t]*\n" nil 1))))
 
+;;;###autoload
 (defun xah-select-line ()
   "Select current line. If region is active, extend selection downward by line.
 If `visual-line-mode' is on, consider line as visual line.
@@ -1974,6 +2076,7 @@ Version: 2017-11-01 2021-03-19"
         (end-of-line)
         (set-mark (line-beginning-position))))))
 
+;;;###autoload
 (defun xah-extend-selection ()
   "Select the current word, bracket/quote expression, or expand selection.
 Subsequent calls expands the selection.
@@ -2078,6 +2181,7 @@ Version: 2020-02-04 2022-05-16"
        ;;
        ))))
 
+;;;###autoload
 (defun xah-select-text-in-quote ()
   "Select text between the nearest left and right delimiters.
 Delimiters here includes the following chars: \" ` and anything in `xah-brackets'.
@@ -2093,9 +2197,11 @@ Version: 2020-11-24 2021-07-11 2021-12-21 2022-03-26"
     (set-mark (point))
     (skip-chars-forward xskipChars)))
 
+
 
 ;; misc
 
+;;;###autoload
 (defun xah-user-buffer-p ()
   "Return t if current buffer is a user buffer, else nil.
 Typically, if buffer name starts with *, it is not considered a user buffer.
@@ -2110,6 +2216,7 @@ Version: 2016-06-18 2022-05-19"
    ((string-equal major-mode "help-mode") nil)
    (t t)))
 
+;;;###autoload
 (defun xah-next-user-buffer ()
   "Switch to the next user buffer.
 “user buffer” is determined by `xah-user-buffer-p'.
@@ -2125,6 +2232,7 @@ Version: 2016-06-19"
                  (setq i (1+ i)))
         (progn (setq i 100))))))
 
+;;;###autoload
 (defun xah-previous-user-buffer ()
   "Switch to the previous user buffer.
 “user buffer” is determined by `xah-user-buffer-p'.
@@ -2140,6 +2248,7 @@ Version: 2016-06-19"
                  (setq i (1+ i)))
         (progn (setq i 100))))))
 
+;;;###autoload
 (defun xah-next-emacs-buffer ()
   "Switch to the next emacs buffer.
 “emacs buffer” here is buffer whose name starts with *.
@@ -2152,6 +2261,7 @@ Version: 2016-06-19"
     (while (and (not (string-equal "*" (substring (buffer-name) 0 1))) (< i 20))
       (setq i (1+ i)) (next-buffer))))
 
+;;;###autoload
 (defun xah-previous-emacs-buffer ()
   "Switch to the previous emacs buffer.
 “emacs buffer” here is buffer whose name starts with *.
@@ -2164,6 +2274,7 @@ Version: 2016-06-19"
     (while (and (not (string-equal "*" (substring (buffer-name) 0 1))) (< i 20))
       (setq i (1+ i)) (previous-buffer))))
 
+;;;###autoload
 (defun xah-new-empty-buffer ()
   "Create a new empty buffer.
 New buffer is named untitled, untitled<2>, etc.
@@ -2181,11 +2292,14 @@ Version: 2017-11-01 2022-04-05"
     xbuf
     ))
 
+;;;###autoload
 (defvar xah-recently-closed-buffers nil "a Alist of recently closed buffers. Each element is (bufferName . filePath). The max number to track is controlled by the variable `xah-recently-closed-buffers-max'.")
 
+;;;###autoload
 (defcustom xah-recently-closed-buffers-max 40 "The maximum length for `xah-recently-closed-buffers'."
   :type 'integer)
 
+;;;###autoload
 ;; (declare-function minibuffer-keyboard-quit "delsel" ())
 ;; (declare-function org-edit-src-save "org-src" ())
 
@@ -2198,15 +2312,18 @@ Version: 2023-03-02"
   (when (> (length xah-recently-closed-buffers) xah-recently-closed-buffers-max)
     (setq xah-recently-closed-buffers (butlast xah-recently-closed-buffers 1))))
 
+;;;###autoload
 (defvar xah-temp-dir-path nil "Path to temp dir used by xah commands.
 by default, the value is (concat user-emacs-directory \"temp/\").
 Version 2023-03-21")
 
+;;;###autoload
 (setq xah-temp-dir-path
       (if xah-temp-dir-path
           xah-temp-dir-path
         (concat user-emacs-directory "temp/")))
 
+;;;###autoload
 (defun xah-save-close-current-buffer ()
   "Save and close current buffer.
 If the buffer is not a file, save it to `xah-temp-dir-path' and named untitled_‹datetime›_‹randomhex›.txt
@@ -2233,6 +2350,7 @@ Version 2022-12-29 2023-01-09 2023-03-21 2023-05-06"
   ;; (string-equal major-mode "minibuffer-mode")
   (kill-buffer))
 
+;;;###autoload
 (defun xah-close-current-buffer ()
   "Close the current buffer.
 
@@ -2268,6 +2386,7 @@ Version: 2016-06-19 2022-05-13 2022-10-18"
         (if buffer-file-name (xah-add-to-recently-closed (buffer-name) buffer-file-name) nil)
         (kill-buffer (current-buffer))))))
 
+;;;###autoload
 (defun xah-open-last-closed ()
   "Open the last closed file.
 URL `http://xahlee.info/emacs/emacs/elisp_close_buffer_open_last_closed.html'
@@ -2277,6 +2396,7 @@ Version: 2016-06-19 2022-03-22"
       (find-file (cdr (pop xah-recently-closed-buffers)))
     (progn (message "No recently close buffer in this session."))))
 
+;;;###autoload
 (defun xah-open-recently-closed ()
   "Open recently closed file.
 Prompt for a choice.
@@ -2286,6 +2406,7 @@ Version: 2016-06-19 2021-10-27 2022-04-07"
   (interactive)
   (find-file (completing-read "Open:" (mapcar (lambda (f) (cdr f)) xah-recently-closed-buffers))))
 
+;;;###autoload
 (defun xah-list-recently-closed ()
   "List recently closed file.
 
@@ -2297,8 +2418,10 @@ Version: 2016-06-19"
     (mapc (lambda (xf) (insert (cdr xf) "\n"))
           xah-recently-closed-buffers)))
 
+;;;###autoload
 (defvar xah-open-file-at-cursor-pre-hook nil "Hook for `xah-open-file-at-cursor'. Functions in the hook will be called in order, each given the path as arg. The first return non-nil, its value is given to `xah-open-file-at-cursor' as input. This is useful for transforming certain url into file path (your website url), so instead of opening in browser, it opens in emacs as file.")
 
+;;;###autoload
 (defun xah-open-file-at-cursor ()
   "Open the file path under cursor.
 If there is selection, use it for path.
@@ -2375,10 +2498,12 @@ Version: 2020-10-17 2021-10-16 2023-02-23 2023-03-22"
                 (when (y-or-n-p (format "file does not exist: [%s]. Create?" xpath))
                   (find-file xpath))))))))))
 
+;;;###autoload
 (defalias 'xah-display-line-numbers-mode
   (if (fboundp 'global-display-line-numbers-mode)
       #'global-display-line-numbers-mode
     #'linum-mode))
+
 
 
 
@@ -2386,6 +2511,7 @@ Version: 2020-10-17 2021-10-16 2023-02-23 2023-03-22"
 
 (defvar xah-run-current-file-after-hook nil "Hook for `xah-run-current-file'. After the file is run.")
 
+;;;###autoload
 (defun xah-run-current-go-file ()
   "Run or build current golang file.
 To build, call `universal-argument' first.
@@ -2440,6 +2566,7 @@ Version: 2018-10-12"
     ("pov" . "povray +R2 +A0.1 +J1.2 +Am2 +Q9 +H480 +W640"))
   "A association list that maps file extension to program name, used by `xah-run-current-file'. Each item is (EXT . PROGRAM), both strings. EXT is file suffix (without the dot prefix), PROGRAM is program name or path, with possibly command options. You can customize this alist.")
 
+;;;###autoload
 (defun xah-run-current-file ()
   "Execute the current file.
 For example, if the current buffer is x.py, then it'll call [python x.py] in a shell.
@@ -2501,6 +2628,7 @@ Version: 2020-09-24 2022-08-12 2022-09-16 2022-09-18"
     (run-hooks 'xah-run-current-file-after-hook))
   (setenv "NO_COLOR"))
 
+;;;###autoload
 (defun xah-clean-empty-lines ()
   "Replace repeated blank lines to just 1, in whole buffer or selection.
 Respects `narrow-to-region'.
@@ -2519,7 +2647,7 @@ Version: 2017-09-22 2020-09-08"
           (goto-char (point-min))
           (while (re-search-forward "\n\n\n+" nil 1)
             (replace-match "\n\n")))))))
-
+;;;###autoload
 (defun xah-clean-whitespace ()
   "Delete trailing whitespace, and replace repeated blank lines to just 1.
 Only space and tab is considered whitespace here.
@@ -2543,6 +2671,7 @@ Version: 2017-09-22 2021-08-27 2022-08-06"
         (while (eq (char-before) 32) (delete-char -1)))))
   (message "%s done" real-this-command))
 
+;;;###autoload
 (defun xah-make-backup ()
   "Make a backup copy of current file or dired marked files.
 If in dired, backup current file or marked files.
@@ -2572,6 +2701,7 @@ Version: 2018-06-06 2020-12-18 2022-06-13"
             (revert-buffer))
         (user-error "%s: buffer not file nor dired" real-this-command)))))
 
+;;;###autoload
 (defun xah-make-backup-and-save ()
   "Backup of current file and save, or backup dired marked files.
 For detail, see `xah-make-backup'.
@@ -2588,6 +2718,7 @@ Version: 2015-10-14"
     (progn
       (xah-make-backup))))
 
+;;;###autoload
 (defun xah-delete-current-file-make-backup ()
   "Delete current file, makes a backup~, close the buffer.
 If buffer is not a file, copy content to `kill-ring', delete buffer.
@@ -2620,8 +2751,10 @@ Version: 2018-05-15 2021-08-31 2021-09-27 2022-07-08 2023-03-15"
       (when (eq major-mode 'dired-mode)
         (revert-buffer)))))
 
+
 
 
+;;;###autoload
 (defun xah-search-current-word ()
   "Call `isearch' on current word or selection.
 “word” here is A to Z, a to z, and hyphen [-] and lowline [_], independent of syntax table.
@@ -2644,8 +2777,10 @@ Version: 2015-04-09"
     (isearch-mode t)
     (isearch-yank-string (buffer-substring-no-properties xp1 xp2))))
 
+
 (declare-function w32-shell-execute "w32fns.c" (operation document &optional parameters show-flag)) ; (w32-shell-execute "open" default-directory)
 
+;;;###autoload
 (defun xah-show-in-desktop ()
   "Show current file in desktop.
  (Mac Finder, File Explorer, Linux file manager)
@@ -2680,6 +2815,7 @@ Version: 2020-11-20 2022-04-20 2022-08-19"
       ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
       ))))
 
+;;;###autoload
 (defun xah-open-in-vscode ()
   "Open current file or dir in vscode.
 
@@ -2696,6 +2832,7 @@ Version: 2020-02-13 2021-01-18 2022-08-04"
      ((string-equal system-type "gnu/linux")
       (shell-command (format "code %s" (shell-quote-argument xpath)))))))
 
+;;;###autoload
 (defun xah-open-in-external-app (&optional Fname)
   "Open the current file or dired marked files in external app.
 When called in emacs lisp, if Fname is given, open that.
@@ -2739,10 +2876,13 @@ Version: 2019-11-04 2023-03-10 2023-04-05"
        ((string-equal system-type "berkeley-unix")
         (mapc (lambda (xfpath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" xfpath))) xfileList))))))
 
+
 (defvar xah-fly-mswin-terminal nil "A string. Value should be one of: wt (for Windows Terminal) or pwsh (for PowerShell Core (cross-platform)) or powershell (for Microsoft PowerShell).")
 
 (setq xah-fly-mswin-terminal "wt")
 
+
+;;;###autoload
 (defun xah-open-in-terminal ()
   "Open the current dir in a new terminal window.
 On Microsoft Windows, which terminal it starts depends on `xah-fly-mswin-terminal'.
@@ -2764,6 +2904,7 @@ Version: 2020-11-21 2021-07-21 2022-08-04 2023-03-01"
    ((string-equal system-type "berkeley-unix")
     (let ((process-connection-type nil)) (start-process "" nil "x-terminal-emulator" (concat "--working-directory=" default-directory))))))
 
+;;;###autoload
 (defun xah-next-window-or-frame ()
   "Switch to next window or frame.
 If current frame has only one window, switch to next frame.
@@ -2776,6 +2917,7 @@ Version: 2017-01-27"
         (other-frame 1)
       (other-window 1))))
 
+;;;###autoload
 (defun xah-unsplit-window-or-next-frame ()
   "Unsplit window. If current frame has only one window, switch to next frame.
 Version: 2017-01-29"
@@ -2859,6 +3001,7 @@ Version: 2019-02-12 2022-10-22" )
 (setq xah-fly--key-convert-table
       (cdr (assoc xah-fly-key-current-layout xah-fly-layouts)))
 
+;;;###autoload
 (defun xah-fly--convert-kbd-str (Charstr)
   "Return the corresponding char Charstr according to
 `xah-fly--key-convert-table'. Charstr must be a string that is the argument to `kbd'. e.g. \"a\" and \"a b c\"
@@ -3624,6 +3767,7 @@ Version 2022-10-31"
                             xah-fly-insert-map
                           xah-fly-command-map)))
 
+;;;###autoload
 (defun xah-fly-keys-set-layout (Layout)
   "Set a keyboard layout.
 Argument must be one of the key name in `xah-fly-layouts'
@@ -3642,6 +3786,7 @@ Version: 2021-05-19 2022-09-11 2022-10-22 2022-10-31"
                (not (string-equal xoldlout xnewlout)))
       (xah-fly-define-keys))))
 
+;;;###autoload
 (defun xah-fly-space-key ()
   "Switch to command mode if the char before cursor is a space.
 experimental
@@ -3651,6 +3796,7 @@ Version: 2018-05-07"
       (xah-fly-command-mode-activate)
     (insert " ")))
 
+;;;###autoload
 (defun xah-fly-command-mode-init ()
   "Set command mode keys.
 Version: 2022-07-06"
@@ -3666,6 +3812,7 @@ Version: 2022-07-06"
   (setq mode-line-front-space xah-fly-command-mode-indicator)
   (force-mode-line-update))
 
+;;;###autoload
 (defun xah-fly-insert-mode-init (&optional no-indication)
   "Enter insertion mode."
   (interactive)
@@ -3678,6 +3825,7 @@ Version: 2022-07-06"
     (setq mode-line-front-space xah-fly-insert-mode-indicator))
   (force-mode-line-update))
 
+;;;###autoload
 (defun xah-fly-mode-toggle ()
   "Switch between {insertion, command} modes."
   (interactive)
@@ -3685,12 +3833,14 @@ Version: 2022-07-06"
       (xah-fly-command-mode-activate)
     (xah-fly-insert-mode-activate)))
 
+;;;###autoload
 (defun xah-fly-save-buffer-if-file ()
   "Save current buffer if it is a file."
   (interactive)
   (when buffer-file-name
     (save-buffer)))
 
+;;;###autoload
 (defun xah-fly-command-mode-activate ()
   "Activate command mode and run `xah-fly-command-mode-activate-hook'
 Version: 2017-07-07"
@@ -3698,12 +3848,14 @@ Version: 2017-07-07"
   (xah-fly-command-mode-init)
   (run-hooks 'xah-fly-command-mode-activate-hook))
 
+;;;###autoload
 (defun xah-fly-command-mode-activate-no-hook ()
   "Activate command mode. Does not run `xah-fly-command-mode-activate-hook'
 Version: 2017-07-07"
   (interactive)
   (xah-fly-command-mode-init))
 
+;;;###autoload
 (defun xah-fly-insert-mode-activate ()
   "Activate insertion mode.
 Version: 2017-07-07"
@@ -3711,18 +3863,21 @@ Version: 2017-07-07"
   (xah-fly-insert-mode-init)
   (run-hooks 'xah-fly-insert-mode-activate-hook))
 
+;;;###autoload
 (defun xah-fly-insert-mode-activate-newline ()
   "Activate insertion mode, insert newline below."
   (interactive)
   (xah-fly-insert-mode-activate)
   (open-line 1))
 
+;;;###autoload
 (defun xah-fly-insert-mode-activate-space-before ()
   "Insert a space, then activate insertion mode."
   (interactive)
   (insert " ")
   (xah-fly-insert-mode-activate))
 
+;;;###autoload
 (defun xah-fly-insert-mode-activate-space-after ()
   "Insert a space, then activate insertion mode."
   (interactive)

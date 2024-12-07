@@ -5,12 +5,20 @@
 (add-to-list 'load-path (file-name-parent-directory load-file-name))
 (require 'init-load-tools)
 (require 'init-proxy)
-(add-to-list 'load-path (expand-file-name "extra.d" (file-name-parent-directory (locate-library "init-load-tools"))))
+(add-to-list 'load-path my/extra.d-dir)
 (require 'init-logging)
 ;; (require 'init-esup)
-(defvar my/install-packages-p t
+(defvar my/install-packages-p nil
   "install packages")
-;; not allow root instal packages
+
+;;; generate autoloads
+;;;; .conf.d/extra.d
+(when my/install-packages-p
+  (require 'package)
+  (package-generate-autoloads "extra.d" my/extra.d-dir))
+
+
+;; not allow root install packages
 (when (string-equal "root" user-login-name)
   (setq my/install-packages-p nil))
 
@@ -33,25 +41,21 @@
 (defvar bootstrap-version)
 
 (defun my/enable-straight ()
-  (when my/install-packages-p
-    (let ((bootstrap-file
-	   (expand-file-name
-	    "straight/repos/straight.el/bootstrap.el"
-	    (or (bound-and-true-p straight-base-dir)
-		user-emacs-directory)))
-	  (bootstrap-version 7))
-      (unless (file-exists-p bootstrap-file)
-	(with-current-buffer
-	    (url-retrieve-synchronously
-	     "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	     'silent 'inhibit-cookies)
-	  (goto-char (point-max))
-	  (eval-print-last-sexp)))
-      (load bootstrap-file nil 'nomessage))
-
-    (straight-use-package 'meow)
-    ;;    (require 'init-lsp-bridge)
-    ))
+  (interactive)
+  (let ((bootstrap-file
+	 (expand-file-name
+	  "straight/repos/straight.el/bootstrap.el"
+	  (or (bound-and-true-p straight-base-dir)
+	      user-emacs-directory)))
+	(bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage)))
 
 (defun my/find-package-path (package)
   "package name is a symbol"
@@ -81,44 +85,54 @@
     )
   (add-subdirs-to-load-path (expand-file-name "straight/build/" prefix))
   )
-(require 'init-no-littering)
-(require 'init-hydra)
-(require 'xah-fly-keys-core)
-(require 'init-vertico)
-(require 'init-consult)
-(require 'init-embark)
+
+;; (use-package extra.d-autoloads
+;;   :demand t
+;;   :requires (dired dired-x)
+;;   )
+
+(use-package init-no-littering)
+(use-package init-hydra)
+(use-package xah-fly-keys-core)
+(use-package init-vertico)
+(use-package init-consult)
+(use-package init-embark)
 (use-package init-corfu
   :after eglot)
-(require 'init-persp-mode)
-(require 'init-treesit)
+(use-package init-search)
+(use-package init-regexp)
+(use-package init-tty)
+(use-package init-persp-mode)
+(use-package init-treesit)
 (global-treesit-auto-mode)
-(require 'init-font)
-(require 'init-project)
-;; (require 'init-doom-modeline)
-(require 'init-ui)
+(use-package init-font)
+(use-package init-project)
+;; (use-package init-doom-modeline)
+(use-package init-ui)
 (use-package init-yasnippet
   :defer 3)
 (use-package prog
   :init
-  (require 'init-lsp-bridge)
+  (use-package init-lsp-bridge)
 )
-(require 'init-major-modes)
-(require 'init-jump)
-(require 'init-expand-region)
+(use-package init-major-modes)
+(use-package init-jump)
+(use-package init-dictionary)
+(use-package init-expand-region)
 (use-package init-pyim
   :config
   (use-package init-liberime))
 
-(require 'init-git)
-(require 'init-line-number)
-(require 'init-ws-butler)
-(require 'init-key-chord)
-(require 'init-python)
+(use-package init-git)
+(use-package init-line-number)
+(use-package init-ws-butler)
+(use-package init-key-chord)
+(use-package init-python)
 (when (locate-library "init-host")
-  (require 'init-host))
+  (use-package init-host))
 (use-package org
   :init
-  (require 'init-org)
+  (use-package init-org)
   :mode (("\\.org\\'" . org-mode)))
 
 (menu-bar-mode -1)
@@ -236,8 +250,9 @@
 (global-set-key (kbd "M-K") #'move-text-up)
 (global-set-key (kbd "M-J") #'move-text-down)
 
-
-
+
+;;; meow config
+(my/straight-if-use 'meow)
 
 (defun my/meow-search-back ()
   (interactive)
@@ -327,7 +342,7 @@ Will cancel all other selection, except char selection. "
           (end (cdr bounds)))
       (cons beg end))))
 
-(require 'meow)
+(use-package meow)
 
 (meow-thing-register 'filename #'my/meow--inner-of-filename #'my/meow--bounds-of-filename)
 (meow-thing-register 'url #'my/meow--inner-of-url #'my/meow--thing-url)
@@ -879,7 +894,7 @@ Will cancel all other selection, except char selection. "
 	     eglot--managed-mode
 	     eglot-shutdown-all)
   :config
-  (require 'consult)
+  (use-package consult)
   ;; add backend lsp server
   (add-to-list 'eglot-server-programs
                '((python-mode python-ts-mode)
@@ -887,7 +902,7 @@ Will cancel all other selection, except char selection. "
 
 
   (defun my/eglot-completion-fix ()
-    (require 'cape)
+    (use-package cape)
     (setq-local completion-at-point-functions
                 (list
                  #'cape-file
@@ -1132,6 +1147,12 @@ Will cancel all other selection, except char selection. "
 ;; * fix pyim
 (with-eval-after-load 'pyim
   (add-to-list 'pyim-english-input-switch-functions #'meow-normal-mode-p))
+
+;; * hooks
+(defun my/enable-delete-active-region ()
+  (interactive)
+  (setq delete-active-region t))
+(add-hook 'meow-global-mode-hook #'my/enable-delete-active-region)
 
 
 (provide 'raw-meow-load)

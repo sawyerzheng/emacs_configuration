@@ -2,9 +2,9 @@
 
 (defvar my/use-format-all-p nil)
 
+(my/straight-if-use 'format-all)
 (use-package format-all
   ;; :if my/use-format-all-p
-  :straight t
   :commands (format-all-mode
              format-all-buffer
              format-all-region
@@ -23,13 +23,15 @@
 
     )
   ;; :hook ((c++-mode c-mode) . format-all-mode)
-  :hook ((format-all-mode python-mode
+  :hook ((format-all-mode
+	  python-mode
           c++-mode
           c-mode
           json-mode
           markdown-mode
           gfm-mode java-mode) . my/format-all-set-formatters-fn))
 
+(my/straight-if-use 'apheleia)
 (use-package apheleia
   :straight t
   :unless my/use-format-all-p

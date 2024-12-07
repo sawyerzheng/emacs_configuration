@@ -1,13 +1,20 @@
 ;; -*- coding: utf-8; -*-
 
 (my/straight-if-use 'pyim)
+
+(defun my/pyim-get-default-scheme ()
+  'xiaohe-shuangpin)
+
+(defun my/pyim-set-scheme ()
+  (setq pyim-default-scheme (my/pyim-get-default-scheme)))
+
 (use-package pyim
   :delight
   (pyim-isearch-mode)
   :commands (my-pyim-forward-mode)
   :config
   (setq default-input-method "pyim")
-  (setq pyim-default-scheme 'xiaohe-shuangpin)
+  (my/pyim-set-scheme)
   ;; 我使用全拼
   ;;  (setq pyim-default-scheme 'quanpin)
 
@@ -143,12 +150,12 @@
                      :elpa t))
           (message "pyim 没有安装，pyim-greatdict 启用失败。"))))))
 
-(defun my/pyim-get-default-scheme ()
-  'xiaohe-shuangpin)
 
 ;; 使 vertico consult 等支持 pyim-isearch-mode 类似的中文搜索
 (with-eval-after-load 'orderless
-  (require 'pyim)
+    (unless (fboundp #'pyim-cregexp-build)
+      (require 'pyim-cregexp))
+
   (defun my-orderless-regexp (orig-func component)
     (let ((result (funcall orig-func component))
           (pyim-default-scheme (my/pyim-get-default-scheme)))
@@ -158,8 +165,9 @@
 
 ;; avy + pyim cregexp
 (with-eval-after-load 'avy
-  (require 'pyim)
   (defun my-avy--regex-candidates (fun regex &optional beg end pred group)
+    (unless (fboundp #'pyim-cregexp-build)
+      (require 'pyim-cregexp))
     (let ((regex (pyim-cregexp-build regex))
           (pyim-default-scheme (my/pyim-get-default-scheme)))
       (funcall fun regex beg end pred group)))
@@ -167,8 +175,9 @@
 
 ;; ivy + pyim cregexp
 (with-eval-after-load 'ivy
-  (require 'pyim)
   (defun my-pyim-cregexp-ivy (str)
+    (unless (fboundp #'pyim-cregexp-build)
+      (require 'pyim-cregexp))
     (let ((pyim-default-scheme (my/pyim-get-default-scheme)))
       (pyim-cregexp-ivy str)))
   (setq ivy-re-builders-alist

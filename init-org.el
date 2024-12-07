@@ -10,10 +10,8 @@
   ;; (key-chord-define org-mode-map "kl" my/org-mode-map)
   (define-key org-mode-map (kbd "C-c C-i") my/org-mode-map))
 
-
+(my/straight-if-use '(org :type built-in))
 (use-package org
-  ;; :straight t
-  :straight (:type built-in)
   :commands org-mode
   :init
   (defun my/org-mode-conf-settings-fn ()
@@ -248,8 +246,8 @@ prepended to the element after the #+HEADER: tag."
     :hook (org-mode . toc-org-mode))
 
   ;; Add graphical view of agenda
+  ;; (my/straight-if-use 'org-timeline)
   ;; (use-package org-timeline
-  ;;   :straight t
   ;;   :hook (org-agenda-finalize . org-timeline-insert-timeline))
 
   ;; (bind-key "SPC b b" org-babel-map 'xah-fly-command-map)

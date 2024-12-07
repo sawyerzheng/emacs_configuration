@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8; -*-
+(my/straight-if-use 'fanyi)
 (use-package fanyi
-  :straight t
   :bind (("C-c s d f" . fanyi-dwim)
          ("C-c s d d" . fanyi-dwim2)
          ("C-c s d h" . fanyi-from-history))
@@ -27,8 +27,8 @@
                          ;; fanyi-longman-provider
                          )))))
 
+(my/straight-if-use 'bing-dict)
 (use-package bing-dict
-  :straight t
   :commands (bing-dict-brief
              my/bing-dict-brief)
   :config
@@ -76,8 +76,8 @@
 
 
 ;; part of codes from centuar-emacs
+(my/straight-if-use 'youdao-dictionary)
 (use-package youdao-dictionary
-  :straight t
   :commands youdao-dictionary-play-voice-of-current-word
   :bind (("C-c s y y" . my-youdao-dictionary-search-at-point))
   :bind (("C-c s y i" . youdao-dictionary-search-from-input)
@@ -136,8 +136,8 @@
 ;; (setq dictionary-server "localhost")
 
 ;;================ search through en.wikipedia.org ===========
+(my/straight-if-use '(browse-url :type built-in))
 (use-package browse-url
-  :straight (:type built-in)
   :config
   ;; Actually, it just search the word by opening a new tab
   ;; in the real web browse which is not the eww in emacs.
@@ -159,9 +159,8 @@ This command switches to browser."
   :bind ("C-c s w" . my-lookup-wikipedia))
 
 ;;========================== end ===== wikipedia =====================
-
+(my/straight-if-use '(popweb :type git :host github :repo "manateelazycat/popweb" :files (:defaults "extension/dict" "extension/latex" "extension/org-roam" "extension/url-preview" "*")))
 (use-package popweb
-  :straight (popweb :type git :host github :repo "manateelazycat/popweb" :files (:defaults "extension/dict" "extension/latex" "extension/org-roam" "extension/url-preview" "*"))
   :init
   (my/add-extra-folder-to-load-path "popweb" '("extension/dict" "extension/latex" "extension/org-roam" "extension/url-preview"))
   :commands (popweb-dict-bing-pointer
@@ -191,13 +190,12 @@ This command switches to browser."
 
 (setq popweb-python-command my/epc-python-command)
 
+(my/straight-if-use '(websocket-bridge :type git :host github :repo "ginqi7/websocket-bridge"))
 (use-package websocket-bridge
-  :straight (:type git :host github :repo "ginqi7/websocket-bridge")
   :defer t)
 
-
+(my/straight-if-use '(dictionary-overlay :type git :host github :repo "ginqi7/dictionary-overlay" :files ("*")))
 (use-package dictionary-overlay
-  :straight (:type git :host github :repo "ginqi7/dictionary-overlay" :files ("*"))
   :commands (dictionary-overlay-start
              dictionary-overlay-mark-word-unknown
              dictionary-overlay-mark-word-known
@@ -238,9 +236,8 @@ This command switches to browser."
 ;; (autoload 'dictionary-overlay-start "dictionary-overlay" nil t)
 ;; (autoload 'dictionary-overlay-render-buffer "dictionary-overlay" nil t)
 
-
+(my/straight-if-use '(baidu-translate :type git :host github :repo "suxiaogang223/baidu-translate"))
 (use-package baidu-translate
-  :straight (:type git :host github :repo "suxiaogang223/baidu-translate")
   :commands (baidu-translate-en-mark
              baidu-translate-zh-mark
              baidu-translate-en-whole-buffer

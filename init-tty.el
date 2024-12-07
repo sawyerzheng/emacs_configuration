@@ -1,6 +1,6 @@
+(my/straight-if-use '(clipetty :source (melpa gpu-elpa-mirror)))
 (use-package
   clipetty
-  :straight (:source (melpa gpu-elpa-mirror))
   :if (not (display-graphic-p))
   :init
   (defun my/clipetty-startup-enable ()
