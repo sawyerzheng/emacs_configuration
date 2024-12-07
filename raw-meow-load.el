@@ -124,6 +124,7 @@
   (use-package init-liberime))
 
 (use-package init-git)
+(use-package init-zoom)
 (use-package init-line-number)
 (use-package init-ws-butler)
 (use-package init-key-chord)
