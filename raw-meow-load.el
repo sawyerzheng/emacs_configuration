@@ -93,7 +93,7 @@
 
 (use-package init-no-littering)
 (use-package init-hydra)
-(use-package init-xah-fly-keys)
+(use-package init-xah-fly-keys-core)
 (use-package init-vertico)
 (use-package init-consult)
 (use-package init-embark)

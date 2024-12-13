@@ -3,6 +3,7 @@
   :init
   (setq xah-fly-use-control-key nil)
   (setq xah-fly-use-meta-key nil)
+  :config
   (defun xah-new-empty-buffer ()
   "Create a new empty buffer.
 New buffer is named untitled, untitled<2>, etc.

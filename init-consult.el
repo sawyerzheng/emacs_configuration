@@ -1,11 +1,12 @@
 (my/straight-if-use 'consult)
 
+(use-package consult-flymake
+  :commands (consult-flymake))
 
 (use-package consult
   ;; :after (project projectile)
   :init
-  (use-package consult-flymake
-    :commands (consult-flymake))
+
 
   :commands (consult-line +default/search-buffer consult-xref)
   :bind
