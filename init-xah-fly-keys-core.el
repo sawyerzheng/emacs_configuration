@@ -3,6 +3,22 @@
   :init
   (setq xah-fly-use-control-key nil)
   (setq xah-fly-use-meta-key nil)
+  (defun xah-new-empty-buffer ()
+  "Create a new empty buffer.
+New buffer is named untitled, untitled<2>, etc.
+
+On emacs quit, if you want emacs to prompt for save, set `buffer-offer-save' to t.
+
+It returns the buffer.
+
+URL `http://xahlee.info/emacs/emacs/emacs_new_empty_buffer.html'
+Version: 2017-11-01 2022-04-05"
+  (interactive)
+  (let ((xbuf (generate-new-buffer "untitled")))
+    (switch-to-buffer xbuf)
+    (funcall (if (fboundp #'gfm-mode) #'gfm-mode initial-major-mode))
+    xbuf
+    ))
   )
 
 (provide 'init-xah-fly-keys-core)

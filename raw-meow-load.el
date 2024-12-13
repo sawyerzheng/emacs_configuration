@@ -93,7 +93,7 @@
 
 (use-package init-no-littering)
 (use-package init-hydra)
-(use-package xah-fly-keys-core)
+(use-package init-xah-fly-keys)
 (use-package init-vertico)
 (use-package init-consult)
 (use-package init-embark)
@@ -116,6 +116,7 @@
   (use-package init-lsp-bridge)
 )
 (use-package init-major-modes)
+(use-package init-file-templates)
 (use-package init-jump)
 (use-package init-dictionary)
 (use-package init-expand-region)

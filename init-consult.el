@@ -1,8 +1,12 @@
-(when (featurep 'straight)
-  (straight-use-package 'consult))
+(my/straight-if-use 'consult)
+
 
 (use-package consult
   ;; :after (project projectile)
+  :init
+  (use-package consult-flymake
+    :commands (consult-flymake))
+
   :commands (consult-line +default/search-buffer consult-xref)
   :bind
   (([remap recentf-open-files] . consult-recent-file)
