@@ -20,7 +20,7 @@
 
 (my/straight-if-use 'ace-link)
 (use-package ace-link
-    :commands (ace-link)
+  :commands (ace-link)
   :init
   (defun my/bind-ace-link ()
     (local-set-key (kbd "o") #'ace-link))
@@ -31,13 +31,15 @@
 
 (my/straight-if-use 'back-button)
 (use-package back-button
-    :commands (back-button-mode)
-  :demand t
-  :config (back-button-mode +1))
+  :commands (back-button-mode
+	     back-button-local-forward
+	     back-button-local-forward)
+  )
+(run-with-idle-timer 2 1 (lambda () (back-button-mode +1)))
 
 (my/straight-if-use 'bm)
 (use-package bm
-    :commands (bm-toggle
+  :commands (bm-toggle
              bm-next
              bm-previous)
   :init

@@ -1,8 +1,8 @@
 (require 'init-doom-themes)
 
-;; modus- themes
+;; modus-themes
 (my/straight-if-use '(modus-themes :type git :host github :repo "protesilaos/modus-themes"))
-(use-package modus-themes
+(with-eval-after-load 'modus-themes
   :config
   (progn
     (setq modus-themes-headings
@@ -40,8 +40,9 @@
 (setq my/selected-theme
       (if (display-graphic-p)
           'doom-vibrant
-        'modus-vivendi
+        ;; 'modus-vivendi
         ;; 'modus-vivendi-tritanopia
+	'tsdh-dark
         ))
 
 

@@ -11,6 +11,9 @@
 (defvar my/install-packages-p nil
   "install packages")
 
+;;; benchmark init
+;; (require 'init-benchmark-init)
+
 ;;; generate autoloads
 ;;;; .conf.d/extra.d
 (when my/install-packages-p
