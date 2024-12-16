@@ -218,6 +218,7 @@
   "is arch linux distrobution")
 
 
+(add-to-list 'load-path my/conf-distro-dir)
 
 ;; ref: https://github.com/alphapapa/unpackaged.el#reload-a-packages-features
 ;;;###autoload

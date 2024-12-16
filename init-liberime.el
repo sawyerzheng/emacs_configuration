@@ -2,7 +2,7 @@
 (setq liberime-user-data-dir (expand-file-name "rime" no-littering-var-directory))
 
 (unless my/windows-p
-  (straight-use-package `(liberime
+  (my/straight-if-use `(liberime
                           :pre-build ,(pcase system-type
                                         (`gnu/linux '("make"))
                                         (`widnows-nt '(message "liberime can not be made on windows"))

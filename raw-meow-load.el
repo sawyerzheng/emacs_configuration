@@ -120,9 +120,8 @@
 (use-package init-jump)
 (use-package init-dictionary)
 (use-package init-expand-region)
-(use-package init-pyim
-  :config
-  (use-package init-liberime))
+(use-package init-pyim)
+(use-package init-liberime)
 
 (use-package init-git)
 (use-package init-zoom)
