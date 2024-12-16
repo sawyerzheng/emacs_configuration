@@ -15,6 +15,7 @@
              vr/select-replace
              vr/select-query-replace
              vr/select-mc-mark)
+  :bind (([remap query-replace] . vr/query-replace))
   :bind (("C-s" . vr/isearch-forward)
          ("C-r" . vr/isearch-backward))
   :bind (:map xah-fly-command-map
