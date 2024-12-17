@@ -1,9 +1,9 @@
+(my/straight-if-use 'elisp-demos)
 (use-package elisp-demos
-  :straight t
   :commands (elisp-demos-advice-describe-function-1))
 
+(my/straight-if-use 'helpful)
 (use-package helpful
-  :straight t
   :defines (helpful-mode helpful-mode-map)
   :bind (("C-h f" . helpful-callable)
          ("C-h v" . helpful-variable)
@@ -15,20 +15,16 @@
          ([remap describe-variable] . helpful-variable)
          ([remap describe-key] . helpful-key)
          ([remap describe-symbol] . helpful-symbol)
-
+         ([remap describe-command] . helpful-command)
          )
   :config
   (require 'elisp-demos)
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update)
   )
 
-;; (autoload 'helpful-mode "helpful")
-;; (autoload 'helpful-mode-map "helpful")
 
-;; (with-eval-after-load 'info
-;;   (require 'info+))
+(my/straight-if-use 'info-plus)
 (use-package info-plus
-  :straight t
   :after info)
 
 

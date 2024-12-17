@@ -16,9 +16,9 @@ to directory DIR."
           (project-current-directory-override dir))
       (call-interactively command))))
 
+(my/straight-if-use '(project :type built-in))
 (use-package project
   ;; :defer t
-  :straight (:type built-in)
   :config
   ;; (bind-key "o" #'+treemacs/toggle  project-prefix-map)
   (bind-key "o" #'dired-sidebar-toggle-sidebar project-prefix-map)

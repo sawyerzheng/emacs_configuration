@@ -11,24 +11,26 @@
   (define-key org-mode-map (kbd "C-c C-i") my/org-mode-map))
 
 (my/straight-if-use '(org :type built-in))
+
+;;;###autoload
+(defun my/org-mode-conf-settings-fn ()
+  (interactive)
+  (setq-local line-spacing 0.2)
+  ;; Increase size of LaTeX fragment previews
+  (plist-put org-format-latex-options :scale 1.5)
+
+  (setq-local tab-width 8)
+
+  (setq org-startup-with-inline-images t
+        org-image-actual-width '(600)
+        org-pretty-entities t
+        org-hide-emphasis-markers t
+
+        org-use-sub-superscripts '{}
+        org-export-with-sub-superscripts '{}))
+
 (use-package org
   :commands org-mode
-  :init
-  (defun my/org-mode-conf-settings-fn ()
-    (interactive)
-    (setq-local line-spacing 0.2)
-    ;; Increase size of LaTeX fragment previews
-    (plist-put org-format-latex-options :scale 1.5)
-
-    (setq-local tab-width 8)
-
-    (setq org-startup-with-inline-images t
-          org-image-actual-width '(600)
-          org-pretty-entities t
-          org-hide-emphasis-markers t
-
-          org-use-sub-superscripts '{}
-          org-export-with-sub-superscripts '{}))
   :hook ((org-mode org-babel-after-execute) . org-redisplay-inline-images)
   :hook (org-mode . my/org-mode-conf-settings-fn)
   :config
@@ -776,4 +778,23 @@ the `jupyter-current-client' local to the buffer."
 
 
 (require 'init-org-journal)
+
+(my/straight-if-use '(consult-notes :type git :host github :repo "mclear-tools/consult-notes"))
+(use-package consult-notes
+  :commands (consult-notes
+             consult-notes-search-in-all-notes
+             ;; if using org-roam
+             consult-notes-org-roam-find-node
+             consult-notes-org-roam-find-node-relation)
+  :config
+  (setq consult-notes-file-dir-sources '(("note" ?n "~/org/note"))) ;; Set notes dir(s), see below
+  ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
+  (setq consult-notes-org-headings-files '("~/path/to/file1.org"
+                                           "~/path/to/file2.org"))
+  (consult-notes-org-headings-mode)
+  (when (locate-library "denote")
+    (consult-notes-denote-mode))
+  ;; search only for text files in denote dir
+  (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
+
 (provide 'init-org)

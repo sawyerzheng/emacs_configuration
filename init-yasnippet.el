@@ -10,10 +10,11 @@
     (yas-reload-all)
     (yas-minor-mode 1))
   :commands (my/enable-yas-local-fn)
-  :hook (((prog-mode org-mode) . my/enable-yas-local-fn))
+  ;; :hook (((prog-mode org-mode) . my/enable-yas-local-fn))
   :config
   (require 'yasnippet-snippets)
   (add-to-list 'yas-snippet-dirs "~/.conf.d/custom.d/snippets")
+  ;; (yas-reload-all)
   )
 
 (my/straight-if-use 'auto-yasnippet)

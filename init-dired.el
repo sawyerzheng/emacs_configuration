@@ -59,9 +59,8 @@
           (shell-command-to-string (format "powershell.exe -noprofile  -noninteractive -windowstyle hidden \" ii $(wslpath -w %s)\"" file))
         (consult-file-externally file))))))
 
-
+(my/straight-if-use '(dired :type built-in))
 (use-package dired
-  :straight (:type built-in)
   :init
   ;; for sort file byt time name size
   (defun xah-dired-sort ()
@@ -138,13 +137,13 @@ Version 2018-09-29"
 
   :config
   ;; * extra packages
+  (my/straight-if-use '(dired-x :type built-in))
   (use-package dired-x
-    :straight (:type built-in)
     :after dired
     :hook (dired-mode . dired-omit-mode))
 
+  (my/straight-if-use 'dired-k)
   (use-package dired-k
-    :straight t
     :after dired
     :hook (dired-mode . dired-k)
     :bind (:map dired-mode-map
@@ -152,27 +151,17 @@ Version 2018-09-29"
     :config
     (setq dired-k-style 'git)
     (setq dired-k-human-readable t))
+  (my/straight-if-use '(nerd-icons-dired :type git :host github :repo "rainstormstudio/nerd-icons-dired"))
   (use-package nerd-icons-dired
-    :straight (:type git :host github :repo "rainstormstudio/nerd-icons-dired")
     :hook (dired-mode . nerd-icons-dired-mode))
-  ;; (use-package all-the-icons-dired
-  ;;   :straight t
-  ;;   :after dired
-  ;;   :hook (dired-mode . all-the-icons-dired-mode)
-  ;;   :config
-  ;;   ;; (remove-hook 'dired-mode-hook 'treemacs-icons-dired-mode)
-  ;;   )
+
+  (my/straight-if-use 'diredfl)
   (use-package diredfl
-    :straight t
     :hook (dired-mode . diredfl-mode)))
 
-;; (use-package treemacs-icons-dired
-;;   :straight t
-;;   :hook (dired-mode . treemacs-icons-dired-mode))
-
+;; (my/straight-if-use '(dirvish :files (:defaults "extensions")))
 ;; (use-package dirvish
 ;;   :after dired
-;;   :straight (dirvish :files (:defaults "extensions"))
 ;;   :init
 ;;   (my/add-extra-folder-to-load-path "dirvish" '("extensions"))
 
@@ -194,8 +183,8 @@ Version 2018-09-29"
 ;;   (require 'dirvish-subtree)
 ;;   (require 'dirvish-vc))
 
+(my/straight-if-use 'dired-sidebar)
 (use-package dired-sidebar
-  :straight t
   :commands (dired-sidebar-show-sidebar
              dired-sidebar-toggle-sidebar)
   :init
@@ -212,25 +201,26 @@ Version 2018-09-29"
   (setq dired-sidebar-use-term-integration t)
   (setq dired-sidebar-use-custom-font t))
 
+(my/straight-if-use 'ztree)
 (use-package ztree
-  :straight t
   :commands (ztree-dir
              ztree-diff)
   :bind (:map ztree-mode-map
               ("p" . ztree-previous-line)
               ("n" . ztree-next-line)))
 
+(my/straight-if-use '(dired-rsync :type git :host github :repo "stsquad/dired-rsync"))
 (use-package dired-rsync
-  :straight (:type git :host github :repo "stsquad/dired-rsync")
   :after dired
   :bind (:map dired-mode-map
               ("C-c C-r" . dired-rsync)
               ("r" . dired-rsync)))
 
+(my/straight-if-use '(dired-rsync-transient :type git :host github :repo "stsquad/dired-rsync"))
 (use-package dired-rsync-transient
-  :straight (:type git :host github :repo "stsquad/dired-rsync")
+
   :bind (:map dired-mode-map
               ("C-c C-x" . dired-rsync-transient)
               ("x" . dired-rsync-transient)))
 
-  (provide 'init-dired)
+(provide 'init-dired)

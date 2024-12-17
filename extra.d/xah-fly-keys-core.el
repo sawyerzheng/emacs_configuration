@@ -3886,6 +3886,76 @@ Version: 2017-07-07"
   (left-char))
 
 
+;;; url encode decoding
+;;;###autoload
+(defun xah-html-percent-encode-url (&optional Begin End)
+  "Percent encode URL in current line or selection.
+
+Example:
+ http://example.org/(Dürer)
+becomes
+ http://example.org/(D%C3%BCrer)
+
+Example:
+ http://example.org/文本编辑器
+becomes
+ http://example.org/%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8
+
+URL `http://xahlee.info/emacs/emacs/emacs_url_percent_decode.html'
+Created: 2022-04-08
+Version: 2023-09-24"
+  (interactive)
+  (require 'url-util)
+  (let (xbeg xend xinput xnewStr)
+    (if (and Begin End)
+        (setq xbeg Begin xend End)
+      (if (region-active-p)
+          (setq xbeg (region-beginning) xend (region-end))
+        (setq xbeg (line-beginning-position) xend (line-end-position))))
+    (setq xinput (buffer-substring-no-properties xbeg xend)
+          xnewStr (url-encode-url xinput))
+    (if (string-equal xnewStr xinput)
+        (message "no change")
+      (progn
+        (delete-region xbeg xend)
+        (insert xnewStr)))
+    xnewStr
+    ))
+
+;;;###
+(defun xah-html-percent-decode-url (&optional Begin End)
+  "Decode percent encoded URL of current line or selection.
+
+Example:
+ %28D%C3%BCrer%29
+becomes
+ (Dürer)
+
+Example:
+ %E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8
+becomes
+ 文本编辑器
+
+URL `http://xahlee.info/emacs/emacs/emacs_url_percent_decode.html'
+Created: 2022-04-08
+Version: 2023-09-24"
+  (interactive)
+  (let (xbeg xend xinput xnewStr)
+    (if (and Begin End)
+        (setq xbeg Begin xend End)
+      (if (region-active-p)
+          (setq xbeg (region-beginning) xend (region-end))
+        (setq xbeg (line-beginning-position) xend (line-end-position))))
+    (setq xinput (buffer-substring-no-properties xbeg xend))
+    (require 'url-util)
+    (setq xnewStr (url-unhex-string xinput))
+    (if (string-equal xnewStr xinput)
+        (message "percent-decode no change")
+      (progn
+        (delete-region xbeg xend)
+        (insert (decode-coding-string xnewStr 'utf-8))))))
+
+
 
 ;; ;;;###autoload
 ;; (define-minor-mode xah-fly-keys

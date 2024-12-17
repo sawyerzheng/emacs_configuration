@@ -20,6 +20,21 @@
       (require 'acm-terminal))
     (acm-terminal-init-colors t) ;; force blend color
     )
+  (defun my/acm-terminal-enable ()
+    (interactive)
+    (acm-terminal-activate))
+  (defun my/acm-terminal-disable ()
+    (interactive)
+    (acm-terminal-deactive))
+  (defun my/acm-terminal-make-frame-auto-switch ()
+    (with-eval-after-load 'acm-terminal
+      (when (daemonp)
+	(if (display-graphic-p)
+            (acm-terminal-deactive)
+	  (acm-terminal-active)
+	  ))))
+  ;; (add-to-list 'after-make-frame-functions #'my/acm-terminal-make-frame-auto-switch)
+  ;; :hook (lsp-bridge-mode . my/acm-terminal-make-frame-auto-switch)
   :config
   (defun acm-terminal-init-colors (&optional force)
     (let* ((is-dark-mode (string-equal (acm-frame-get-theme-mode) "dark"))
@@ -33,7 +48,6 @@
       (when (or force (equal (face-attribute 'acm-terminal-select-face :foreground) 'unspecified))
         (set-face-foreground 'acm-terminal-select-face (face-attribute 'font-lock-function-name-face :foreground)))))
   :hook (lsp-bridge-mode . my/acm-terminal-set-colors)
-  ;; :straight (:type git :host github :repo "twlz0ne/acm-terminal")
   :after lsp-bridge)
 
 (use-package lsp-bridge

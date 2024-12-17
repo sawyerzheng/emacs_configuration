@@ -104,13 +104,15 @@
   :after eglot)
 (use-package init-search)
 (use-package init-regexp)
+(use-package init-dired)
 (use-package init-tty)
 (use-package init-persp-mode)
 (use-package init-treesit)
 (global-treesit-auto-mode)
 (use-package init-font)
+(use-package init-emacs-lisp)
 (use-package init-project)
-;; (use-package init-doom-modeline)
+(use-package init-doom-modeline)
 (use-package init-ui)
 (use-package init-yasnippet
   :defer 3)
@@ -138,6 +140,8 @@
   :init
   (use-package init-org)
   :mode (("\\.org\\'" . org-mode)))
+
+(use-package init-org-roam)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -573,6 +577,7 @@ Will cancel all other selection, except char selection. "
  '("i u" . eaf-open-browser-with-history)
  '("i s" . eaf-search-it)
  '("i w" . xah-open-in-external-app)
+ '("d T" . my/xah-insert-time)
  '("d a" . xah-insert-double-angle-bracket)
  '("d b" . my/xah-insert-singe-bracket)
  '("d c" . insert-char)

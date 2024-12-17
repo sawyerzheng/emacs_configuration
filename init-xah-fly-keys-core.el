@@ -20,6 +20,10 @@ Version: 2017-11-01 2022-04-05"
     (funcall (if (fboundp #'gfm-mode) #'gfm-mode initial-major-mode))
     xbuf
     ))
+  (defun my/xah-insert-time ()
+    "insert time %H:%M only."
+    (interactive)
+    (insert (format-time-string "%H:%M")))
   )
 
 (provide 'init-xah-fly-keys-core)

@@ -1,4 +1,5 @@
 (require 'init-doom-themes)
+(require 'doom-themes)
 
 ;; modus-themes
 (my/straight-if-use '(modus-themes :type git :host github :repo "protesilaos/modus-themes"))
