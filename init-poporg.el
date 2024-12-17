@@ -1,5 +1,5 @@
+(my/straight-if-use 'poporg)
 (use-package poporg
-  :straight t
   :bind (:map prog-mode-map
               ("C-c '" . poporg-dwim))
   :bind (:map poporg-mode-map
