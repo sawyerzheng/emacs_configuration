@@ -1,7 +1,7 @@
 ;; -*- coding: utf-8; -*-
 ;; :ref https://github.com/DarthFennec/highlight-indent-guides
+(my/straight-if-use 'highlight-indent-guides)
 (use-package highlight-indent-guides
-  :straight t
   :hook (prog-mode . highlight-indent-guides-mode)
   :hook (highlight-indent-guides-mode . (lambda ()
                                           (my/highlight-indent-guides-set-faces-fn)
