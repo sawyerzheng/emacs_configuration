@@ -27,7 +27,7 @@
 	 ("C-c n j s" . org-journal-search-entry)
 	 ("C-c n j o" . org-journal-open-current-journal-file)
 	 ("C-c n j a" . org-journal-new-scheduled-entry)
-	  )))
+	  ))
 
 (with-eval-after-load 'calendar
   (progn

@@ -3,7 +3,7 @@
 (use-package impatient-mode
   :after (markdown-mode)
   :bind (:map markdown-mode-command-map
-              ("i" . impatient-mode))
+              ("I" . impatient-mode))
   :config
   ;;(setq httpd-port 18080)
   (defun my/impatient-open ()

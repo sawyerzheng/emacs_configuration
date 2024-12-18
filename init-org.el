@@ -11,6 +11,8 @@
   (define-key org-mode-map (kbd "C-c C-i") my/org-mode-map))
 
 (my/straight-if-use '(org :type built-in))
+(my/straight-if-use 'org-rich-yank)
+(my/straight-if-use 'toc-org)
 
 ;;;###autoload
 (defun my/org-mode-conf-settings-fn ()
@@ -237,13 +239,11 @@ prepended to the element after the #+HEADER: tag."
 
 
   ;; rich yank, for copy source code
-  (my/straight-if-use 'org-rich-yank)
   (use-package org-rich-yank
     :bind (:map org-mode-map
                 ("C-M-y" . org-rich-yank)))
 
   ;; Table of contents
-  (my/straight-if-use 'toc-org)
   (use-package toc-org
     :hook (org-mode . toc-org-mode))
 

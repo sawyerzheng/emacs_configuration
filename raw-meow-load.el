@@ -114,12 +114,10 @@
 (use-package init-project)
 (use-package init-doom-modeline)
 (use-package init-ui)
+(use-package init-highlight-indent-guides)
 (use-package init-yasnippet
   :defer 3)
-(use-package prog
-  :init
-  (use-package init-lsp-bridge)
-)
+(use-package init-lsp-bridge)
 (use-package init-major-modes)
 (use-package init-file-templates)
 (use-package init-jump)
@@ -148,7 +146,9 @@
 
 (if (display-graphic-p)
     (load-theme 'modus-vivendi t)
-  (load-theme 'tsdh-dark t))
+  (load-theme 'tsdh-dark t)
+  ;; (load-theme 'doom-vibrant t)
+  )
 
 (global-auto-revert-mode 1)
 

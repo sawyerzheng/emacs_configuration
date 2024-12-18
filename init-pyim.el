@@ -1,6 +1,8 @@
 ;; -*- coding: utf-8; -*-
 
 (my/straight-if-use 'pyim)
+(my/straight-if-use 'posframe)
+(my/straight-if-use 'popup)
 
 (defun my/pyim-get-default-scheme ()
   'xiaohe-shuangpin)
@@ -44,11 +46,9 @@
   ;; 手动安装 posframe 包。
   ;; 使用默认配置，兼容 terminal
   ;; (setq pyim-page-tooltip 'posframe)
-  (my/straight-if-use 'posframe)
   (use-package posframe
     :if (or (daemonp) (display-graphic-p))
     )
-  (my/straight-if-use 'popup)
   (use-package popup
     :unless (display-graphic-p)
     )

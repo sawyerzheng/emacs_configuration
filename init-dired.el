@@ -60,6 +60,11 @@
         (consult-file-externally file))))))
 
 (my/straight-if-use '(dired :type built-in))
+(my/straight-if-use '(nerd-icons-dired :type git :host github :repo "rainstormstudio/nerd-icons-dired"))
+(my/straight-if-use 'diredfl)
+(my/straight-if-use '(dired-x :type built-in))
+(my/straight-if-use 'dired-k)
+
 (use-package dired
   :init
   ;; for sort file byt time name size
@@ -137,12 +142,10 @@ Version 2018-09-29"
 
   :config
   ;; * extra packages
-  (my/straight-if-use '(dired-x :type built-in))
   (use-package dired-x
     :after dired
     :hook (dired-mode . dired-omit-mode))
 
-  (my/straight-if-use 'dired-k)
   (use-package dired-k
     :after dired
     :hook (dired-mode . dired-k)
@@ -151,11 +154,10 @@ Version 2018-09-29"
     :config
     (setq dired-k-style 'git)
     (setq dired-k-human-readable t))
-  (my/straight-if-use '(nerd-icons-dired :type git :host github :repo "rainstormstudio/nerd-icons-dired"))
   (use-package nerd-icons-dired
     :hook (dired-mode . nerd-icons-dired-mode))
 
-  (my/straight-if-use 'diredfl)
+
   (use-package diredfl
     :hook (dired-mode . diredfl-mode)))
 

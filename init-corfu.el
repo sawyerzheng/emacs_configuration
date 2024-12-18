@@ -4,6 +4,7 @@
       )
 
 (my/straight-if-use 'corfu)
+(my/straight-if-use '(nerd-icons-corfu :source (melpa)))
 (use-package corfu
   :commands (corfu-mode)
   ;; :hook (my/startup . global-corfu-mode)
@@ -45,7 +46,6 @@
   (add-to-list 'corfu-excluded-modes 'minibuffer-mode)
 
   ;; (require 'corfu-indexed)
-  (my/straight-if-use '(nerd-icons-corfu :source (melpa)))
   (use-package nerd-icons-corfu
     :hook (corfu-mode . (lambda ()
                           (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))))
@@ -125,14 +125,13 @@
   (add-hook 'corfu-mode-hook #'my/cape-add-to-corfu))
 
 ;; * for terminal
+(my/straight-if-use '(corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
 (when (or (not (display-graphic-p))
           (daemonp)
           ;; my/4k-p
           )
   (with-eval-after-load 'corfu
     (require 'popon)
-
-    (my/straight-if-use '(corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
     (use-package corfu-terminal
       :after corfu
       :hook (corfu-mode . my/daemonp-corfu-load-helper)

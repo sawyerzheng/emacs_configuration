@@ -337,8 +337,7 @@
               ("C-c C-c" . lsp-bridge-ref-apply-changed)))
 
 
-(when (featurep 'straight)
-  (straight-use-package '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge")))
+(my/straight-if-use '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge"))
 (use-package flymake-bridge
   :after lsp-bridge
   :hook (lsp-bridge-mode . flymake-bridge-setup))

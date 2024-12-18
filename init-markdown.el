@@ -6,6 +6,7 @@
 (my/straight-if-use 'markdown-mode)
 (my/straight-if-use 'markdown-toc)
 (my/straight-if-use 'edit-indirect)
+(my/straight-if-use '(markdown-dnd-images :type git :host github :repo "mooreryan/markdown-dnd-images"))
 (use-package markdown-mode
   :mode (("/README\\(?:\\.md\\)?\\'" . gfm-mode)
          ("\\.md\\'" . gfm-mode))
@@ -81,7 +82,6 @@
   (setq markdown-download-image-dir "./img/")
 
   ;; (require 'markdown-preview-mode)
-  (my/straight-if-use '(markdown-dnd-images :type git :host github :repo "mooreryan/markdown-dnd-images"))
   (use-package markdown-dnd-images
     :demand t
     :config
