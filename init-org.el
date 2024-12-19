@@ -786,11 +786,10 @@ the `jupyter-current-client' local to the buffer."
              ;; if using org-roam
              consult-notes-org-roam-find-node
              consult-notes-org-roam-find-node-relation)
+  :bind (("C-c n s" . consult-notes)
+	 ("C-c n S" . consult-notes-search-in-all-notes))
   :config
   (setq consult-notes-file-dir-sources '(("note" ?n "~/org/note"))) ;; Set notes dir(s), see below
-  ;; Set org-roam integration, denote integration, or org-heading integration e.g.:
-  (setq consult-notes-org-headings-files '("~/path/to/file1.org"
-                                           "~/path/to/file2.org"))
   (consult-notes-org-headings-mode)
   (when (locate-library "denote")
     (consult-notes-denote-mode))
