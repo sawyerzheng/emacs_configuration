@@ -20,6 +20,7 @@
   (global-set-key (kbd "C-h r r") #'my/reload-init-file)
 
   (require 'init-load-tools)
+  (add-subdirs-to-load-path (expand-file-name "straight/build/" user-emacs-directory))
   (require 'init-lib-regexp)
   (require 'init-proxy)
   (require 'init-straight)

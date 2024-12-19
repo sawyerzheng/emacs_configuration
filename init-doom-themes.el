@@ -1,6 +1,9 @@
 ;; -*- coding: utf-8; -*-
-(my/straight-if-use '(doom-themes :files ("*.el" "extensions")))
+(my/straight-if-use '(doom-themes :files ("*.el" "**/*.el")))
+
 (with-eval-after-load 'doom-themes
+  (add-to-list 'load-path (expand-file-name "extensions" (file-name-parent-directory (locate-library "doom-themes"))))
+  (add-to-list 'load-path (expand-file-name "themes" (file-name-parent-directory (locate-library "doom-themes"))))
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
 	doom-themes-enable-italic t) ; if nil, italics is universally disabled
