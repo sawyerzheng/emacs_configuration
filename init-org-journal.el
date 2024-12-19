@@ -18,7 +18,7 @@
 	     org-journal-search
 	     org-journal-open-current-journal-file)
   :config
-  (setq org-journal-dir "~/org/journal/life/")
+  (setq org-journal-dir (file-truename (expand-file-name "journal/life" org-directory)))
   (setq org-journal-enable-encryption nil)
   (setq org-journal-file-type 'daily)
   (setq org-journal-enable-agenda-integration t)
