@@ -17,16 +17,18 @@
   )
 
 (my/straight-if-use '(gptel-quick :type git :host github :repo "karthink/gptel-quick"))
+
 (use-package gptel-quick
   :after gptel
   :commands (gptel-quick)
+  :bind (:map embark-general-map
+	      ("?" . gptel-quick)
+	 )
   :config
-  (keymap-set embark-general-map "?" #'gptel-quick)
+  ;; (with-eval-after-load 'embark
+  ;;     (keymap-set embark-general-map "?" #'gptel-quick))
   )
 
-(with-eval-after-load 'embark
-  (require 'gptel-quick)
-  (keymap-set embark-general-map "?" #'gptel-quick))
 
 (my/straight-if-use '(ai-org-chat :type git :host github :repo "ultronozm/ai-org-chat.el"))
 (use-package ai-org-chat
@@ -85,8 +87,8 @@
   )
 
 (my/straight-if-use '(ellama :type git :host github :repo "s-kostyaev/ellama"))
-(when (file-exists-p (locate-library "ellama-autoloads"))
-  (require 'ellama-autoloads))
+;; (when (file-exists-p (locate-library "ellama-autoloads"))
+;;   (require 'ellama-autoloads))
 
 (use-package ellama
   :bind (("C-c i a" . ellama-transient-main-menu))

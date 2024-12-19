@@ -401,7 +401,6 @@ Will cancel all other selection, except char selection. "
      '("i /" . revert-buffer-with-coding-system)
      '("i ;" . write-file)
      '("i v" . my/xah-open-in-vscode)
-     (cons "i a" ellama-command-map)
      ;; '("i a a" . codegeex-request-completion)
      ;; '("i a b" . baidu-translate-zh-mark)
      ;; '("i a c c" . my/chatgpt-interface-prompt-region-action)

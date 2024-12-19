@@ -1,10 +1,15 @@
 (defvar my/org-roam-keymap (make-sparse-keymap))
 (my/straight-if-use 'org-roam)
 (my/straight-if-use 'consult-org-roam)
+(use-package consult-org-roam
+  :commands (consult-org-roam-mode
+	     consult-org-roam-search
+	     consult-org-roam-file-find
+	     consult-org-roam-forward-links
+	     consult-org-roam-backlinks
+	     consult-org-roam-backlinks-recursive))
+
 (use-package org-roam
-  :init
-  (with-eval-after-load 'consult
-    (require 'consult-org-roam))
   :custom
   (org-roam-directory "~/org/roam")
   :bind (("C-c n l" . org-roam-buffer-toggle)

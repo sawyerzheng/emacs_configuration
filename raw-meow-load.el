@@ -12,7 +12,7 @@
   "install packages")
 
 ;;; benchmark init
-;; (require 'init-benchmark-init)
+(require 'init-benchmark-init)
 
 ;;; generate autoloads
 ;;;; .conf.d/extra.d

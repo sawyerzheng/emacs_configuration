@@ -1,11 +1,3 @@
-(defun my/kill-emacs-save-or-server-edit ()
-  " check if server done before save buffers and kill emacs"
-  (interactive)
-  (if (daemonp)
-      (when-let ((server-already-done (string-equal "No server buffers remain to edit" (server-edit))))
-        (save-buffers-kill-terminal))
-    (save-buffers-kill-terminal)))
-
 (defvar my/server-keymap
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "s") #'server-edit)

@@ -11,13 +11,14 @@
 
   
 
-  (advice-add #'browse-url :override #'my/browse-url-wsl-advice)
-  (advice-remove #'browse-url  #'my/browse-url-wsl-advice)
+  ;; (advice-add #'browse-url :override #'my/browse-url-wsl-advice)
+  ;; (advice-remove #'browse-url  #'my/browse-url-wsl-advice)
   )
 
 ;; browser tools
+(my/straight-if-use 'atomic-chrome)
+
 (use-package atomic-chrome
-  :straight t
   :commands (atomic-chrome-start-server)
   :config
   (setq atomic-chrome-server-ghost-text-port 4001)
@@ -37,16 +38,16 @@
 ;;   :hook ((js2-mode css-mode html-mode) . skewer-mode)
 ;;   )
 
+(my/straight-if-use '(js :type built-in))
 (use-package js
   :mode ("\\.js$" . js-mode))
 
+(my/straight-if-use 'js2-mode)
 (use-package js2-mode
-  :straight t
   :hook (js-mode . js2-minor-mode))
 
-
+(my/straight-if-use 'web-mode)
 (use-package web-mode
-  :straight t
   :mode (("\\.html?\\'" . web-mode))
   :hook ((html-mode . web-mode))
   :config
@@ -137,13 +138,14 @@
   (add-to-list 'eglot-server-programs
                `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
 
+(my/straight-if-use '(typescript-mode :source (melpa gpu-elpa-mirror)))
+
 (use-package typescript-mode
-  :straight (:source (melpa gpu-elpa-mirror))
   :commands (typescript-mode))
 
 ;; ref: https://github.com/ananthakumaran/tide
+(my/straight-if-use 'tide)
 (use-package tide
-  :straight t
   :after (web-mode typescript-mode)
   :config
   (setq my/tide-enable-hooks '(web-mode-hook
@@ -206,17 +208,22 @@
   (dolist (hook my/tide-enable-hooks)
     (remove-hook hook #'setup-tide-mode)))
 
+(my/straight-if-use 'indium)
+;; * javascript 工具
+;; - 依赖： ~npm install -g indium~
+;;
 (use-package indium
-  :straight t)
+  :commands (indium-scratch
+             indium-switch-to-repl-buffer))
 
+(my/straight-if-use 'emmet-mode)
 (use-package emmet-mode
-  :straight t
   :hook ((css-mode sgml-mode web-mode) . emmet-mode)
   :bind (:map emmet-mode-keymap
               ("C-<return>" . nil)))
 
+(my/straight-if-use 'impatient-mode)
 (use-package impatient-mode
-  :straight t
   :commands (impatient-mode)
   :config
   ;; (defun my/impatient-mode-open-current-buffer ()
@@ -229,8 +236,8 @@
   ;; (add-hook 'impatient-mode-hook #'imp-visit-buffer)
   )
 
+(my/straight-if-use 'jq-mode)
 (use-package jq-mode
-  :straight t
   :commands (jq-mode)
   :config
   (with-eval-after-load 'org
@@ -240,8 +247,8 @@
 
 
 ;; ref: https://github.com/pashky/restclient.el
+(my/straight-if-use '(restclient :files ("*.el")))
 (use-package restclient
-  :straight (:files ("*.el"))
   :mode ("\\.http\\'" . restclient-mode)
   :hook (restclient-mode . display-line-numbers-mode)
   :commands (restclient-mode)
@@ -277,8 +284,8 @@
 
   )
 
+(my/straight-if-use 'company-restclient)
 (use-package company-restclient
-  :straight t
   :hook (restclient-mode . my/company-restclient--add-capf)
   :config
   (defun my/company-restclient--add-capf ()
@@ -287,12 +294,12 @@
                                                                   '(company-restclient))))))
 
 ;; ref: https://github.com/federicotdn/verb
-(use-package verb
-  :straight t)
+(my/straight-if-use 'verb)
+
 
 ;; ref: https://github.com/nicferrier/elnode
+(my/straight-if-use 'elnode)
 (use-package elnode
-  :straight t
   :commands (list-elnode-servers
              elnode-make-websever))
 

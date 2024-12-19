@@ -153,10 +153,9 @@
 
 ;; 使 vertico consult 等支持 pyim-isearch-mode 类似的中文搜索
 (with-eval-after-load 'orderless
+  (defun my-orderless-regexp (orig-func component)
     (unless (fboundp #'pyim-cregexp-build)
       (require 'pyim-cregexp))
-
-  (defun my-orderless-regexp (orig-func component)
     (let ((result (funcall orig-func component))
           (pyim-default-scheme (my/pyim-get-default-scheme)))
       (pyim-cregexp-build result)))

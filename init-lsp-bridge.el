@@ -109,7 +109,7 @@
   ;; (require 'cl)
   (setq acm-enable-tabnine nil)
   (setq acm-enable-doc nil)
-  (setq acm-enable-jupyter t)
+  (setq acm-enable-jupyter nil)
   (setq lsp-bridge-toggle-sdcv-helper t)
   (setq acm-enable-codeium t)
   (setq acm-enable-preview t)

@@ -1,7 +1,13 @@
-(when (featurep 'straight)
-  (straight-use-package 'embark))
+(my/straight-if-use 'embark)
+(my/straight-if-use 'marginalia)
+(my/straight-if-use 'embark-consult)
+
+(use-package marginalia
+  :demand t
+  :config
+  (marginalia-mode))
+
 (use-package embark
-  ;; :straight (:type git :host github :repo "oantolin/embark" :files ("*"))
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
    ;; ("C-;" . embark-dwim)        ;; good alternative: M-.
@@ -10,7 +16,6 @@
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
-
   :config
 
   ;; Hide the mode line of the Embark live/completions buffers
@@ -18,18 +23,6 @@
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none))))
-
-  (when (featurep 'straight)
-    (straight-use-package 'marginalia))
-
-  (use-package marginalia
-    ;; :straight t
-    :demand t
-    :config
-    (marginalia-mode))
-
-  (when (featurep 'straight)
-    (straight-use-package 'embark-consult))
 
   (use-package embark-consult
     ;; :straight t
@@ -40,7 +33,7 @@
     :hook
     (embark-collect-mode . consult-preview-at-point-mode)))
 
-(with-eval-after-load 'vertico
-  (require 'embark))
+;; (with-eval-after-load 'vertico
+;;   (require 'embark))
 
 (provide 'init-embark)

@@ -532,5 +532,14 @@ BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
   (when (featurep 'straight)
     (straight-use-package recipe-or-package))
   )
+
+(defun my/kill-emacs-save-or-server-edit ()
+  " check if server done before save buffers and kill emacs"
+  (interactive)
+  (if (daemonp)
+      (when-let ((server-already-done (string-equal "No server buffers remain to edit" (server-edit))))
+        (save-buffers-kill-terminal))
+    (save-buffers-kill-terminal)))
+
 ;; (if (my/windows-p))
 ;; (add-to-list 'exec-path )

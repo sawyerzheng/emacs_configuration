@@ -1,5 +1,5 @@
+(my/straight-if-use 'ein)
 (use-package ein
-  :straight t
   :commands (ein:login                  ;; login a remote server
              ein:jupyter-server-login-and-open
              ein:jupyter-server-start   ;; start a local server
@@ -86,15 +86,16 @@
     (("m t" ein:tb-show-km "traceback")
      ("/" ein:notebook-scratchsheet-open "scratch"))))
   :init
-  (require 'ein-notebook)
+  ;; (require 'ein-notebook)
   ;; (require 'elpy)
   ;; (my/elpy-enable)
-  (define-key ein:notebook-mode-map (kbd "M-'") #'my/ein-hydra/body)
+  ;; (define-key ein:notebook-mode-map (kbd "M-'") #'my/ein-hydra/body)
   :bind (:map ein:notebook-mode-map
               ("S-<return>" . ein:worksheet-execute-cell-and-goto-next-km)
               ("M-<return>" . ein:worksheet-execute-cell-and-goto-next-km)
               ("C-c C-c" . ein:worksheet-execute-cell-km)
               ("C-<return>" . ein:worksheet-execute-cell-km)
+	      ("M-'" . my/ein-hydra/body)
               ))
 
 

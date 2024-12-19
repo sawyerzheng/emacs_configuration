@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8; -*-
-(when (featurep 'straight)
-  (straight-use-package 'vertico))
+(my/straight-if-use 'vertico)
+(my/straight-if-use 'orderless)
 
 (use-package vertico
   :commands (vertico-mode)
@@ -26,13 +26,10 @@
               ("M-K" . #'vertico-scroll-up)
               ("M-P" . #'previous-history-element)
               ("M-N" . #'next-history-element)
-              ("M-;" . #'vertico-quick-exit)
               )
   :config
-  (when (featurep 'straight)
-    (straight-use-package 'orderless))
   (use-package orderless
-    ;;    :straight t
+    :after simple
     :init
     ;; Configure a custom style dispatcher (see the Consult wiki)
     ;; (setq orderless-style-dispatchers '(+orderless-dispatch)

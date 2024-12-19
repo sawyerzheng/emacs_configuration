@@ -377,7 +377,7 @@
 
   (require 'init-calc)
 
-  (require 'init-server)
+  ;; (require 'init-server)
   ;; ;; ;; xah-fly-keys ------ start at earlier time
   ;; (require 'init-xah-fly-keys)
 
