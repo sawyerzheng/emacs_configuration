@@ -10,6 +10,7 @@
 (use-package gptel
   :commands (gptel gptel-mode)
   :config
+  (require 'gptel-curl)
   ;; (load-file "~/org/private/openai.el.gpg")
   (setq gptel-default-mode #'org-mode)
 
@@ -19,7 +20,7 @@
 (my/straight-if-use '(gptel-quick :type git :host github :repo "karthink/gptel-quick"))
 
 (use-package gptel-quick
-  :after gptel
+  :after embark
   :commands (gptel-quick)
   :bind (:map embark-general-map
 	      ("?" . gptel-quick)
