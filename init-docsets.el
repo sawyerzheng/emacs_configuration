@@ -8,8 +8,11 @@
 (defun my/devdocs-set-local-docsets ()
   (let* ((defaults (cdr (assq major-mode my/devdocs-major-mode-docs-alist))))
     (setq-local devdocs-current-docs defaults)))
+
+(my/straight-if-use 'devdocs)
 (use-package devdocs
-  :straight t
+  :commands (devdocs-dwim
+	     devdocs-install)
   :bind (:map prog-mode-map
               ("M-<f1>" . devdocs-dwim))
   :hook (prog-mode . my/devdocs-set-local-docsets)
@@ -71,14 +74,15 @@ Install the doc if it's not installed."
 
   )
 
+(my/straight-if-use 'counsel-dash)
 (use-package counsel-dash
-  :straight t
   :commands (counsel-dash-at-point
              counsel-dash-install-docset))
 
 
 
 ;; use consult + dash-docs
+(my/straight-if-use 'consult-dash)
 (use-package consult-dash
   :straight (:type git :host github :repo "emacsmirror/consult-dash")
   ;; :straight (:type git :type codeberg :repo "ravi/consult-dash")
@@ -213,7 +217,8 @@ Install the doc if it's not installed."
                        (my/dash-docs-set-local-docsets)))
   :commands (my/counsel-dash-at-point))
 
+(my/straight-if-use 'ivy)
 (use-package ivy
   :bind (:map ivy-minibuffer-map
               ("M-n" . ivy-next-line)
-              ("M--" . ivy-previous-line)))
+              ("M-p" . ivy-previous-line)))

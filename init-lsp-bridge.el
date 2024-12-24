@@ -22,7 +22,7 @@
     )
   (defun my/acm-terminal-enable ()
     (interactive)
-    (acm-terminal-activate))
+    (acm-terminal-active))
   (defun my/acm-terminal-disable ()
     (interactive)
     (acm-terminal-deactive))

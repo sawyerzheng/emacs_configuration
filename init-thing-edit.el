@@ -18,9 +18,8 @@
               (beginning-of-thing 'symbol)))
     (backward-word)))
 
-
+(my/straight-if-use '(thing-edit :type git :host github :repo "manateelazycat/thing-edit"))
 (use-package thing-edit
-  :straight (thing-edit :type git :host github :repo "manateelazycat/thing-edit")
   :commands (thing-edit-hydra/body
              thing-mark-hydra/body)
   :config
@@ -136,22 +135,21 @@
   )
 
 
-
+(my/straight-if-use '(open-newline :type git :host github :repo "manateelazycat/open-newline"))
 (use-package open-newline
-  :straight (:type git :host github :repo "manateelazycat/open-newline")
   :commands (open-newline-above
              open-newline-below)
   :bind (("C-O" . open-newline-above)
          ("C-o" . open-newline-below))
   )
 
+(my/straight-if-use '(move-text :type git :host github :repo "manateelazycat/move-text"))
 (use-package move-text
-  :straight (:type git :host github :repo "manateelazycat/move-text")
   :commands (move-text-up
              move-text-down))
 
+(my/straight-if-use '(duplicate-line :type git :host github :repo "manateelazycat/duplicate-line"))
 (use-package duplicate-line
-  :straight (:type git :host github :repo "manateelazycat/duplicate-line")
   :commands
   (duplicate-line-or-region-above
    duplicate-line-or-region-below
@@ -166,22 +164,21 @@
       (duplicate-line-or-region-above t)))
   :bind ("M-Y" . my/duplicate-line-or-region-below))
 
+(my/straight-if-use '(find-orphan :type git :host github :repo "manateelazycat/find-orphan"))
 (use-package find-orphan
-  :straight (:type git :host github :repo "manateelazycat/find-orphan")
   :commands (find-orphan-function-in-buffer
              find-orphan-function-in-directory)
   )
 
+(my/straight-if-use '(drag-stuff :type git :host github :repo "rejeep/drag-stuff.el"))
 (use-package drag-stuff
-  :straight (:type git :host github :repo "rejeep/drag-stuff.el")
   :commands (drag-stuff-mode
              global-drag-stuff-mode))
 
 
 ;; ref: https://github.com/manateelazycat/markmacro
+(my/straight-if-use '(markmacro :type git :host github :repo "manateelazycat/markmacro"))
 (use-package markmacro
-  :straight (:type git :host github :repo "manateelazycat/markmacro")
-  :config
   :bind
   (("C-M-m ;" . markmacro-mark-words)
    ("C-M-m '" . markmacro-mark-lines)
@@ -206,9 +203,9 @@
    ("C-M-m H" . markmacro-secondary-region-mark-cursors) ;标记二级选中区域内的光标对象
    ))
 
+(my/straight-if-use 'chinese-word-at-point)
 (use-package chinese-word-at-point
-  :straight t
-  :defer t
+  :after 'thingatpt
   :config
   (setq chinese-word-split-command
         (concat "echo %s | "

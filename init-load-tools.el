@@ -541,5 +541,8 @@ BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
         (save-buffers-kill-terminal))
     (save-buffers-kill-terminal)))
 
+(defalias 'remove-if-not #'cl-remove-if-not)
+(defalias 'remove-if #'cl-remove-if)
+
 ;; (if (my/windows-p))
 ;; (add-to-list 'exec-path )
