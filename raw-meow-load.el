@@ -106,6 +106,7 @@
 (use-package init-regexp)
 (use-package init-dired)
 (use-package init-tty)
+(use-package init-format)
 (use-package init-thing-edit)
 (use-package init-persp-mode)
 (use-package init-treesit)

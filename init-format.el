@@ -33,7 +33,6 @@
 
 (my/straight-if-use 'apheleia)
 (use-package apheleia
-  :straight t
   :unless my/use-format-all-p
   :commands
   (apheleia-mode
