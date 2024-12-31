@@ -14,6 +14,8 @@
   ;; (load-file "~/org/private/openai.el.gpg")
   (setq gptel-default-mode #'org-mode)
 
+   (require 'gptel-openai)
+   (require 'gptel-ollama)
   (my/elisp-load-file-existsp "~/org/private/gptel-setup.el")
   )
 
@@ -81,11 +83,8 @@
   )
 
 (my/straight-if-use '(llm :type git :host github :repo "ahyatt/llm" :files ("*.el" "**/*.el")))
-(use-package llm
-  :defer t
-  :config
-  (my/elisp-load-file-existsp "~/org/private/gptel-setup.el")
-  )
+(with-eval-after-load 'llm
+  (my/elisp-load-file-existsp "~/org/private/gptel-setup.el"))
 
 (my/straight-if-use '(ellama :type git :host github :repo "s-kostyaev/ellama"))
 ;; (when (file-exists-p (locate-library "ellama-autoloads"))
@@ -94,12 +93,13 @@
 (use-package ellama
   :bind (("C-c i a" . ellama-transient-main-menu))
   :init
-  (require 'llm)
-  (setq ellama-sessions-directory (expand-file-name "ellama-sessions" no-littering-var-directory))
   ;; setup key bindings
   ;; (setopt ellama-keymap-prefix "C-c e")
   ;; language you want ellama to translate to
   :config
+  (require 'llm)
+  (setq ellama-sessions-directory (expand-file-name "ellama-sessions" no-littering-var-directory))
+
   (setopt ellama-language "English")
   (setopt ellama-language "汉语")
   ;; could be llm-openai for example
