@@ -1,9 +1,6 @@
+(my/straight-if-use '(tabby :type git :host github :files ("*.el" "node_scripts") :repo "alan-w-255/tabby.el"))
+
 (use-package tabby
-  :straight (tabby
-             :type git
-             :host github
-             :files ("*.el" "node_scripts")
-             :repo "alan-w-255/tabby.el")
   :commands (tabby-mode)
   :bind (:map tabby-mode-map
               ("M-]" . tabby-accept-completion))

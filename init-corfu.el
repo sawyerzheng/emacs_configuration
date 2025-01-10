@@ -102,6 +102,7 @@
          ("C-c ` l" . cape-line)
          ("C-c ` s" . cape-symbol))
   :config
+  (require 'cape-keyword)
   (defun my/cape-add-to-corfu ()
     (interactive)
     ;; (make-local-variable 'completion-at-point-functions)

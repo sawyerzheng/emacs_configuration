@@ -10,6 +10,27 @@
   :bind (("M-g i" . consult-imenu)
 	 ("M-g I" . consult-imenu-multi)))
 
+(use-package consult-info
+  :bind (([remap Info-search] . consult-info))
+  )
+
+(use-package consult-compile
+  :bind (("M-g e" . consult-compile-error)
+))
+
+(use-package consult-register
+  :bind (;; Custom M-# bindings for fast register access
+	 ("M-#" . consult-register-load)
+	 ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+	 ("C-M-#" . consult-register)))
+
+(use-package consult-kmacro
+  :commands (consult-kmacro))
+
+(use-package consult-org
+  :commands (consult-org-heading
+	     consult-org-agenda))
+
 (use-package consult
   :commands (consult-line +default/search-buffer consult-xref)
   :bind
@@ -44,14 +65,11 @@
    ;; C-c bindings (mode-specific-map)
    ;; ("C-c h" . consult-history)
    ;; ("C-c m" . consult-mode-command)
-   ;; ("C-c k" . consult-kmacro)
    ;; C-x bindings (ctl-x-map)
    ("C-c M-x" . consult-mode-command)
    ;; ("C-c h" . consult-history)
-   ;; ("C-c k" . consult-kmacro)
    ;; ("C-c m" . consult-man)
    ;; ("C-c i" . consult-info)
-   ([remap Info-search] . consult-info)
    ;; C-x bindings in `ctl-x-map'
    ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
    ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
@@ -60,14 +78,9 @@
    ("C-x t b" . consult-buffer-other-tab)    ;; orig. switch-to-buffer-other-tab
    ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
    ;; ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-   ;; Custom M-# bindings for fast register access
-   ("M-#" . consult-register-load)
-   ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-   ("C-M-#" . consult-register)
    ;; Other custom bindings
    ("M-y" . consult-yank-pop)                ;; orig. yank-pop
    ;; M-g bindings in `goto-map'
-   ("M-g e" . consult-compile-error)
    ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
    ("M-g g" . consult-goto-line)             ;; orig. goto-line
    ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
@@ -106,7 +119,7 @@ region.
 If a selection is active and not multi-line, use the selection as the initial
 input and search the whole buffer for it."
     (interactive)
-    (let (start end multiline-p)
+    (let (start end multiline-p text)
       (save-restriction
         (when (region-active-p)
           (setq start (region-beginning)
@@ -116,6 +129,11 @@ input and search the whole buffer for it."
           (deactivate-mark)
           (when multiline-p
             (narrow-to-region start end)))
+
+	;; (if (thing-at-point 'symbol)
+	;;     (setq text (substring-no-properties (thing-at-point 'symbol)))
+	;;   (setq text ""))
+	
         (if (and start end (not multiline-p))
             (consult-line
              (replace-regexp-in-string

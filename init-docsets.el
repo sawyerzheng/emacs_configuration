@@ -45,7 +45,7 @@
 
   ;; (setq devdocs-data-dir (expand-file-name "devdocs" user-emacs-directory))
 
-  (defun devdocs-dwim()
+  (defun devdocs-dwim ()
     "Look up a DevDocs documentation entry.
 Install the doc if it's not installed."
     (interactive)
@@ -84,7 +84,6 @@ Install the doc if it's not installed."
 ;; use consult + dash-docs
 (my/straight-if-use 'consult-dash)
 (use-package consult-dash
-  :straight (:type git :host github :repo "emacsmirror/consult-dash")
   ;; :straight (:type git :type codeberg :repo "ravi/consult-dash")
   :commands (consult-dash)
   :config
@@ -184,8 +183,8 @@ Install the doc if it's not installed."
     (interactive)
     (setq dash-docs-browser-func 'browse-url))
 
+(my/straight-if-use 'dash-docs)
 (use-package dash-docs
-  :straight t
   :commands (dash-docs-install-docset)
   :config
   ;; * debug

@@ -122,6 +122,51 @@
         lsp-bridge-python-multi-lsp-server "basedpyright_ruff"
         )
   (setq lsp-bridge-complete-manually nil)
+  (defvar my/lsp-bridge-auto-complete-delay 0.5
+    "delay time for auto completion")
+  
+  ;; (defun lsp-bridge-try-completion ()
+  ;;   (cond (lsp-bridge-prohibit-completion
+  ;;          (setq-local lsp-bridge-prohibit-completion nil))
+  ;;         (t
+  ;;          ;; Don't popup completion menu when `lsp-bridge-last-change-position' (cursor before send completion request) is not equal current cursor position.
+  ;;          (when (equal lsp-bridge-last-change-position
+  ;; 			(list (current-buffer) (buffer-chars-modified-tick) (point)))
+  ;;            ;; Try popup completion frame.
+  ;; 	     (run-with-idle-timer my/lsp-bridge-auto-complete-delay	1 (lambda () (if (cl-every (lambda (pred)
+  ;;                            (lsp-bridge-check-predicate pred "lsp-bridge-try-completion"))
+  ;;                          lsp-bridge-completion-popup-predicates)
+  ;; 		 (progn
+  ;;                  (acm-template-candidate-init)
+  ;;                  (acm-update)
+
+  ;;                  ;; We need reset `lsp-bridge-manual-complete-flag' if completion menu popup by `lsp-bridge-popup-complete-menu'.
+  ;;                  (when lsp-bridge-complete-manually
+  ;;                    (setq-local lsp-bridge-manual-complete-flag nil)))
+  ;;              (acm-hide)
+  ;;              )))
+  ;;            ))))
+
+  (defun lsp-bridge-try-completion ()
+    (cond (lsp-bridge-prohibit-completion
+           (setq-local lsp-bridge-prohibit-completion nil))
+          (t
+           ;; Don't popup completion menu when `lsp-bridge-last-change-position' (cursor before send completion request) is not equal current cursor position.
+           (when (equal lsp-bridge-last-change-position
+			(list (current-buffer) (buffer-chars-modified-tick) (point)))
+             ;; Try popup completion frame.
+             (if (cl-every (lambda (pred)
+                             (lsp-bridge-check-predicate pred "lsp-bridge-try-completion"))
+                           lsp-bridge-completion-popup-predicates)
+		 (progn
+                   (acm-template-candidate-init)
+                   (acm-update)
+
+                   ;; We need reset `lsp-bridge-manual-complete-flag' if completion menu popup by `lsp-bridge-popup-complete-menu'.
+                   (when lsp-bridge-complete-manually
+                     (setq-local lsp-bridge-manual-complete-flag nil)))
+               (acm-hide)
+               )))))
 
   ;; remote
   (setq lsp-bridge-remote-python-command "/home/sawyer/miniconda3/envs/tools/bin/python")

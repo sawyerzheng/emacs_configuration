@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8; -*-
+(my/straight-if-use 'persistent-soft)
 (use-package persistent-soft
-  :straight t
   :config
   (persistent-soft-store 'hundred 100 "mydatastore")
   (persistent-soft-fetch 'hundred "mydatastore") ; 100
@@ -11,8 +11,8 @@
   (persistent-soft-fetch 'hundred "mydatastore") ; 100
   )
 
+(my/straight-if-use 'unicode-fonts)
 (use-package unicode-fonts
-  :straight t
   :hook (my/startup . (lambda () (ignore-errors (unicode-fonts-setup)))))
 
 ;; emoji font, ref: http://xahlee.info/emacs/emacs/emacs_set_font_emoji.html

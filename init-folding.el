@@ -19,6 +19,20 @@ this."
 (require 'doom-lib)
 (require 'doom-fold-hideshow)
 (require 'doom-fold-fold)
+(use-package doom-fold-fold
+  :bind (("C-c z z" . +fold/toggle)
+	 ("C-c z c" . +fold/close)
+	 ("C-c z o" . +fold/open)
+	 ("C-c z O" . +fold/open-all)
+	 ("C-c z C" . +fold/close-all)
+	 ("C-c z r" . +fold/open-rec)
+	 ("C-c z n" . +fold/next)
+	 ("C-c z p" . +fold/previous)
+	 ("C-<return>" . +fold/toggle)
+	 ("C-S-<return>" . +fold/close-all)
+	 ("C-M-<return>" . +fold/open-all)
+	 ))
+
 (use-package hideshow                   ; built-in
   :if (not (member 'init-treesit features))
   :demand t
@@ -96,15 +110,17 @@ this."
            hs-special-modes-alist
            '((t))))))
 
+(my/straight-if-use '(ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold"))
+(with-eval-after-load 'init-treesit
+  (use-package ts-fold
+    :after (init-treesit)
+    ;; :after (tree-sitter init-treesit)
+    :demand t
+    :config
+    (setq ts-fold-replacement +fold-ellipsis)
+    (global-ts-fold-mode +1))
+  )
 
-(use-package ts-fold
-  :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
-  :after (init-treesit)
-  ;; :after (tree-sitter init-treesit)
-  :demand t
-  :config
-  (setq ts-fold-replacement +fold-ellipsis)
-  (global-ts-fold-mode +1))
 
 
 ;; (use-package yafolding

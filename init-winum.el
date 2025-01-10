@@ -1,8 +1,8 @@
 ;; -*- coding: utf-8; -*-
+(my/straight-if-use 'winum)
 (use-package winum
   ;; :ensure t
   ;; :defer 3
-  :straight t
   :commands winum-mode
   :init
   (setq winum-keymap

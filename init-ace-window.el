@@ -1,13 +1,23 @@
 ;; -*- coding: utf-8; -*-
+(my/straight-if-use 'ace-window)
+
+(defun my/window-list-visible-frames ()
+  (apply #'append (mapcar (lambda (frame) (window-list frame)) (visible-frame-list))))
+
 (use-package ace-window
-  :straight t
   :init
-  (defun my/ace-window ()
+  (setq aw-scope 'global)
+
+  (defun my/ace-window (&optional arg)
     "fix ace-window error which need manually select window when only two window exits at terminal"
-    (interactive)
-    (if (<= (length (window-list)) 2)
-        (call-interactively #'other-window)
+    (interactive "P")
+    (if (<= (length (my/window-list-visible-frames)) 3)
+	(if (equal (length (visible-frame-list)) 1)
+	    (call-interactively #'other-window)
+	  (call-interactively #'ace-window))
+        
       (call-interactively #'ace-window)))
+  :commands (ace-window)
   :bind (("M-o" . my/ace-window)  ; 1) C-u M-o swap 2) C-u C-u M-o delete
          ("M-O" . ace-swap-window)
          ("M-D" . ace-delete-window))
@@ -33,7 +43,6 @@
       (?? aw-show-dispatch-help))
     "List of actions for `aw-dispatch-default'.")
 
-  (setq aw-scope 'global)
   (custom-set-faces
    '(aw-leading-char-face ((t (:foreground "white" :background "red"
                                            :weight bold :height 2.5 :box (:line-width 10 :color "red")))))))

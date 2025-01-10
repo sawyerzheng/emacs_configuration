@@ -16,17 +16,14 @@
 
 ;;; generate autoloads
 ;;;; .conf.d/extra.d
-(when my/install-packages-p
-  (require 'package)
-  (package-generate-autoloads "extra.d" my/extra.d-dir))
+;; (when my/install-packages-p
+;;   (require 'package)
+;;   (package-generate-autoloads "extra.d" my/extra.d-dir))
 
 
 ;; not allow root install packages
 (when (string-equal "root" user-login-name)
   (setq my/install-packages-p nil))
-
-(defvar my/install-packages
-  '(meow vertico consult orderless cape embark embark-consult marginalia treesit-auto compat doom-modeline markdown-mode lsp-bridge acm-terminal popon flymake-bridge nerd-icons shrink-path dash s f eglot-booster projectile project-x yasnippet yasnippet-snippets auto-yasnippet))
 
 (use-package savehist
   :init
@@ -65,16 +62,13 @@
   (expand-file-name (symbol-name package)
 		    (expand-file-name "straight/build" prefix)) ;; package build prefix
   )
-(let* ((prefix   (if my/linux-p
-                     "/home/sawyer/.emacs.d.raw"
-                   "d:/home/.emacs.d"
-                   ))
-       (prefix user-emacs-directory)
+(let* ((prefix user-emacs-directory)
        (straight-base-dir prefix)
-       (packages my/install-packages)
-       (installed-packages (cl-remove-if-not (lambda (p) (file-exists-p (my/find-package-path p))) packages))
-       (enable-straight-p (or my/install-packages-p (< (seq-length installed-packages)
-						       (seq-length packages))))
+       ;; (packages my/install-packages)
+       (packages nil)
+       ;; (installed-packages (cl-remove-if-not (lambda (p) (file-exists-p (my/find-package-path p))) packages))
+       ;; (enable-straight-p (or my/install-packages-p (< (seq-length installed-packages)
+       ;; 						       (seq-length packages))))
        (enable-straight-p my/install-packages-p)
        )
   (when enable-straight-p
@@ -89,10 +83,10 @@
   (add-subdirs-to-load-path (expand-file-name "straight/build/" prefix))
   )
 
-;; (use-package extra.d-autoloads
-;;   :demand t
-;;   :requires (dired dired-x)
-;;   )
+(use-package extra.d-autoloads
+  :demand t
+  :requires (dired dired-x)
+  )
 
 (use-package init-no-littering)
 (use-package init-hydra)
@@ -111,18 +105,22 @@
 (use-package init-persp-mode)
 (use-package init-treesit)
 (global-treesit-auto-mode)
+(use-package init-folding)
 (use-package init-font)
 (use-package init-emacs-lisp)
 (use-package init-project)
 (use-package init-doom-modeline)
 (use-package init-ui)
+(use-package init-ace-window)
 (use-package init-highlight-indent-guides)
 (use-package init-yasnippet
   :defer 3)
 (use-package init-lsp-bridge)
+(use-package init-docsets)
 (use-package init-major-modes)
 (use-package init-file-templates)
 (use-package init-jump)
+(use-package init-mwim)
 (use-package init-dictionary)
 (use-package init-expand-region)
 (use-package init-pyim)
@@ -144,6 +142,7 @@
 (use-package init-org-roam)
 (use-package init-poporg)
 (menu-bar-mode -1)
+(scroll-bar-mode -1)
 (tool-bar-mode -1)
 
 (if (display-graphic-p)
@@ -388,11 +387,7 @@ Will cancel all other selection, except char selection. "
 ;; * start meow mode
 
 (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-(meow-motion-overwrite-define-key
- '("j" . meow-next)
- '("k" . meow-prev)
- '("<escape>" . ignore)
- '("\\" . my/meow-quit))
+
 (meow-leader-define-key
  ;; SPC j/k will run the original command in MOTION state.
  '("j" . "H-j")
@@ -410,89 +405,28 @@ Will cancel all other selection, except char selection. "
  '("0" . meow-digit-argument)
  '("/" . meow-keypad-describe-key)
  '("?" . meow-cheatsheet))
-(with-eval-after-load 'back-button
-  (meow-normal-define-key
-   '("=" . back-button-local-backward)
-   '("+" . back-button-local-forward)))
-(meow-normal-define-key
- '("0" . meow-expand-0)
- '("9" . meow-expand-9)
- '("8" . meow-expand-8)
- '("7" . meow-expand-7)
- '("6" . meow-expand-6)
- '("5" . meow-expand-5)
- '("4" . meow-expand-4)
- '("3" . meow-expand-3)
- '("2" . meow-expand-2)
- '("1" . meow-expand-1)
- '("-" . negative-argument)
- '(";" . meow-reverse)
- '("," . meow-inner-of-thing)
- '("." . meow-bounds-of-thing)
- '("[" . meow-beginning-of-thing)
- '("]" . meow-end-of-thing)
- '("a" . meow-append)
- '("A" . meow-open-below)
- '("b" . meow-back-word)
- '("B" . meow-back-symbol)
- '("c" . meow-change)
- '("d" . meow-delete)
- '("D" . meow-backward-delete)
- '("e" . meow-next-word)
- '("E" . meow-next-symbol)
- '("f" . meow-find)
- '("g" . meow-cancel-selection)
- '("G" . meow-grab)
- '("h" . meow-left)
- '("H" . meow-left-expand)
- '("i" . meow-insert)
- '("I" . meow-open-above)
+
+;; * meow-motion
+(meow-motion-overwrite-define-key
  '("j" . meow-next)
- '("J" . meow-next-expand)
  '("k" . meow-prev)
- '("K" . meow-prev-expand)
- '("l" . meow-right)
- '("L" . meow-right-expand)
- '("m" . meow-join)
- '("n" . meow-search)
- '("o" . meow-block)
- '("O" . meow-to-block)
- '("p" . meow-yank)
- '("Q" . meow-goto-line)
- '("r" . meow-replace)
- '("R" . meow-swap-grab)
- '("s" . meow-kill)
- '("t" . meow-till)
- '("u" . meow-undo)
- '("U" . meow-undo-in-selection)
- '("v" . meow-visit)
- '("w" . meow-mark-word)
- '("W" . meow-mark-symbol)
- '("x" . meow-line)
- '("X" . meow-goto-line)
- '("y" . meow-save)
- '("Y" . meow-sync-grab)
- '("z" . meow-pop-selection)
- '("'" . repeat)
- '("<escape>" . ignore))
-
-(meow-normal-define-key
- (cons "q" my/search-keymap))
-(meow-motion-overwrite-define-key
- (cons "q" my/search-keymap))
-
-(meow-motion-overwrite-define-key
- (cons "q" my/search-keymap))
+ '("~" . other-frame)
+ '("<escape>" . ignore)
+ '("\\" . my/meow-quit)
+ (cons "q" my/search-keymap)
+ )
 
 (meow-leader-define-key
  (cons "q q"  '("kill emacs" . my/kill-emacs-save-or-server-edit)))
+
 (global-unset-key (kbd "C-c b"))
 (global-unset-key (kbd "C-c f"))
 (global-unset-key (kbd "C-c j"))
 (global-unset-key (kbd "C-c k"))
 (global-unset-key (kbd "C-c w"))
-(global-unset-key (kbd "C-c s"))
+;; (global-unset-key (kbd "C-c s"))
 (global-unset-key (kbd "C-x C-0"))
+
 
 (meow-leader-define-key
  '("r" . vr/query-replace)
@@ -732,10 +666,17 @@ Will cancel all other selection, except char selection. "
  '(";" . meow-reverse)
  ;; '(";" . move-end-of-line)
  ;; '(":" . meow-reverse)
+
+ ;; back-button
+ '("=" . back-button-local-backward)
+ '("+" . back-button-local-forward)
+
+ ;; thing
  '("," . meow-inner-of-thing)
  '("." . meow-bounds-of-thing)
  '("[" . meow-beginning-of-thing)
  '("]" . meow-end-of-thing)
+
  '("a" . meow-append)
  '("A" . meow-open-below)
  '("b" . meow-back-word)
@@ -774,8 +715,8 @@ Will cancel all other selection, except char selection. "
  ;; '("U" . meow-undo-in-selection)
  '("U" . undo-redo)
  ;; '("v" . my/meow-visit)
- '("v" . meow-visit)
- ;; '("V" . meow-visit)
+ '("v" . recenter-top-bottom)
+ '("V" . meow-visit)
  '("w" . meow-mark-word)
  '("W" . meow-mark-symbol)
  '("x" . meow-line)
@@ -788,7 +729,6 @@ Will cancel all other selection, except char selection. "
 
  '("\\" . my/meow-quit)
  ;; window
- '("`" . delete-other-windows)
  '("~" . other-frame)
  '("|" . split-window-right)
 
@@ -815,10 +755,9 @@ Will cancel all other selection, except char selection. "
  ;; insert space
  '("P" . xah-insert-space-after)
  )
-(key-chord-define meow-insert-state-keymap "jk" #'meow-insert-exit)
-(key-chord-define meow-insert-state-keymap "JK" #'meow-insert-exit)
 
-(meow-global-mode 1)
+(key-chord-define meow-insert-state-keymap "jj" #'meow-insert-exit)
+(key-chord-define meow-insert-state-keymap "JJ" #'meow-insert-exit)
 
 ;; * meow mode state list
 (add-to-list 'meow-mode-state-list '(eaf-mode . motion))
@@ -827,6 +766,13 @@ Will cancel all other selection, except char selection. "
 (add-to-list 'meow-mode-state-list '(eww-mode . normal))
 (add-to-list 'meow-mode-state-list '(blink-search-mode . insert))
 (add-to-list 'meow-mode-state-list '(eat-mode . insert))
+(add-to-list 'meow-mode-state-list '(ediff-mode . insert))
+
+
+(add-hook 'ediff-mode-hook (lambda () (remove-hook 'ediff-mode-hook #'meow-motion-mode) (meow-insert-mode 1)))
+
+(meow-global-mode 1)
+
 
 
 ;;; eglot lsp
@@ -897,6 +843,8 @@ Will cancel all other selection, except char selection. "
                                      my/dap-hydra))
         map))
 
+(with-eval-after-load 'corfu
+  (add-hook 'eglot--managed-mode-hook #'corfu-mode))
 (use-package eglot
   :init
   :commands (eglot
@@ -1117,8 +1065,10 @@ Will cancel all other selection, except char selection. "
     (eglot-shutdown-all)))
 
 
+(my/straight-if-use '(eglot-booster :type git :host github :repo "jdtsmith/eglot-booster"))
+(my/straight-if-use 'eldoc-box)
 (when (featurep 'straight)
-  (straight-use-package '(eglot-booster :type git :host github :repo "jdtsmith/eglot-booster")))
+  (straight-use-package '))
 
 (use-package eglot-booster
   ;; :straight (:type git :host github :repo "jdtsmith/eglot-booster")

@@ -96,6 +96,8 @@
   ;; setup key bindings
   ;; (setopt ellama-keymap-prefix "C-c e")
   ;; language you want ellama to translate to
+  :commands (ellama-chat-translation-disable
+	     ellama-chat-translation-enable)
   :config
   (require 'llm)
   (setq ellama-sessions-directory (expand-file-name "ellama-sessions" no-littering-var-directory))
@@ -124,6 +126,66 @@
 		  (buffer-substring-no-properties (point-min) (point-max)))))
       (ellama-instant (format my/ellma-code-generate-comment-template text))))
   ;; (define-key ellama-command-map (kbd "c d") #'my/ellama-code-generate-comment)
+
+
+  ;; my patch
+
+  (defun ellama--apply-transformations (beg end)
+    "Apply md to org transformations for region BEG END."
+    ;; headings
+    (ellama--replace "^# " "* " beg end)
+    (ellama--replace "^## " "** " beg end)
+    (ellama--replace "^### " "*** " beg end)
+    (ellama--replace "^#### " "**** " beg end)
+    (ellama--replace "^##### " "***** " beg end)
+    (ellama--replace "^###### " "****** " beg end)
+    ;; bold
+    ;; (ellama--replace "__\\(.+?\\)__" "*\\1*" beg end)
+    (ellama--replace "\\(^\\|\W\\)__\\(.+?\\)__\\(\W\\|$\\)" "\\1*\\2*\\3" beg end)
+    (ellama--replace "\\*\\*\\(.+?\\)\\*\\*" "*\\1*" beg end)
+    (ellama--replace "<b>\\(.+?\\)</b>" "*\\1*" beg end)
+    ;; italic
+    ;; (ellama--replace "_\\(.+?\\)_" "/\\1/" beg end)
+    (ellama--replace "\\(^\\|\W\\)_\\(.+?\\)_\\(\W\\|$\\)" "\\1/\\2/\\3" beg end)
+    (ellama--replace "<i>\\(.+?\\)</i>" "/\\1/" beg end)
+    ;; underlined
+    (ellama--replace "<u>\\(.+?\\)</u>" "_\\1_" beg end)
+    ;; inline code
+    (ellama--replace "`\\(.+?\\)`" "~\\1~" beg end)
+    ;; lists
+    (ellama--replace "^\\* " "+ " beg end)
+    ;; strikethrough
+    (ellama--replace "~~\\(.+?\\)~~" "+\\1+" beg end)
+    (ellama--replace "<s>\\(.+?\\)</s>" "+\\1+" beg end)
+    ;; badges
+    (ellama--replace "\\[\\!\\[.*?\\](\\(.*?\\))\\](\\(.*?\\))" "[[\\2][file:\\1]]" beg end)
+    ;;links
+    (ellama--replace "\\[\\(.*?\\)\\](\\(.*?\\))" "[[\\2][\\1]]" beg end)
+
+    ;; horizontal line
+
+    (ellama--replace "^---+$" "-----" beg end)
+
+    ;; filling long lines
+    (goto-char beg)
+    (let ((fill-column ellama-long-lines-length)
+	  (use-hard-newlines t))
+      (fill-region beg end nil t t)))
+
+  (setq my/ellama-summarize-prompt-template "<INSTRUCTIONS>
+你是一名总结者。你按照以下步骤对输入文本进行总结，*使用与原始输入文本相同的语言*：  
+1. 分析输入文本，生成5个关键问题，这些问题在得到解答后能够捕捉文本的主要内容和核心意义。
+2. 在制定问题时：  
+   a. 涉及核心主题或论点
+   b. 识别关键支持观点
+   c. 突出重要事实或证据
+   d. 揭示作者的目的或视角
+   e. 探讨任何重要的影响或结论。
+3. 逐一详细回答你生成的所有问题。
+</INSTRUCTIONS>
+<INPUT>
+%s
+</INPUT>")
   )
 
 (provide 'init-openai)

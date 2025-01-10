@@ -153,7 +153,7 @@
               ))
 
 
-
+;;;###autoload
 (defun my/venv-activate ()
   (interactive)
   (let* ((root (project-root (project-current t)))
@@ -174,3 +174,5 @@
           (pyvenv-activate local-python))
 
       (call-interactively #'pyvenv-activate))))
+
+(defalias 'my/pyvenv-activate #'my/venv-activate)

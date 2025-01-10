@@ -1,5 +1,5 @@
+(my/straight-if-use 'mwim)
 (use-package mwim
-  :straight t
   :bind (
          ("M-m" . my/mwim-begin-end-jump)
          ("M-M" . mwim-end))

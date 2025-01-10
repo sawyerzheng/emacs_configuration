@@ -2,7 +2,7 @@
 (my/straight-if-use 'magit)
 (use-package magit
   :bind ("C-x g" . magit-status)
-  :commands (magit-file-delete)
+  :commands (magit-file-delete magit-init)
   :config
   (setq magit-diff-refine-hunk 'all) ;; (nil t 'all) 显示单词级别的差异
   )
