@@ -1067,8 +1067,6 @@ Will cancel all other selection, except char selection. "
 
 (my/straight-if-use '(eglot-booster :type git :host github :repo "jdtsmith/eglot-booster"))
 (my/straight-if-use 'eldoc-box)
-(when (featurep 'straight)
-  (straight-use-package '))
 
 (use-package eglot-booster
   ;; :straight (:type git :host github :repo "jdtsmith/eglot-booster")
