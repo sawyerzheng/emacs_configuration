@@ -36,6 +36,7 @@
   ;; (add-to-list 'after-make-frame-functions #'my/acm-terminal-make-frame-auto-switch)
   ;; :hook (lsp-bridge-mode . my/acm-terminal-make-frame-auto-switch)
   :config
+
   (defun acm-terminal-init-colors (&optional force)
     (let* ((is-dark-mode (string-equal (acm-frame-get-theme-mode) "dark"))
            (blend-background (if is-dark-mode "#555555" "#AAAAAA"))
