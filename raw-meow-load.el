@@ -227,7 +227,7 @@
                                  ((memq major-mode '(compilation-mode Info-mode eww-mode))
                                   (ace-link))
                                  (t (avy-goto-line)))))
-  (define-key map (kbd "`") #'+default/search-buffer)
+  (define-key map (kbd "q") #'+default/search-buffer)
 
   ;; embark
   (define-key map (kbd ".") #'embark-act)
@@ -409,12 +409,15 @@ Will cancel all other selection, except char selection. "
 
 ;; * meow-motion
 (meow-motion-overwrite-define-key
+ (cons "q" my/search-keymap)
+ '("Q" . "H-q")
  '("j" . meow-next)
  '("k" . meow-prev)
+ '("C-M-j" . "H-j")
+ '("C-M-k" . "H-k")
  '("~" . other-frame)
  '("<escape>" . ignore)
  '("\\" . my/meow-quit)
- (cons "`" my/search-keymap)
  )
 
 (meow-leader-define-key
@@ -652,7 +655,7 @@ Will cancel all other selection, except char selection. "
  )
 
 (meow-normal-define-key
- (cons "`" my/search-keymap)
+ (cons "q" my/search-keymap)
  ;; '("0" . delete-window)
  '("9" . meow-expand-9)
  '("8" . meow-expand-8)
