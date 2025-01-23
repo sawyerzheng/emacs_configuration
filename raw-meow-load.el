@@ -107,6 +107,7 @@
 (global-treesit-auto-mode)
 (use-package init-folding)
 (use-package init-font)
+(use-package init-unicode-fonts)
 (use-package init-emacs-lisp)
 (use-package init-page-break-lines)
 (use-package init-project)
@@ -133,6 +134,8 @@
 (use-package init-ws-butler)
 (use-package init-key-chord)
 (use-package init-python)
+(use-package init-dap-mode)
+
 (when (locate-library "init-host")
   (use-package init-host))
 (use-package org
@@ -1067,6 +1070,12 @@ Will cancel all other selection, except char selection. "
     (add-hook hook #'my-disable-eglot--managed-mode))
   (ignore-errors
     (eglot-shutdown-all)))
+
+
+(my/straight-if-use '(flymake-cursor :type git :host github :repo "flymake/emacs-flymake-cursor"))
+(use-package flymake-cursor
+  :commands (flymake-cursor-mode
+             flymake-cursor-show-errors-at-point-now))
 
 
 (my/straight-if-use '(eglot-booster :type git :host github :repo "jdtsmith/eglot-booster"))

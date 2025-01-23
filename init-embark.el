@@ -13,6 +13,10 @@
    ;; ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
+  :commmands (embark-prefix-help-command
+	      embark-dwim
+	      embark-act
+	      embark-bindings)
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -24,15 +28,16 @@
                  nil
                  (window-parameters (mode-line-format . none))))
 
-  (use-package embark-consult
-    ;; :straight t
-    :after (embark consult)
-    :demand t              ; only necessary if you have the hook below
-    ;; if you want to have consult previews as you move around an
-    ;; auto-updating embark collect buffer
-    :hook
-    (embark-collect-mode . consult-preview-at-point-mode)))
+  )
 
+(use-package embark-consult
+  ;; :straight t
+  :after (embark consult)
+  :demand t              ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 ;; (with-eval-after-load 'vertico
 ;;   (require 'embark))
 

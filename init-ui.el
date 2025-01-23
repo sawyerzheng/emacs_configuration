@@ -82,3 +82,4 @@
 (require 'init-nav-flash)
 (require 'init-solaire)
 (require 'init-tab)
+(require 'init-ansi-color)

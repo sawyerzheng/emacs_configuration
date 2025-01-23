@@ -1,4 +1,8 @@
 ;; -*- coding: utf-8-unix; -*-
+(my/straight-if-use 'dap-mode)
+;; depends of dap-mode
+(my/straight-if-use 'all-the-icons)
+
 (use-package dap-ui
   :hook (dap-mode . dap-ui-mode))
 
@@ -154,5 +158,31 @@
          ))
 
   (funcall-interactively #'dap-hydra))
+
+(use-package dap-python
+  :after dap-mode
+  :config
+  (setq dap-python-debugger 'debugpy)
+  :config
+  (dap-register-debug-template "Python :: Run file (buffer) (Not Just My Code)"
+                             (list :type "python"
+                                   :args ""
+                                   :cwd nil
+                                   :module nil
+                                   :program nil
+                                   :request "launch"
+                                   :name "Python :: Run file (buffer)"
+				   :justMyCode nil
+				   ))
+
+  (dap-register-debug-template "Python :: Run file from project directory (Not Just My Code)"
+                             (list :type "python"
+                                   :args ""
+                                   :cwd "${workspaceFolder}"
+                                   :module nil
+                                   :program nil
+                                   :request "launch"
+				   :justMyCode nil
+				   )))
 
 (provide 'init-dap-mode)
