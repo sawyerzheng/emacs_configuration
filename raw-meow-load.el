@@ -2,13 +2,13 @@
 ;; emacs -Q -L /home/sawyer/.conf.d -l raw-meow-load.el --init-directory /home/sawyer/.emacs.d.raw -nw $@
 
 ;;; Codes
-(add-to-list 'load-path (file-name-parent-directory load-file-name))
+(add-to-list 'load-path (file-name-directory load-file-name))
 (require 'init-load-tools)
 (require 'init-proxy)
 (add-to-list 'load-path my/extra.d-dir)
 (require 'init-logging)
 ;; (require 'init-esup)
-(defvar my/install-packages-p nil
+(defvar my/install-packages-p t
   "install packages")
 
 ;;; benchmark init
@@ -104,7 +104,6 @@
 (use-package init-thing-edit)
 (use-package init-persp-mode)
 (use-package init-treesit)
-(global-treesit-auto-mode)
 (use-package init-folding)
 (use-package init-font)
 (use-package init-unicode-fonts)

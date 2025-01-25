@@ -111,7 +111,7 @@ this."
            '((t))))))
 
 (my/straight-if-use '(ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold"))
-(with-eval-after-load 'init-treesit
+(with-eval-after-load 'treesit
   (use-package ts-fold
     :after (init-treesit)
     ;; :after (tree-sitter init-treesit)

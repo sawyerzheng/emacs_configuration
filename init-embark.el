@@ -13,7 +13,7 @@
    ;; ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
-  :commmands (embark-prefix-help-command
+  :commands (embark-prefix-help-command
 	      embark-dwim
 	      embark-act
 	      embark-bindings)

@@ -95,6 +95,7 @@
 
 (use-package treesit-auto
   ;; :straight (:type git :host github :repo "renzmann/treesit-auto")
+  :if (featurep 'treesit)
   :commands (global-treesit-auto-mode)
   :hook (my/startup . global-treesit-auto-mode)
   :config

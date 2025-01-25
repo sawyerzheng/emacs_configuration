@@ -21,6 +21,10 @@
 
 (provide 'init-load-tools)
 
+(require 'subr-x)
+
+
+
 (defvar my/use-head-face-scaling t
   "if use different font size for headline levels")
 
@@ -466,14 +470,15 @@ Nominally unique, but not enforced."
     (setq browse-url-browser-function (cdr (assoc selected-choice function-assoc)))))
 
 ;; * 切换默认浏览器工具
-(use-package browse-url
-  :bind ("C-c t w" . my/toggle-default-browser)
-  :config
-  (when my/windows-p
+(with-eval-after-load 'browse-url
+  (global-set-key (kbd "C-c t w") #'my/toggle-default-browser)
+    (when my/windows-p
     (setq browse-url-chrome-program "chrome.exe"))
 
   ;; (setq browse-url-browser-function #'browse-url-default-browser)
+
   )
+
 
 (defun my/wsl-enable-wslview ()
   (interactive)
@@ -543,6 +548,20 @@ BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
 
 (defalias 'remove-if-not #'cl-remove-if-not)
 (defalias 'remove-if #'cl-remove-if)
+
+
+(when (<= emacs-major-version 29)
+  (let ((site-path (expand-file-name "site-lisp" user-emacs-directory)))
+    (when (file-exists-p site-path)
+        (add-subdirs-to-load-path site-path)))
+
+  (require 'use-package)
+  ;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  ;; (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+  ;; (package-initialize)
+  ;; (unless  (package-installed-p 'use-package)
+  ;;   (package-install 'use-package))
+  )
 
 ;; (if (my/windows-p))
 ;; (add-to-list 'exec-path )

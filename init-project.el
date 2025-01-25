@@ -1,4 +1,10 @@
-(bind-key "C-c p" project-prefix-map)
+(when (< emacs-major-version 29)
+  (my/straight-if-use 'project))
+
+(with-eval-after-load 'project
+  (bind-key "C-c p" project-prefix-map)
+  )
+
 
 
 (defun my/project-switch-project (dir)
