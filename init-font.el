@@ -40,7 +40,10 @@
 
      ;; wsl ,`windows-sub-linux' + linux-vm
      ((and my/linux-p (or my/wsl-p my/linux-vm-p))
-      (set-face-attribute 'default nil :family "Source Code Pro" :foundry "ADBO" :slant 'normal :weight 'semi-bold :height 128 :width 'normal))
+      ;; (set-face-attribute 'default nil :family "CaskaydiaCove Nerd Font" :foundry "outline" :slant 'normal :weight 'normal :height 128 :width 'normal)
+      (set-face-attribute 'default nil :family "Cascadia Code" :foundry "outline" :slant 'normal :weight 'normal :height 128 :width 'normal)
+      ;; (set-face-attribute 'default nil :family "Source Code Pro" :foundry "ADBO" :slant 'normal :weight 'semi-bold :height 128 :width 'normal)
+      )
 
      ;; windows
      (my/windows-p

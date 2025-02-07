@@ -29,15 +29,16 @@
   :init
   (savehist-mode))
 
-(use-package recentf
-  :config
-  (if (file-exists-p recentf-save-file)
-      (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
-    )
-  (setq recentf-max-saved-items 1000)
-  (add-to-list 'recentf-exclude  ".gpg\\'")
-  (recentf-mode 1))
+;(use-package recentf
+;  :config
+;  (if (file-exists-p recentf-save-file)
+;      (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
+;    )
+;  (setq recentf-max-saved-items 1000)
+;  (add-to-list 'recentf-exclude  ".gpg\\'")
+;  (recentf-mode 1))
 
+(use-package init-recentf)
 (defvar bootstrap-version)
 
 (defun my/enable-straight ()
@@ -96,6 +97,7 @@
 (use-package init-embark)
 (use-package init-corfu
   :after eglot)
+(use-package init-exec-path-from-shell)
 (use-package init-search)
 (use-package init-regexp)
 (use-package init-dired)

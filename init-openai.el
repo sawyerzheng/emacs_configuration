@@ -82,7 +82,7 @@
   :defer t
   )
 
-(my/straight-if-use '(llm :type git :host github :repo "ahyatt/llm" :files ("*.el" "**/*.el")))
+(my/straight-if-use '(llm :type git :host github :repo "ahyatt/llm" :files ("*")))
 (with-eval-after-load 'llm
   (my/elisp-load-file-existsp "~/org/private/gptel-setup.el"))
 
@@ -196,9 +196,14 @@
 
 (my/straight-if-use '(minuet-ai :type git :host github :repo "milanglacier/minuet-ai.el"))
 (use-package minuet
+  :commands (minuet-auto-suggestion-mode
+	     minuet-show-suggestion
+	     minuet-complete-with-minibuffer)
   :bind
   (:map minuet-active-mode-map
-	("C-M-i" . #'minuet-show-suggestion))
+	("C-M-i" . #'minuet-show-suggestion)
+	("C-M-y" . #'minuet-complete-with-minibuffer)
+	)
   :bind
   (
    ;; ("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
@@ -217,7 +222,7 @@
   :init
   ;; if you want to enable auto suggestion.
   ;; Note that you can manually invoke completions without enable minuet-auto-suggestion-mode
-  (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
+  ;; (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
 
   
 
