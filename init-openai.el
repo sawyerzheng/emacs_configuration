@@ -110,7 +110,12 @@
                              ("gpu" . my/llm-provider-gpu)
                              ("deepseek-v2.5" . my/llm-provider-deepseek)
 			     ("ollama-deepseek-r1" . my/llm-provider-ollama-deepseek-r1)
-			     ("ollama-qwen2.5-coder" . my/llm-provider-ollama-qwen2.5-coder))
+			     ("ollama-deepseek-r1-office" . my/llm-provider-ollama-deepseek-r1-office)
+			     ("ollama-qwen2.5-coder" . my/llm-provider-ollama-qwen2.5-coder)
+			     ("ollama-qwen2.5-coder-office" . my/llm-provider-ollama-qwen2.5-coder-office)
+)
+
+
 
 	  )
   

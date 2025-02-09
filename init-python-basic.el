@@ -34,7 +34,7 @@ If there is not function elpy-project-root, use xah lee's function"
 
 (defun my/python-which-module ()
   (interactive)
-  (let ((file (buffer-file-name))
+  (let* ((file (buffer-file-name))
         (p-root (my/get-project-root))
         (file-no-init-parent (my/detect-module-root file p-root)))
     (when (and file p-root)
