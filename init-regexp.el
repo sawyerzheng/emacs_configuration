@@ -26,7 +26,11 @@
   (setq vr/default-regexp-modifiers '(:I t :M t :S nil :U nil))
   (setq vr/command-python (format "%s %s"
                                   (cond
-                                   (my/linux-p "/usr/bin/python")
+                                   (my/linux-p
+				    (if (file-exists-p "/usr/bin/python")
+					"/usr/bin/python"
+				      "/usr/bin/python3")
+				    )
                                    (my/windows-p "d:/soft/miniconda3/python.exe")
                                    (t "python"))
                                   (expand-file-name "../regexp.py" (locate-library "visual-regexp-steroids")))))
