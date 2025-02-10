@@ -785,6 +785,8 @@ Will cancel all other selection, except char selection. "
 
 ;;; eglot lsp
 
+(my/straight-if-use '(flymake :type built-in))
+(my/straight-if-use '(xref :type built-in))
 (defvar my/lsp-basic-map nil
   "parent keymap for all sub-keymaps")
 
