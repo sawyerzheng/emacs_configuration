@@ -19,7 +19,40 @@
 	     pyvenv-workon
 	     pyvenv-create
 	     pyvenv-deactivate
-	     pyvenv-restart-python))
+	     pyvenv-restart-python
+	     my/pdm-activate)
+  :config
+  (defun my/pdm-activate ()
+    "choose venv for current project, then activate it"
+    (interactive)
+    (let* ((s (shell-command-to-string "pdm venv list"))
+	   (lines (split-string s "\n"))
+	   (pattern "^\\*[ \t]+\\([[:alnum:]]+\\):[ \t]*\\(.+\\)$")
+	   (results nil)
+	   selected-venv
+	   selected-path)
+      (dolist (line lines)
+	(when (and (not (string-empty-p line))
+		   (string-match pattern line))
+	  (push (list :name (match-string 1 line)
+                      :path (match-string 2 line))
+		results)))
+      (setq results (nreverse results))
+      (setq results (mapcar (lambda (item)
+                              (cons (plist-get item :name)
+				    (plist-get item :path)))
+			    results))
+
+      (setq selected-venv (completing-read "Choose pdm venv:" (mapcar 'car results)))
+      (setq selected-path (cdr (assoc selected-venv results)))
+      (message "activating pdm venv: %s: %s" selected-venv selected-path)
+      (pyvenv-activate selected-path)
+      (message "activated pdm venv: %s: %s" selected-venv selected-path))
+
+    )
+  )
+
+
 
 ;;; python unittest
 (my/straight-if-use 'pytest)
