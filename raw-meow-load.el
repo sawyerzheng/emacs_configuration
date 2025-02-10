@@ -129,6 +129,7 @@
 (use-package init-pyim)
 (use-package init-liberime)
 (use-package init-openai)
+(use-package init-ai-code)
 (use-package init-git)
 (use-package init-zoom)
 (use-package init-line-number)
@@ -854,7 +855,7 @@ Will cancel all other selection, except char selection. "
         map))
 
 (with-eval-after-load 'corfu
-  (add-hook 'eglot--managed-mode-hook #'corfu-mode))
+  (add-hook 'eglot-managed-mode-hook #'corfu-mode))
 (use-package eglot
   :init
   :commands (eglot
@@ -877,6 +878,14 @@ Will cancel all other selection, except char selection. "
                  (cape-capf-super
                   #'eglot-completion-at-point
                   ))))
+    
+  (defun my/eglot-completion-fix ()
+    (use-package cape)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions (cape-capf-super
+						 #'eglot-completion-at-point
+						 )))
+
   (add-hook 'eglot-managed-mode-hook #'my/eglot-completion-fix)
   (defun my-eglot-restart ()
     (interactive)
@@ -928,7 +937,7 @@ Will cancel all other selection, except char selection. "
 
 
 ;;; lsp toggle
-(defvar my/lsp-backend "lsp-bridge"
+(defvar my/lsp-backend "eglot"
   "use `lsp-bridge' or `eglot'")
 
 
