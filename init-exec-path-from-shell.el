@@ -4,10 +4,12 @@
              exec-path-from-shell-copy-env)
   :config
   (setq exec-path-from-shell-arguments '("-l"
-					 ;; "-i"
-					 )))
-(if my/linux-p
-    (run-with-timer 4 1 (lambda () (exec-path-from-shell-initialize)))
+					 "-i"
+					 ))
+  :hook (my/startup . exec-path-from-shell-initialize)
   )
+;; (if my/linux-p
+;;     (run-with-idle-timer 4 1 (lambda () (exec-path-from-shell-initialize)))
+;;   )
 
 (provide 'init-exec-path-from-shell)
