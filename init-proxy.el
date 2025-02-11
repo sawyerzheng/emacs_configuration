@@ -68,15 +68,27 @@
 (defun enable-proxy-windows ()
   (interactive)
   (let ((proxy))
-    (when my/wsl-p
-      (setq proxy (format "http://%s:%s" (my/wsl-get-windows-ip) my/proxy-port) )
+        
+	(progn
+	  (setq proxy "http://172.16.10.86:7890" )
 
-      (setenv "http_proxy" proxy)
-      (setenv "https_proxy" proxy)
-      (message "env http_proxy is %s now" proxy))))
+	  (setenv "http_proxy" proxy)
+	  (setenv "https_proxy" proxy)
+	  (message "env http_proxy is %s now" proxy)
+	  )
+    ;; (when my/wsl-p
+    ;;   (setq proxy (format "http://%s:%s" (my/wsl-get-windows-ip) my/proxy-port) )
 
-(setenv "no_proxy" "127.0.0.1,localhost,172.16.10.0/24,192.168.0.0/16,10.0.18.0/24,10.8.0.0/24")
-(setenv "NO_PROXY" "127.0.0.1,localhost,172.16.10.0/24,192.168.0.0/16,10.0.18.0/24,10.8.0.0/24")
+    ;;   (setenv "http_proxy" proxy)
+    ;;   (setenv "https_proxy" proxy)
+    ;;   (message "env http_proxy is %s now" proxy))
+
+    ))
+
+;; "127.0.0.1,localhost,172.16.10.0/24,192.168.0.0/16,10.0.18.0/24,10.8.0.0/24"
+(setq my/no_proxy_hosts "127.0.0.1,localhost,172.16.10.88,172.16.10.86,192.168.1.114,10.0.18.3")
+(setenv "no_proxy" my/no_proxy_hosts)
+(setenv "NO_PROXY" my/no_proxy_hosts)
 
 (defun enable-proxy-eaf ()
   "remember to restart eaf using: `eaf-restart-process'."

@@ -1,11 +1,31 @@
 ;; -*- coding: utf-8; -*-
+(my/straight-if-use '(indent-bars :type git :host github :repo "jdtsmith/indent-bars"))
 (use-package indent-bars
-  :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
-  :hook ((python-mode yaml-mode) . indent-bars-mode)
+  ;; :hook ((python-mode yaml-mode) . indent-bars-mode)
+  :hook (prog-mode . indent-bars-mode)
 
   :config
   (require 'indent-bars-ts) 		; not needed with straight
-  (setq indent-bars-width-frac 0.2)
+  (setq indent-bars-width-frac 0.1)
+  ;; (setq
+  ;;  indent-bars-color '(highlight :face-bg t :blend 0.2)
+  ;;  indent-bars-pattern "."
+  ;;  indent-bars-width-frac 0.1
+  ;;  indent-bars-pad-frac 0.1
+  ;;  indent-bars-zigzag nil
+  ;;  indent-bars-color-by-depth nil
+  ;;  indent-bars-highlight-current-depth nil
+  ;;  indent-bars-display-on-blank-lines nil)
+
+  (setq
+    indent-bars-color '(highlight :face-bg t :blend 0.15)
+    indent-bars-pattern "."
+    indent-bars-width-frac 0.1
+    indent-bars-pad-frac 0.1
+    indent-bars-zigzag nil
+    indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 1) ; blend=1: blend with BG only
+    indent-bars-highlight-current-depth '(:blend 0.5) ; pump up the BG blend on current
+    indent-bars-display-on-blank-lines t)
   :custom
   (indent-bars-treesit-support t)
   (indent-bars-treesit-ignore-blank-lines-types '("module"))

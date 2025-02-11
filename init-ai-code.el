@@ -1,12 +1,12 @@
 (defvar my/use-codeium t
   "if to use codeium"
   )
+(my/straight-if-use '(copilot :host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 (use-package copilot
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist"))
   :defer t)
 
-(use-package codeium
-  :straight (:host github :repo "Exafunction/codeium.el")
+(my/straight-if-use '(codeium :host github :repo "Exafunction/codeium.el"))
+(use-package codeium 
   :commands (codeium-init
              codeium-reset
              codeium-install
@@ -20,7 +20,7 @@
   
   :config
   (when my/use-codeium
-    (add-hook 'eglot--managed-mode-hook (lambda ()
+    (add-hook 'eglot-managed-mode-hook (lambda ()
                                           (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)))
     (add-hook 'lsp-managed-mode-hook (lambda ()
                                        (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))))
@@ -68,9 +68,8 @@
     (call-interactively #'completion-at-point)))
 
 
-
+(my/straight-if-use '(starhugger :type git :host gitlab :repo "daanturo/starhugger.el" :files (:defaults "*.py")))
 (use-package starhugger
-  :straight (:type git :host gitlab :repo "daanturo/starhugger.el" :files (:defaults "*.py"))
   :config
   (setq starhugger-ollama-generate-api-url "http://172.16.10.86:11434/api/generate")
   (setq starhugger-completion-backend-function #'starhugger-ollama-completion-api)
