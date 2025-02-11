@@ -48,5 +48,6 @@ perl.exe.*
 \#*
 
 #----------------------------
-custom.d/
+custom.d/cnfonts
+org-ltximg*.png
 init-host.el
