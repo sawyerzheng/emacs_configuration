@@ -1,9 +1,9 @@
 (defvar my/use-codeium t
   "if to use codeium"
   )
-(my/straight-if-use '(copilot :host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
-(use-package copilot
-  :defer t)
+;; (my/straight-if-use '(copilot :host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+;; (use-package copilot
+;;   :defer t)
 
 (my/straight-if-use '(codeium :host github :repo "Exafunction/codeium.el"))
 (use-package codeium 

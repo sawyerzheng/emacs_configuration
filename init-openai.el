@@ -62,7 +62,7 @@
   ;; Add gptcommit transient commands to `magit-commit'
   ;; Eval (transient-remove-suffix 'magit-commit '(1 -1)) to remove gptcommit transient commands
   (magit-gptcommit-status-buffer-setup)
-  (setq magit-gptcommit-llm-provider my/llm-provider-deepseek)
+  (setq magit-gptcommit-llm-provider my/llm-provider-deepseek-chat)
   :bind (:map git-commit-mode-map
               ("C-c C-g" . magit-gptcommit-commit-accept))
   )
@@ -105,7 +105,7 @@
   (setopt ellama-language "English")
   (setopt ellama-language "汉语")
   ;; could be llm-openai for example
-  (setopt ellama-provider my/llm-provider-deepseek)
+  (setopt ellama-provider my/llm-provider-deepseek-chat)
   (setopt ellama-providers '(("kimi" . my/llm-provider-kimi)
                              ("gpu" . my/llm-provider-gpu)
                              ("deepseek-chat" . my/llm-provider-deepseek-chat)

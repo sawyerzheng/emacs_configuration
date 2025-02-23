@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: method
+# key: <m
+# condition: t
+# group: OOP
+# --
+def ${1:meth}(self$2):
+    $0

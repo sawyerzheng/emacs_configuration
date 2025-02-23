@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test_method
+# key: df
+# group: object oriented
+# --
+def test_${1:function}():
+    $0

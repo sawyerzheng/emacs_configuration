@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: property setter
+# key: <s
+# condition: t
+# group: OOP
+# --
+@${1:prop_name}.setter
+def $1(self, $2):
+    ${0:pass}

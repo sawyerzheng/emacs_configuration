@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: printf
+# key: pf
+# --
+System.out.printf("${1:text}", ${2:arg});
+$0

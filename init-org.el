@@ -736,6 +736,13 @@ the `jupyter-current-client' local to the buffer."
 (use-package math-preview
   ;; require: npm install -g git+https://gitlab.com/matsievskiysv/math-preview
   :defer t
+  :commands (math-preview-all
+	     math-preview-at-point
+	     math-preview-region
+	     math-preview-increment-scale
+	     math-preview-decrement-scale
+	     math-preview-start-process
+	     math-preview-stop-process)
   )
 
 ;; ref: https://gitlab.com/latex-math-preview/latex-math-preview/-/blob/master/latex-math-preview.el?ref_type=heads

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: st
+# key: st
+# --
+@startuml
+$1
+@enduml

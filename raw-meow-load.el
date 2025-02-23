@@ -928,11 +928,13 @@ Will cancel all other selection, except char selection. "
   (setq completion-category-defaults nil)
 
   (defun my/capf-use-ai-code ()
+    (when (locate-library "codeium")
+      (require 'codeium))
     (add-hook 'eglot-managed-mode-hook #'eglot-completion-at-point nil t)
     (dolist (backend '(codeium-completion-at-point codegeex-completion-at-point))
       (when (fboundp backend)
         (add-hook 'completion-at-point-functions backend nil t))))
-  ;; (add-hook 'eglot-managed-mode-hook #'my/capf-use-ai-code)
+  (add-hook 'eglot-managed-mode-hook #'my/capf-use-ai-code)
 
   )
 

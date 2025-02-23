@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: staticmethod
+# key: <sm
+# group: OOP
+# --
+@staticmethod
+def ${1:meth}($2):
+    $0

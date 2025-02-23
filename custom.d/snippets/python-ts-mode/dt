@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: test_method
+# key: dt
+# group: object oriented
+# --
+def test_${1:method}(self):
+    $0

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: property method
+# key: <p
+# condition: t
+# group: OOP
+# --
+@property
+def ${1:prop_name}(self):
+    ${0:pass}
