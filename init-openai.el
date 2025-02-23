@@ -108,14 +108,15 @@
   (setopt ellama-provider my/llm-provider-deepseek)
   (setopt ellama-providers '(("kimi" . my/llm-provider-kimi)
                              ("gpu" . my/llm-provider-gpu)
-                             ("deepseek-v2.5" . my/llm-provider-deepseek)
+                             ("deepseek-chat" . my/llm-provider-deepseek-chat)
+                             ("deepseek-reasoner" . my/llm-provider-deepseek-reasoner)
 			     ("ollama-deepseek-r1" . my/llm-provider-ollama-deepseek-r1)
 			     ("ollama-deepseek-r1-office" . my/llm-provider-ollama-deepseek-r1-office)
 			     ("ollama-qwen2.5-coder" . my/llm-provider-ollama-qwen2.5-coder)
 			     ("ollama-qwen2.5-coder-office" . my/llm-provider-ollama-qwen2.5-coder-office)
-)
-
-
+			     ("ollama-qwen2.5-chat" . my/llm-provider-ollama-qwen2.5-chat)
+			     ("ollama-qwen2.5-chat-office" . my/llm-provider-ollama-qwen2.5-chat-office)
+			     )
 
 	  )
   
@@ -196,6 +197,14 @@
 <INPUT>
 %s
 </INPUT>")
+
+
+  ;; 修复 ellama-ask-about 结束后，存在一个 posframe buffer 没有被清理的问题
+
+  (defun my/ellama-ask-command-advice-fn (&rest args)
+  "fix bug of posfram not hide for ellama ask command"
+  (posframe-delete-all))
+  (advice-add #'ellama-ask-about :after #'my/ellama-ask-command-advice-fn)
   )
 
 

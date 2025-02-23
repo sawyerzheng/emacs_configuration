@@ -115,7 +115,8 @@
 (use-package init-doom-modeline)
 (use-package init-ui)
 (use-package init-ace-window)
-(use-package init-highlight-indent-guides)
+;; (use-package init-highlight-indent-guides)
+(use-package init-indent-bars)
 (use-package init-yasnippet
   :defer 3)
 (use-package init-lsp-bridge)
