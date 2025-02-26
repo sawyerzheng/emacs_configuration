@@ -54,8 +54,8 @@
 (use-package lsp-bridge
   :commands (lsp-bridge-rename lsp-bridge-mode global-lsp-bridge-mode)
   ;; :hook (my/startup . global-lsp-bridge-mode)
-  :hook ((emacs-lisp-mode
-          lisp-interaction-mode) . lsp-bridge-mode)
+  ;; :hook ((emacs-lisp-mode
+          ;; lisp-interaction-mode) . lsp-bridge-mode)
   :bind (:map lsp-bridge-mode-map
               ("M-." . lsp-bridge-find-def)
               ("M-," . lsp-bridge-find-def-return)

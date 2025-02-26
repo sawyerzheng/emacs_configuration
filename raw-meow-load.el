@@ -855,7 +855,7 @@ Will cancel all other selection, except char selection. "
                                      my/dap-hydra))
         map))
 
-(with-eval-after-load 'corfu
+(with-eval-after-load 'eglot
   (add-hook 'eglot-managed-mode-hook #'corfu-mode))
 (use-package eglot
   :init
@@ -931,7 +931,7 @@ Will cancel all other selection, except char selection. "
     (when (locate-library "codeium")
       (require 'codeium))
     (add-hook 'eglot-managed-mode-hook #'eglot-completion-at-point nil t)
-    (dolist (backend '(codeium-completion-at-point codegeex-completion-at-point))
+    (dolist (backend '(codeium-completion-at-point))
       (when (fboundp backend)
         (add-hook 'completion-at-point-functions backend nil t))))
   (add-hook 'eglot-managed-mode-hook #'my/capf-use-ai-code)

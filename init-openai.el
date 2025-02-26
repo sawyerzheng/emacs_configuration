@@ -108,6 +108,8 @@
   (setopt ellama-provider my/llm-provider-deepseek-chat)
   (setopt ellama-providers '(("kimi" . my/llm-provider-kimi)
                              ("gpu" . my/llm-provider-gpu)
+			     ("siliconflow-deepseek-v3" . my/llm-provider-siliconflow-deepseek-v3)
+			     ("siliconflow-deepseek-r1" . my/llm-provider-siliconflow-deepseek-r1)
                              ("deepseek-chat" . my/llm-provider-deepseek-chat)
                              ("deepseek-reasoner" . my/llm-provider-deepseek-reasoner)
 			     ("ollama-deepseek-r1" . my/llm-provider-ollama-deepseek-r1)
@@ -249,4 +251,52 @@
   ;; (add-hook 'minuet-active-mode-hook #'evil-normalize-keymaps)
 
   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256))
+
+(my/straight-if-use '(aidermacs :host github :repo "MatthewZMD/aidermacs" :files ("*.el")))
+
+
+(use-package aidermacs
+  :commands (aidermacs-transient-menu)
+  :bind (("C-c i b" . aidermacs-transient-menu))
+  :init
+  (setq aidermacs-popular-models '("ollama/qwen2.5-coder:1.5b"
+				   "ollama/qwen2.5-coder:3b"
+				   "ollama/qwen2.5:1.5b"
+				   "ollama/qwen2.5:3b"
+				   "ollama/deepseek-r1:1.5b"
+
+				   ))
+  :config
+  (setq aidermacs-default-model "ollama/qwen2.5-coder:1.5b")
+  (setq aidermacs-architect-model "ollama/deepseek-r1:1.5b")
+  (setq aidermacs-editor-model "ollama/qwen2.5-coder:1.5b")
+
+  (setq aidermacs-architect-model "openai/chat-llm")
+  (setq aidermacs-architect-model "ollama/deepseek-r1:1.5b-qwen-distill-q8_0")
+
+  (setenv "OPENAI_API_KEY" "EMPTY")
+  (setenv "OPENAI_API_BASE" "http://172.16.10.88:18000/v1/")
+  (setenv "OLLAMA_API_BASE" "http://172.16.10.86:11434")
+
+  ; See the Configuration section below
+  (setq aidermacs-auto-commits t)
+  (setq aidermacs-use-architect-mode t))
+
+(my/straight-if-use '(aider :type git :host github :repo "tninja/aider.el"))
+(use-package aider
+  :straight (:host github :repo "tninja/aider.el" :files ("aider.el"))
+  :config
+  ;; For claude-3-5-sonnet
+  (setq aider-args '("--model" "sonnet"))
+  (setenv "ANTHROPIC_API_KEY" anthropic-api-key)
+  ;; Or chatgpt model
+  ;; (setq aider-args '("--model" "o3-mini"))
+  ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
+  ;; Or use your personal config file
+  ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
+  ;; ;;
+  ;; Optional: Set a key binding for the transient menu
+  ;; (global-set-key (kbd "C-c a") 'aider-transient-menu)
+  )
+
 (provide 'init-openai)

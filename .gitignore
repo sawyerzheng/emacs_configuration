@@ -51,3 +51,4 @@ perl.exe.*
 custom.d/cnfonts
 org-ltximg*.png
 init-host.el
+.aider*

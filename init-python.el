@@ -43,7 +43,11 @@
 				    (plist-get item :path)))
 			    results))
 
-      (setq selected-venv (completing-read "Choose pdm venv:" (mapcar 'car results)))
+
+      (if (length= results 1)
+	  (setq selected-venv (car (car results)))
+	(setq selected-venv (completing-read "Choose pdm venv:" (mapcar 'car results))))
+      
       (setq selected-path (cdr (assoc selected-venv results)))
       (message "activating pdm venv: %s: %s" selected-venv selected-path)
       (pyvenv-activate selected-path)

@@ -2,8 +2,9 @@
   :commands (auto-insert-mode auto-insert)
   :hook (my/startup . auto-insert-mode)
   :config
-  (defun my/autoinsert-yas-expand()
+  (defun my/autoinsert-yas-expand ()
     "Replace text in yasnippet template."
+    (yas-minor-mode 1)
     (yas/expand-snippet (buffer-string) (point-min) (point-max)))
 
   (setq auto-insert-directory "~/.conf.d/custom.d/auto-insert-templates/")

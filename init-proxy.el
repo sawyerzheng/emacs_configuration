@@ -60,6 +60,15 @@
     (message "env http_proxy is %s now" proxy))
   )
 
+(defun enable-proxy-lan ()
+  (interactive)
+  (let ((proxy))
+    (setq proxy "http://172.16.10.86:7890")
+    (setenv "http_proxy" proxy)
+    (setenv "https_proxy" proxy)
+    (message "env http_proxy is %s now" proxy))
+  )
+
 (defun my/wsl-get-windows-ip ()
   (when (file-exists-p "/usr/bin/wslpath")
     (car (split-string (shell-command-to-string

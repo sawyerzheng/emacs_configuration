@@ -52,17 +52,17 @@
   (setq codeium/document/text 'my-codeium/document/text)
   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 
-(use-package codegeex
-  :commands (codegeex-mode
-             codegeex-request-completion
-             codegeex-completion-at-point)
-  :bind (:map my/openai-map
-              ("a" . codegeex-request-completion)))
+;; (use-package codegeex
+;;   :commands (codegeex-mode
+;;              codegeex-request-completion
+;;              codegeex-completion-at-point)
+;;   :bind (:map my/openai-map
+;;               ("a" . codegeex-request-completion)))
 
 (defun my/ai-code-capf ()
   (interactive)
   (let (completion-at-point-functions)
-    (dolist (backend '(codeium-completion-at-point codegeex-completion-at-point))
+    (dolist (backend '(codeium-completion-at-point))
       (when (fboundp backend)
         (add-hook 'completion-at-point-functions backend nil t)))
     (call-interactively #'completion-at-point)))
@@ -73,7 +73,7 @@
   :config
   (setq starhugger-ollama-generate-api-url "http://172.16.10.86:11434/api/generate")
   (setq starhugger-completion-backend-function #'starhugger-ollama-completion-api)
-  (setopt starhugger-model-id "qwen2.5-coder:1.5-base"))
+  (setopt starhugger-model-id "qwen2.5-coder:1.5b"))
 
 
 

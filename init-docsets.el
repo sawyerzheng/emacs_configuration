@@ -23,7 +23,7 @@
   (setq my/devdocs-major-mode-docs-alist
         '((c-mode          . ("c"))
           (c++-mode        . ("cpp"))
-          (python-mode     . ("python~3.9" "numpy~1.22" "pandas~1" "flask~2.2"))
+          (python-mode     . ("python~3.13" "numpy~1.22" "pandas~1" "flask~2.2"))
           (ruby-mode       . ("ruby~3.1"))
           (go-mode         . ("Go"))
           (rustic-mode     . ("Rust"))

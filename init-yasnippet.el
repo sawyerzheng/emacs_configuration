@@ -9,7 +9,10 @@
       (require 'yasnippet))
     (yas-reload-all)
     (yas-minor-mode 1))
-  :commands (my/enable-yas-local-fn)
+  :hook (prog-mode . my/enable-yas-local-fn)
+  :commands (my/enable-yas-local-fn
+	     yas-minor-mode
+	     yas-global-mode)
   ;; :hook (((prog-mode org-mode) . my/enable-yas-local-fn))
   :config
   (require 'yasnippet-snippets)
