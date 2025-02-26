@@ -96,12 +96,10 @@
 (use-package treesit-auto
   ;; :straight (:type git :host github :repo "renzmann/treesit-auto")
   :if (featurep 'treesit)
-  :commands (global-treesit-auto-mode)
-  :hook (my/startup . global-treesit-auto-mode)
   :config
   (global-treesit-auto-mode)
   (setq treesit-auto-install 'prompt)
-
+  (treesit-auto-add-to-auto-mode-alist 'all)
   (add-to-list 'auto-mode-alist
                '("\\.ya?ml\\'" . yaml-ts-mode))
 
@@ -118,6 +116,13 @@
   ;;         (typescript-mode . typescript-ts-mode)
   ;;         (rust-mode . rust-ts-mode)))
   )
+(run-with-idle-timer 1 10
+		     (lambda ()
+		       (when (and (featurep 'treesit) (locate-library "treesit-auto"))
+  			 (require 'treesit-auto)
+			 (global-treesit-auto-mode +1)
+			 )
+		       ))
 
 
 

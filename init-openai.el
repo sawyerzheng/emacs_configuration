@@ -282,9 +282,8 @@
   (setq aidermacs-auto-commits t)
   (setq aidermacs-use-architect-mode t))
 
-(my/straight-if-use '(aider :type git :host github :repo "tninja/aider.el"))
+(my/straight-if-use '(aider :type git :host github :repo "tninja/aider.el" e '(aider :type git :host github :repo "tninja/aider.el")))
 (use-package aider
-  :straight (:host github :repo "tninja/aider.el" :files ("aider.el"))
   :config
   ;; For claude-3-5-sonnet
   (setq aider-args '("--model" "sonnet"))

@@ -1,6 +1,3 @@
-(when (< emacs-major-version 29)
-  (my/straight-if-use 'project))
-
 (with-eval-after-load 'project
   (bind-key "C-c p" project-prefix-map)
   )
@@ -22,7 +19,9 @@ to directory DIR."
           (project-current-directory-override dir))
       (call-interactively command))))
 
-(my/straight-if-use '(project :type built-in))
+(if (< emacs-major-version 29)
+    (my/straight-if-use 'project)
+  (my/straight-if-use '(project :type built-in)))
 (use-package project
   ;; :defer t
   :config
