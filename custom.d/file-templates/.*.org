@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: mine org mode template
+# name: mine org mode template							    
 # --
 #+title: ${1:`
 (string-join
@@ -19,4 +19,5 @@
 #+tags${2:[]:}$3
 #+date: [${4:`(format-time-string (cdr org-time-stamp-formats) (current-time))`}]
 #+lastmod: [${5:`(format-time-string (cdr org-time-stamp-formats) (current-time))`}]
+
 $0

@@ -1,12 +1,14 @@
 ;; -*- coding: utf-8; -*-
+(my/straight-if-use 'bash-completion)
 (use-package bash-completion
   :commands (bash-completion-dynamic-complete)
   :config
   (add-hook 'shell-dynamic-complete-functions
 	    'bash-completion-dynamic-complete))
 
+(my/straight-if-use 'fish-mode)
 (use-package fish-mode
-  :straight t
+  :if (executable-find "fish")
   :commands (fish-mode)
   :mode (("\\.fish\\'" . fish-mode)
          ("/fish_funced\\..*\\'" . fish-mode)))
@@ -18,23 +20,22 @@
 ;;   (fish-completion-fallback-on-bash-p t))
 
 
+(my/straight-if-use 'vterm)
 (use-package vterm
-  :straight t
   :if (not my/windows-p)
   :commands (vterm vterm-module-compile)
   :config
   :custom (vterm-always-compile-module t)
   )
 
-(use-package pcmpl-args
-  :straight t)
+(my/straight-if-use 'pcmpl-args)
 
+(my/straight-if-use '(eat :type git :host codeberg :repo "akib/emacs-eat" :files ("*.el" ("term" "term/*.el") "*.texi"
+										  "*.ti" ("terminfo/e" "terminfo/e/*")
+										  ("terminfo/65" "terminfo/65/*")
+										  ("integration" "integration/*")
+										  (:exclude ".dir-locals.el" "*-tests.el"))))
 (use-package eat
-  :straight '(:type git :host codeberg :repo "akib/emacs-eat" :files ("*.el" ("term" "term/*.el") "*.texi"
-                                                                      "*.ti" ("terminfo/e" "terminfo/e/*")
-                                                                      ("terminfo/65" "terminfo/65/*")
-                                                                      ("integration" "integration/*")
-                                                                      (:exclude ".dir-locals.el" "*-tests.el")))
   :commands (eat eat-other-window)
   :config
   ;; * hack for doom theme

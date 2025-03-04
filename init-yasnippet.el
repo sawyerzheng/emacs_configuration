@@ -6,10 +6,13 @@
   :init
   (defun my/enable-yas-local-fn ()
     (unless (fboundp #'yas-reload-all)
-      (require 'yasnippet))
-    (yas-reload-all)
+      (require 'yasnippet-snippets)
+      (require 'yasnippet)
+      (yas-reload-all)
+      )
     (yas-minor-mode 1))
-  :hook (prog-mode . my/enable-yas-local-fn)
+  ;; :hook (prog-mode . my/enable-yas-local-fn)
+  :hook (prog-mode . yas-minor-mode)
   :commands (my/enable-yas-local-fn
 	     yas-minor-mode
 	     yas-global-mode)
@@ -17,7 +20,7 @@
   :config
   (require 'yasnippet-snippets)
   (add-to-list 'yas-snippet-dirs "~/.conf.d/custom.d/snippets")
-  ;; (yas-reload-all)
+  (yas-reload-all)
   )
 
 (my/straight-if-use 'auto-yasnippet)

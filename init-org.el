@@ -717,17 +717,22 @@ the `jupyter-current-client' local to the buffer."
       (and (fboundp 'mixed-pitch-mode) (mixed-pitch-mode -1))
       (text-scale-set 0))))
 
-;; 直接在 org-mode 上显示 latex 公式，上下边等
-(my/straight-if-use 'org-fragtog)
-(use-package org-fragtog
-  :commands (org-fragtog-mode)
-  :hook (org-mode . org-fragtog-mode)
-  )
 
 (my/straight-if-use '(org-pretty-table :type git :host github :repo "Fuco1/org-pretty-table"))
 (use-package org-pretty-table
   :commands (org-pretty-table-mode))
 
+;;; latex 公式预览
+;;;; org-fragtog 使用 latex 命令
+;; 直接在 org-mode 上显示 latex 公式，上下边等, 并且会自动启动 latex 转换，当光标放到 latex 上时
+(my/straight-if-use 'org-fragtog)
+(use-package org-fragtog
+  :commands (org-fragtog-mode)
+  ;; :hook (org-mode . org-fragtog-mode)
+  )
+
+
+;;;; math-preview 使用 mathjax
 ;; ref: https://gitlab.com/matsievskiysv/math-preview
 ;; 1. 生效：手动选择公式区域， `math-preview-region' 预览公式渲染效果
 ;; 2. 取消预览：移动cursor 到公式位置，<Enter>
@@ -744,6 +749,28 @@ the `jupyter-current-client' local to the buffer."
 	     math-preview-start-process
 	     math-preview-stop-process)
   )
+
+
+;;;; 优化 org-mode 自带的 `org-latex-preview'
+;; preview org-mode latex, in current buffer
+;; ref: https://github.com/karthink/org-preview?tab=readme-ov-file
+(my/straight-if-use '(org-preview :type git :host github :repo "karthink/org-preview"))
+(use-package org-preview
+  :commands (org-preview-mode)
+  :config
+  )
+
+;;;; 使用 tex2svg 命令， 类似 popweb-latex-mode,使用弹出窗口（posframe）显示
+(use-package org-latex-impatient
+  :defer t
+  :commands (org-latex-impatient-mode)
+  :hook (org-mode . org-latex-impatient-mode)
+  :init
+  (setq org-latex-impatient-tex2svg-bin
+        ;; location of tex2svg executable
+        ;; "~/node_modules/mathjax-node-cli/bin/tex2svg"
+	(executable-find "tex2svg")
+	))
 
 ;; ref: https://gitlab.com/latex-math-preview/latex-math-preview/-/blob/master/latex-math-preview.el?ref_type=heads
 ;;

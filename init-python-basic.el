@@ -7,7 +7,6 @@ If there is not function elpy-project-root, use xah lee's function"
   (let* ((root (my/get-project-root))
          (file (buffer-file-name))
          (default-directory (file-name-directory file)))
-
     (if (and root file)
         (my-elpy/execute-from-project-root file root)
       (progn
