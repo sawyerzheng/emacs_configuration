@@ -216,13 +216,13 @@ Version 2018-09-29"
   :after dired
   :bind (:map dired-mode-map
               ("C-c C-r" . dired-rsync)
-              ("r" . dired-rsync)))
+              ("r r" . dired-rsync)))
 
 (my/straight-if-use '(dired-rsync-transient :type git :host github :repo "stsquad/dired-rsync"))
 (use-package dired-rsync-transient
 
   :bind (:map dired-mode-map
               ("C-c C-x" . dired-rsync-transient)
-              ("x" . dired-rsync-transient)))
+              ("r x" . dired-rsync-transient)))
 
 (provide 'init-dired)
