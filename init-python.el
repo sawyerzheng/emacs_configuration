@@ -212,4 +212,13 @@
 
       (call-interactively #'pyvenv-activate))))
 
+
+;; convert python object to json
+(defun my/python-object-to-json ()
+  (interactive)
+  (let* ((start (region-beginning))
+	 (end (region-end)))
+    (when (region-active-p)
+      (shell-command-on-region start end "python -c 'import sys,json;print(json.dumps(eval(sys.stdin.read()),ensure_ascii=False, indent=2))'" (current-buffer) t))))
+
 (defalias 'my/pyvenv-activate #'my/venv-activate)

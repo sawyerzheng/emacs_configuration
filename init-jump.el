@@ -27,6 +27,7 @@
   :hook ((eww-mode
           Info-mode
           grep-mode
+	  w3m-mode
           Custom-mode) . my/bind-ace-link))
 
 (my/straight-if-use 'back-button)
@@ -90,3 +91,8 @@
   :bind (("<f2>" . bm-next)
          ("S-<f2>" . bm-previous)
          ("C-<f2>" . bm-toggle)))
+
+(my/straight-if-use 'imenu-list)
+(use-package imenu-list
+  :commands (imenu-list-smart-toggle
+	     imenu-list))

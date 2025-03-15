@@ -146,11 +146,19 @@
               '(;; Emacs
                 ("Emacs Home Page" .
                  "www.gnu.org/software/emacs/emacs.html")
-                ("Xah Emacs Site" . "ergoemacs.org/index.html")
+                ("Xah Emacs Site" . "http://xahlee.info/emacs/emacs/blog.html")
                 ("(or emacs irrelevant)" . "oremacs.com")
                 ("Mastering Emacs" .
                  "https://www.masteringemacs.org/")
+		("Sacha Chua" . "https://sachachua.com/")
 
+		;; news
+		("solidot" . "https://www.solidot.org")
+		("reddit" . "https://www.reddit.com")
+		("Hack News" . "https://news.ycombinator.com/")
+		("CNN" . "https://lite.cnn.com")
+		("NPR" . "https://text.npr.org")
+		
                 ;; Search engines.
                 ("DuckDuckGo" .
                  [simple-query "duckduckgo.com"
@@ -166,6 +174,18 @@
                  [simple-query "www.baidu.com"
                                "www.baidu.com/s?wd=" ""])
                 ("Wikipedia" .
-                 [simple-query "wikipedia.org" "wikipedia.org/wiki/" ""]))))
+                 [simple-query "wikipedia.org" "wikipedia.org/wiki/" ""])
+
+	       	 ("Reddit Search" .
+                 [simple-query "reddit.com" "www.reddit.com/search/?q=" ""])
+		)))
+
+(my/straight-if-use 'deadgrep)
+(use-package deadgrep
+  :commands (deadgrep))
+
+(my/straight-if-use '(wgrep :type git :host github :repo "mhayashi1120/Emacs-wgrep" :files ("*.el")))
+(autoload 'wgrep-deadgrep-setup "wgrep-deadgrep")
+(add-hook 'deadgrep-finished-hook 'wgrep-deadgrep-setup)
 
 (provide 'init-search)

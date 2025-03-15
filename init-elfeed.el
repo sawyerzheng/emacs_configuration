@@ -24,12 +24,11 @@
 ;;   ;;   (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))
 ;;   )
 
-
+(my/straight-if-use 'elfeed)
+(my/straight-if-use 'elfeed-org)
 (use-package elfeed
-  :straight t
   :config
   (use-package elfeed-org
-    :straight t
     :config
     (setq rmh-elfeed-org-files '("~/org/elfeed.org"))
     (elfeed-org))
@@ -71,7 +70,8 @@
          :map elfeed-search-mode-map
          ("?" . elfeed-hydra/body)
          :map elfeed-show-mode-map
-         ("q" . delete-window))
+         ("q" . delete-window)
+	 ("v" . recenter-top-bottom))
   :hook (elfeed-show-mode . centaur-read-mode)
   :init (setq url-queue-timeout 30
               elfeed-db-directory (locate-user-emacs-file ".elfeed")
@@ -178,8 +178,8 @@ browser defined by `browse-url-generic-program'."
   (advice-add #'elfeed-show-entry :after #'my/elfeed-show-entry-advice-fn)
   )
 
+(my/straight-if-use 'elfeed-goodies)
 (use-package elfeed-goodies
-  :straight t
   :after elfeed
   :commands (elfeed-goodies/split-show-next
              elfeed-goodies/split-show-previous)
@@ -200,9 +200,10 @@ browser defined by `browse-url-generic-program'."
                 ;; ("Emacs Reddit" "https://www.reddit.com/r/emacs.rss")
                 )))
 
+(when (featurep 'xwidget-internal)
+  (my/straight-if-use '(elfeed-webkit :type git :host github :repo "fritzgrabo/elfeed-webkit")))
 (use-package elfeed-webkit
   :if (featurep 'xwidget-internal)
-  :straight (:type git :host github :repo "fritzgrabo/elfeed-webkit")
   :after elfeed
   :demand ;; !
   :init

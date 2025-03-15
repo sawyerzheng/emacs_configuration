@@ -99,6 +99,8 @@
   :commands (ellama-chat-translation-disable
 	     ellama-chat-translation-enable)
   :config
+  (setenv "OLLAMA_HOST" "http://172.16.10.86:11434")
+
   (require 'llm)
   (setq ellama-sessions-directory (expand-file-name "ellama-sessions" no-littering-var-directory))
 

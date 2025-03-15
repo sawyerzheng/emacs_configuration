@@ -131,6 +131,8 @@
 (use-package init-pyim)
 (use-package init-liberime)
 (use-package init-openai)
+(use-package init-w3m)
+(use-package init-elfeed)
 (use-package init-ai-code)
 (use-package init-git)
 (use-package init-zoom)
@@ -154,7 +156,8 @@
 (tool-bar-mode -1)
 
 (if (display-graphic-p)
-    (load-theme 'modus-vivendi t)
+    ;; (load-theme 'modus-vivendi t)
+    (load-theme 'doom-vibrant t)
   (load-theme 'tsdh-dark t)
   ;; (load-theme 'doom-vibrant t)
   )

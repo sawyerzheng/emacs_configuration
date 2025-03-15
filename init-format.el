@@ -39,12 +39,27 @@
    apheleia-global-mode
    apheleia-format-buffer)
   :config
+  (add-to-list 'exec-path (expand-file-name "scripts/formatters" (file-name-parent-directory (locate-library "apheleia"))))
+
   (setf (alist-get 'taplo apheleia-formatters)
         '("taplo" "fmt" "-"))
   (setf (alist-get 'toml-ts-mode apheleia-mode-alist)
         'taplo)
   (setf (alist-get 'conf-toml-mode apheleia-mode-alist)
         'taplo)
+
+  ;; npm i -D prettier prettier-plugin-sh
+  ;; ref: https://www.npmjs.com/package/prettier-plugin-sh?activeTab=readme
+  (add-to-list 'apheleia-formatters
+	       '(prettier-dockerfile
+		 . ("npx" "prettier" "--stdin-filepath" filepath
+		    "--plugin=prettier-plugin-sh" "--parser=Dockerfile"
+		    )))
+  (add-to-list 'apheleia-formatters
+	       '(prettier-gitignore
+		 . ("npx" "prettier" "--stdin-filepath" filepath
+		    "--plugin=prettier-plugin-sh"
+		    )))
   )
 
 
