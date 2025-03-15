@@ -752,13 +752,14 @@ the `jupyter-current-client' local to the buffer."
 
 
 ;;;; 优化 org-mode 自带的 `org-latex-preview'
+;; 这个只是一个示范项目
 ;; preview org-mode latex, in current buffer
 ;; ref: https://github.com/karthink/org-preview?tab=readme-ov-file
-(my/straight-if-use '(org-preview :type git :host github :repo "karthink/org-preview"))
-(use-package org-preview
-  :commands (org-preview-mode)
-  :config
-  )
+;; (my/straight-if-use '(org-preview :type git :host github :repo "karthink/org-preview"))
+;; (use-package org-preview
+;;   :commands (org-preview-mode)
+;;   :config
+;;   )
 
 ;;;; 使用 tex2svg 命令， 类似 popweb-latex-mode,使用弹出窗口（posframe）显示
 (use-package org-latex-impatient
