@@ -132,7 +132,6 @@
 (use-package init-liberime)
 (use-package init-openai)
 (use-package init-w3m)
-(use-package init-elfeed)
 (use-package init-ai-code)
 (use-package init-git)
 (use-package init-zoom)
@@ -149,6 +148,7 @@
   (use-package init-org)
   :mode (("\\.org\\'" . org-mode)))
 
+(use-package init-elfeed)
 (use-package init-org-roam)
 (use-package init-poporg)
 (menu-bar-mode -1)
