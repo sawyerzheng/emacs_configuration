@@ -31,6 +31,8 @@
         org-use-sub-superscripts '{}
         org-export-with-sub-superscripts '{}))
 
+(my/straight-if-use '(org :type built-in))
+(my/straight-if-use '(org-mode :type built-in))
 (use-package org
   :commands org-mode
   :hook ((org-mode org-babel-after-execute) . org-redisplay-inline-images)
