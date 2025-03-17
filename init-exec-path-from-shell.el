@@ -1,5 +1,6 @@
 (my/straight-if-use 'exec-path-from-shell)
 (use-package exec-path-from-shell
+  :if (not my/windows-p)
   :commands (exec-path-from-shell-initialize
              exec-path-from-shell-copy-env)
   :config

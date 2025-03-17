@@ -233,6 +233,7 @@ This command switches to browser."
     (my/dictionary-overlay-render-buffer)
     (dictionary-overlay-mark-word-known))
   )
+
 ;; (autoload 'dictionary-overlay-start "dictionary-overlay" nil t)
 ;; (autoload 'dictionary-overlay-render-buffer "dictionary-overlay" nil t)
 

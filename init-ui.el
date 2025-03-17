@@ -61,18 +61,19 @@
 ;;   :config)
 
 (my/straight-if-use '(holo-layer :type git :host github :repo "manateelazycat/holo-layer" :files ("*")))
-(use-package holo-layer
-  :commands (my/holo-layer-enable
-             my/holo-layer-disable)
-  :config
-  ;; (setq holo-layer-python-command my/epc-python-command)
-  (setq holo-layer-python-command eaf-python-command)
-  (defun my/holo-layer-enable ()
-    (interactive)
-    (holo-layer-enable))
-  (defun my/holo-layer-disable ()
-    (interactive)
-    (holo-layer-disable)))
+  (use-package holo-layer
+    :commands (my/holo-layer-enable
+               my/holo-layer-disable)
+    :config
+    ;; (setq holo-layer-python-command my/epc-python-command)
+    (setq holo-layer-python-command eaf-python-command)
+    (defun my/holo-layer-enable ()
+      (interactive)
+      (holo-layer-enable))
+    (defun my/holo-layer-disable ()
+      (interactive)
+      (holo-layer-disable)))
+
 
 
 
