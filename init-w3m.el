@@ -13,6 +13,7 @@
     (interactive)
     (browse-url (w3m-anchor))
     )
+  :bind (("C-c l 3" . w3m))
   :config
   
   ;; (set-face-background 'w3m-tab-background "#242730")
