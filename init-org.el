@@ -764,6 +764,7 @@ the `jupyter-current-client' local to the buffer."
 ;;   )
 
 ;;;; 使用 tex2svg 命令， 类似 popweb-latex-mode,使用弹出窗口（posframe）显示
+;; 依赖： npm install -g mathjax-node-cli
 (my/straight-if-use 'org-latex-impatient)
 (use-package org-latex-impatient
   :defer t
