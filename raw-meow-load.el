@@ -865,6 +865,19 @@ Will cancel all other selection, except char selection. "
 
 (with-eval-after-load 'eglot
   (add-hook 'eglot-managed-mode-hook #'corfu-mode))
+
+;;; eglot
+;;;; 依赖安装
+;;
+;; uv tool install basedpyright	      # python
+;; uv tool install cmake-language-server # cmake
+;; npm i -g vscode-langservers-extracted # html, json, css, js
+;; npm i -g typescript-language-server   # typescript
+;; npm i -g emmet-ls		      # ement
+;; npm i -g bash-language-server	      # bash
+;; npm i -g dockerfile-language-server-nodejs # dockerfile
+;;
+
 (use-package eglot
   :init
   :commands (eglot
