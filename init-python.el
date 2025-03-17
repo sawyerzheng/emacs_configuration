@@ -27,7 +27,7 @@
     (interactive)
     (let* ((s (shell-command-to-string "pdm venv list"))
 	   (lines (split-string s "\n"))
-	   (pattern "^\\*[ \t]+\\([[:alnum:]_-]+\\):[ \t]*\\(.+\\)$")
+	   (pattern "^[-\\*][ \t]+\\([[:alnum:]_-]+\\):[ \t]*\\(.+\\)$")
 	   (results nil)
 	   selected-venv
 	   selected-path)
