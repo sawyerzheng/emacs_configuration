@@ -132,6 +132,14 @@
              code-cells-mode)
   :hook (python-mode . code-cells-mode-maybe)
   :config
+  (defun my/code-cells-ipynb-to-py:percent ()
+    (interactive)
+    (shell-command  (format "jupytext --to py:percent %s" (completing-read "select jupyter file: " (split-string (shell-command-to-string "ls -a *.ipynb"))))))
+
+  (defun my/code-cells-ipynb-to-md ()
+    (interactive)
+    (shell-command  (format "jupytext --to md %s" (completing-read "select jupyter file: " (split-string (shell-command-to-string "ls -a *.ipynb"))))))
+
   (defun code-cells-my-insert-ahead ()
     (interactive)
     (let* ((place (code-cells--bounds))
