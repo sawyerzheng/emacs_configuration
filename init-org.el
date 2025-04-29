@@ -42,6 +42,52 @@
   (defvar org-mode-local-keymap
     (make-sparse-keymap)
     "local keymap for org mode")
+  :config
+  (defun insert-zero-with-space-around-chinese-region ()
+    "If region is selected and has Chinese characters before or after it,
+insert spaces as needed to separate Chinese text from the region."
+    (interactive)
+    (when (use-region-p)
+      (let ((region-begin (region-beginning))
+            (region-end (region-end))
+            (chinese-char-regexp "[\u4e00-\u9fa5]+"))
+
+	(set-mark region-end)
+	(goto-char region-begin)
+	;; Check character before region
+	(when (> region-begin (point-min))
+          (save-excursion
+            (goto-char (1- region-begin))
+            (when (looking-at chinese-char-regexp)
+              (goto-char region-begin)
+              (insert "​")
+              ;; Update region-end since we inserted a character
+              (setq region-end (1+ region-end))
+
+	      (setq region-begin (1+ region-begin))
+	      )))
+
+	(push-mark region-begin)
+	(goto-char region-end)
+
+	;; Check character after region
+	(when (< region-end (point-max))
+          (save-excursion
+            (goto-char region-end)
+            (when (looking-at chinese-char-regexp)
+              (insert "​")))))
+      )
+
+    )
+
+
+  (defun my/org-emphasize--adv-fn (&optional CHAR)
+    (insert-zero-with-space-around-chinese-region)
+    )
+
+  ;; 让 org-mode ** // ~~ 等，格式支持中文，通过插入 zero with space 实现
+  (advice-add 'org-emphasize :before #'my/org-emphasize--adv-fn)
+
   :mode-hydra
   (org-mode
    ("Edit"
