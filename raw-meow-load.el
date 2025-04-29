@@ -102,6 +102,7 @@
 (use-package init-regexp)
 (use-package init-dired)
 (use-package init-tty)
+(use-package init-ansi-color)
 (use-package init-shell)
 (use-package init-format)
 (use-package init-thing-edit)
@@ -129,7 +130,8 @@
 (use-package init-dictionary)
 (use-package init-expand-region)
 (use-package init-pyim)
-(use-package init-liberime)
+;; (use-package init-liberime)
+(use-package init-rime)
 (use-package init-openai)
 (use-package init-w3m)
 (use-package init-elfeed)
@@ -1103,6 +1105,7 @@ Will cancel all other selection, except char selection. "
 (use-package eglot-booster
   ;; :straight (:type git :host github :repo "jdtsmith/eglot-booster")
   :after eglot
+  :if (<= emacs-major-version 29)
   :config
   (if   (executable-find "emacs-lsp-booster")
       (eglot-booster-mode)
