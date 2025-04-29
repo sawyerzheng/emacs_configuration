@@ -6,6 +6,7 @@
   :commands ansi-color-apply-on-region
   :hook ((org-mode
 	  org-babel-after-execute
+	  log-view-mode
 	  compilation-filter
 	  compilation-mode) . my/ansi-colorize-buffer)
   :config
