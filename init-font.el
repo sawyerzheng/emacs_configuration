@@ -79,7 +79,28 @@
 
     (set-face-attribute 'mode-line nil
 			:family (face-attribute 'default :family)
-			:height (face-attribute 'default :height))))
+			:height (face-attribute 'default :height)))
+
+
+  ;; set emoji font
+  (when (member "Segoe UI Emoji" (font-family-list))
+    (set-fontset-font
+     t 'symbol (font-spec :family "Segoe UI Emoji") nil 'prepend)
+    ;; 有效 work
+    (set-fontset-font
+     t 'emoji (font-spec :family "Segoe UI Emoji") nil 'prepend)
+    )
+
+  (when (member "Noto Color Emoji" (font-family-list))
+    (set-fontset-font
+     t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
+    ;; not work
+    (set-fontset-font
+     t 'emoji (font-spec :family "Noto Color Emoji") nil 'prepend)
+
+    )
+
+  )
 
 ;; (if (daemonp)
 ;;     (add-hook 'after-make-frame-functions

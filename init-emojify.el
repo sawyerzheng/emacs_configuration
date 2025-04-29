@@ -8,9 +8,7 @@
          (my/startup . global-emojify-mode-line-mode))
   :config
   (setq emojify-emoji-styles '(unicode))
-  (when (member "Segoe UI Emoji" (font-family-list))
-    (set-fontset-font
-     t 'symbol (font-spec :family "Segoe UI Emoji") nil 'prepend))
+  (setq emojify-display-style '(unicode))
   )
 
 (provide 'init-emojify)
