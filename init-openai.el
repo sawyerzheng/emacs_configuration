@@ -300,4 +300,13 @@
   ;; (global-set-key (kbd "C-c a") 'aider-transient-menu)
   )
 
+(my/straight-if-use '(emigo :type git :host github :repo "MatthewZMD/emigo" :files ("*")))
+(use-package emigo
+  :init
+  (setq emigo-python-command my/epc-python-command)
+  :config
+  (emigo-enable) ;; Starts the background process automatically
+  (my/elisp-load-file-existsp "~/org/private/gptel-setup.el")
+  :commands (emigo)
+  )
 (provide 'init-openai)
