@@ -107,6 +107,14 @@
         eaf-proxy-port "7890")
   (message "env http_proxy is %s now" (concat eaf-proxy-type "://" eaf-proxy-host ":" eaf-proxy-port)))
 
+(defun enable-proxy-eaf-lan ()
+  "remember to restart eaf using: `eaf-restart-process'."
+  (interactive)
+  (setq eaf-proxy-host "172.16.10.86"
+        eaf-proxy-type "http"
+        eaf-proxy-port "7890")
+  (message "env http_proxy is %s now" (concat eaf-proxy-type "://" eaf-proxy-host ":" eaf-proxy-port)))
+
 (defun enable-proxy-windows-eaf ()
   "remember to restart eaf using: `eaf-restart-process'."
   (interactive)
