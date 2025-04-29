@@ -91,14 +91,14 @@
      t 'emoji (font-spec :family "Segoe UI Emoji") nil 'prepend)
     )
 
-  (when (member "Noto Color Emoji" (font-family-list))
-    (set-fontset-font
-     t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
-    ;; not work
-    (set-fontset-font
-     t 'emoji (font-spec :family "Noto Color Emoji") nil 'prepend)
+  ;; (when (member "Noto Color Emoji" (font-family-list))
+  ;;   (set-fontset-font
+  ;;    t 'symbol (font-spec :family "Noto Color Emoji") nil 'prepend)
+  ;;   ;; not work
+  ;;   (set-fontset-font
+  ;;    t 'emoji (font-spec :family "Noto Color Emoji") nil 'prepend)
 
-    )
+  ;;   )
 
   )
 
