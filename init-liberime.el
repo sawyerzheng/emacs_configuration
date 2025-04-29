@@ -22,8 +22,16 @@
 
   (if (eq system-type 'windows-nt)
       ;; nil ;; 手动复制官方 Release zip 文件到 emacs 安装目录： https://github.com/merrickluo/liberime/releases
-      ;; (setq liberime-module-file "d:/soft/emacs/emacs-28.1/bin/liberime-core.dll")
-      (setq liberime-module-file "E:/soft/msys64/ucrt64/bin/liberime-core.dll")
+      (cond ((equal emacs-major-version 30)
+
+	     ;; (setq liberime-module-file "d:/home/.emacs.d.raw/straight/repos/liberime/src/liberime-core.dll")
+	     (setq liberime-module-file "d:/soft/emacs/emacs-30.1/bin/liberime-core.dll")
+
+	     )
+	    (t
+	     (setq liberime-module-file "d:/soft/emacs/emacs-28.1/bin/liberime-core.dll")))
+      
+      ;; (setq liberime-module-file "E:/soft/msys64/ucrt64/bin/liberime-core.dll")
     (setq liberime-module-file "d:/soft/emacs/emacs-29.1_1/emacs-29.1_1/bin/liberime-core.dll")
 
     ;; (setq liberime-module-file "D:/soft/emacs/emacs-28.1-NATIVE_FULL_AOT/bin/liberime-core.dll")

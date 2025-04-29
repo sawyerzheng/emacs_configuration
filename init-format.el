@@ -31,6 +31,16 @@
           markdown-mode
           gfm-mode java-mode) . my/format-all-set-formatters-fn))
 
+
+;;; apheleia
+
+;;;; 依赖
+
+;; uv tool install black
+;; uv
+;; npm i -g prettier
+;; npm install -g @taplo/cli
+
 (my/straight-if-use 'apheleia)
 (use-package apheleia
   :unless my/use-format-all-p

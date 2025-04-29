@@ -179,6 +179,8 @@
   (defun my-pyim-cregexp-ivy (str)
     (unless (fboundp #'pyim-cregexp-build)
       (require 'pyim-cregexp))
+    (unless (fboundp #'pyim-cregexp-ivy)
+      (require 'pyim-cregexp-utils))
     (let ((pyim-default-scheme (my/pyim-get-default-scheme)))
       (pyim-cregexp-ivy str)))
   (setq ivy-re-builders-alist

@@ -31,6 +31,8 @@
         org-use-sub-superscripts '{}
         org-export-with-sub-superscripts '{}))
 
+(my/straight-if-use '(org :type built-in))
+(my/straight-if-use '(org-mode :type built-in))
 (use-package org
   :commands org-mode
   :hook ((org-mode org-babel-after-execute) . org-redisplay-inline-images)
@@ -808,10 +810,12 @@ the `jupyter-current-client' local to the buffer."
 ;;   )
 
 ;;;; 使用 tex2svg 命令， 类似 popweb-latex-mode,使用弹出窗口（posframe）显示
+;; 依赖： npm install -g mathjax-node-cli
+(my/straight-if-use 'org-latex-impatient)
 (use-package org-latex-impatient
   :defer t
   :commands (org-latex-impatient-mode)
-  :hook (org-mode . org-latex-impatient-mode)
+  ;; :hook (org-mode . org-latex-impatient-mode)
   :init
   (setq org-latex-impatient-tex2svg-bin
         ;; location of tex2svg executable

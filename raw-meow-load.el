@@ -12,7 +12,7 @@
   "install packages")
 
 ;;; benchmark init
-;;(require 'init-benchmark-init)
+;; (require 'init-benchmark-init)
 
 ;;; generate autoloads
 ;;;; .conf.d/extra.d
@@ -29,17 +29,21 @@
   :init
   (savehist-mode))
 
-;(use-package recentf
-;  :config
-;  (if (file-exists-p recentf-save-file)
-;      (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
-;    )
-;  (setq recentf-max-saved-items 1000)
-;  (add-to-list 'recentf-exclude  ".gpg\\'")
-;  (recentf-mode 1))
-
 (use-package init-recentf)
 (defvar bootstrap-version)
+
+;; * for .dz compressed file
+(require 'jka-compr)
+(add-to-list 'jka-compr-compression-info-list
+             ["\\.dz\\'" 
+              "dictzip-compress" 
+              "dictzip"
+	      ("-c")
+	      "dictzip-decompress"
+	      "dictzip"
+	      ("-c" "-d")
+              nil t nil nil])
+(jka-compr-update)
 
 (defun my/enable-straight ()
   (interactive)
@@ -134,7 +138,6 @@
 (use-package init-rime)
 (use-package init-openai)
 (use-package init-w3m)
-(use-package init-elfeed)
 (use-package init-ai-code)
 (use-package init-git)
 (use-package init-zoom)
@@ -151,6 +154,7 @@
   (use-package init-org)
   :mode (("\\.org\\'" . org-mode)))
 
+(use-package init-elfeed)
 (use-package init-org-roam)
 (use-package init-poporg)
 (menu-bar-mode -1)
@@ -863,6 +867,19 @@ Will cancel all other selection, except char selection. "
 
 (with-eval-after-load 'eglot
   (add-hook 'eglot-managed-mode-hook #'corfu-mode))
+
+;;; eglot
+;;;; 依赖安装
+;;
+;; uv tool install basedpyright	      # python
+;; uv tool install cmake-language-server # cmake
+;; npm i -g vscode-langservers-extracted # html, json, css, js
+;; npm i -g typescript-language-server   # typescript
+;; npm i -g emmet-ls		      # ement
+;; npm i -g bash-language-server	      # bash
+;; npm i -g dockerfile-language-server-nodejs # dockerfile
+;;
+
 (use-package eglot
   :init
   :commands (eglot
@@ -1146,6 +1163,25 @@ Will cancel all other selection, except char selection. "
   (interactive)
   (setq delete-active-region t))
 (add-hook 'meow-global-mode-hook #'my/enable-delete-active-region)
+
+;; coding
+(when my/windows-p
+ (set-language-environment 'UTF-8)
+
+  ;; (set-language-environment 'Chinese-GB)
+  ;; default-buffer-file-coding-system变量在emacs23.2之后已被废弃，使用buffer-file-coding-system代替
+  (set-default buffer-file-coding-system 'utf-8-unix)
+  (set-default-coding-systems 'utf-8-unix)
+  (setq-default pathname-coding-system 'utf-8)
+  (setq file-name-coding-system 'utf-8)
+  (prefer-coding-system 'cp950)
+  (prefer-coding-system 'gb2312)
+  (prefer-coding-system 'cp936)
+  (prefer-coding-system 'gb18030)
+  (prefer-coding-system 'utf-16)
+  (prefer-coding-system 'utf-8-dos)
+  (prefer-coding-system 'utf-8-unix)
+  )
 
 
 (provide 'raw-meow-load)

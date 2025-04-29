@@ -257,48 +257,48 @@
 (my/straight-if-use '(aidermacs :host github :repo "MatthewZMD/aidermacs" :files ("*.el")))
 
 
-(use-package aidermacs
-  :commands (aidermacs-transient-menu)
-  :bind (("C-c i b" . aidermacs-transient-menu))
-  :init
-  (setq aidermacs-popular-models '("ollama/qwen2.5-coder:1.5b"
-				   "ollama/qwen2.5-coder:3b"
-				   "ollama/qwen2.5:1.5b"
-				   "ollama/qwen2.5:3b"
-				   "ollama/deepseek-r1:1.5b"
+;; (use-package aidermacs
+;;   :commands (aidermacs-transient-menu)
+;;   :bind (("C-c i b" . aidermacs-transient-menu))
+;;   :init
+;;   (setq aidermacs-popular-models '("ollama/qwen2.5-coder:1.5b"
+;; 				   "ollama/qwen2.5-coder:3b"
+;; 				   "ollama/qwen2.5:1.5b"
+;; 				   "ollama/qwen2.5:3b"
+;; 				   "ollama/deepseek-r1:1.5b"
 
-				   ))
-  :config
-  (setq aidermacs-default-model "ollama/qwen2.5-coder:1.5b")
-  (setq aidermacs-architect-model "ollama/deepseek-r1:1.5b")
-  (setq aidermacs-editor-model "ollama/qwen2.5-coder:1.5b")
+;; 				   ))
+;;   :config
+;;   (setq aidermacs-default-model "ollama/qwen2.5-coder:1.5b")
+;;   (setq aidermacs-architect-model "ollama/deepseek-r1:1.5b")
+;;   (setq aidermacs-editor-model "ollama/qwen2.5-coder:1.5b")
 
-  (setq aidermacs-architect-model "openai/chat-llm")
-  (setq aidermacs-architect-model "ollama/deepseek-r1:1.5b-qwen-distill-q8_0")
+;;   (setq aidermacs-architect-model "openai/chat-llm")
+;;   (setq aidermacs-architect-model "ollama/deepseek-r1:1.5b-qwen-distill-q8_0")
 
-  (setenv "OPENAI_API_KEY" "EMPTY")
-  (setenv "OPENAI_API_BASE" "http://172.16.10.88:18000/v1/")
-  (setenv "OLLAMA_API_BASE" "http://172.16.10.86:11434")
+;;   (setenv "OPENAI_API_KEY" "EMPTY")
+;;   (setenv "OPENAI_API_BASE" "http://172.16.10.88:18000/v1/")
+;;   (setenv "OLLAMA_API_BASE" "http://172.16.10.86:11434")
 
-  ; See the Configuration section below
-  (setq aidermacs-auto-commits t)
-  (setq aidermacs-use-architect-mode t))
+;;   ; See the Configuration section below
+;;   (setq aidermacs-auto-commits t)
+;;   (setq aidermacs-use-architect-mode t))
 
 (my/straight-if-use '(aider :type git :host github :repo "tninja/aider.el" :files ("*.el")))
-(use-package aider
-  :config
-  ;; For claude-3-5-sonnet
-  (setq aider-args '("--model" "sonnet"))
-  (setenv "ANTHROPIC_API_KEY" anthropic-api-key)
-  ;; Or chatgpt model
-  ;; (setq aider-args '("--model" "o3-mini"))
-  ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
-  ;; Or use your personal config file
-  ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
-  ;; ;;
-  ;; Optional: Set a key binding for the transient menu
-  ;; (global-set-key (kbd "C-c a") 'aider-transient-menu)
-  )
+;; (use-package aider
+;;   :config
+;;   ;; For claude-3-5-sonnet
+;;   (setq aider-args '("--model" "sonnet"))
+;;   (setenv "ANTHROPIC_API_KEY" anthropic-api-key)
+;;   ;; Or chatgpt model
+;;   ;; (setq aider-args '("--model" "o3-mini"))
+;;   ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
+;;   ;; Or use your personal config file
+;;   ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
+;;   ;; ;;
+;;   ;; Optional: Set a key binding for the transient menu
+;;   ;; (global-set-key (kbd "C-c a") 'aider-transient-menu)
+;;   )
 
 (my/straight-if-use '(emigo :type git :host github :repo "MatthewZMD/emigo" :files ("*")))
 (use-package emigo
