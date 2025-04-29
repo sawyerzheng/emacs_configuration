@@ -10,6 +10,8 @@
 (defun my/pyim-set-scheme ()
   (setq pyim-default-scheme (my/pyim-get-default-scheme)))
 
+(with-eval-after-load 'pyim-cregexp
+  (my/pyim-set-scheme))
 (use-package pyim
   :delight
   (pyim-isearch-mode)

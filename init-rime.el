@@ -1,11 +1,17 @@
 ;; -*- coding: utf-8; -*-
+(my/straight-if-use 'rime)
 (use-package rime
-  :straight t
+  :init
+  (when my/linux-p
+    (setq rime-emacs-module-header-root "/usr/include")
+    )
   :custom
   (default-input-method "rime")
   :bind
   (:map rime-mode-map
         ("C-`" . 'rime-send-keybinding))
+  :bind
+  ("M-j" . nil)
   :config
   ;; (setq module-file-suffix "/usr/lib/x86_64-linux-gnu/")
   ;; (if (eq system-type 'windows-nt)
@@ -15,6 +21,12 @@
   ;; (setq rime-user-data-dir "~/.config/ibus/rime/")
   ;; (setq rime-user-data-dir "~/.emacs.d/rime/")
 
+  (defun my/rime--not-meow-insert-mode-p ()
+    (and (fboundp #'meow-insert-mode-p) (not (meow-insert-mode-p))))
+
+  (add-to-list 'rime-disable-predicates #'my/rime--not-meow-insert-mode-p)
+  (add-to-list 'pyim-english-input-switch-functions #'my/rime--not-meow-insert-mode-p)
+  
   (setq rime-translate-keybindings
         '("C-f" "C-b" "C-n" "C-p" "C-g"
           "M-n" "M-p"
