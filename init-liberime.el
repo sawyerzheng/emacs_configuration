@@ -1,5 +1,5 @@
 ;; -*- coding: utf-8; -*-
-(setq liberime-user-data-dir (expand-file-name "rime" no-littering-var-directory))
+
 
 (unless my/windows-p
   (my/straight-if-use `(liberime
@@ -15,6 +15,8 @@
 (use-package liberime
   :commands (liberime-build liberime-sync liberime-load liberime-deploy)
   :after pyim
+  :config
+  (setq liberime-user-data-dir (expand-file-name "rime" no-littering-var-directory))
   :init
   (setq liberime-user-data-dir (expand-file-name "rime" no-littering-var-directory))
 
