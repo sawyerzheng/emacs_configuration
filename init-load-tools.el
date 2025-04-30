@@ -563,5 +563,18 @@ BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
   ;;   (package-install 'use-package))
   )
 
-;; (if (my/windows-p))
-;; (add-to-list 'exec-path )
+(defun my/scroll-down-line-keep-cursor ()
+  "Scroll window up by one line without moving the cursor, similar to Vim's C-e."
+  (interactive)
+  (scroll-up-line)
+  (next-line))
+
+
+(defun my/scroll-up-line-keep-cursor ()
+  "Scroll window up by one line without moving the cursor, similar to Vim's C-y."
+  (interactive)
+  (scroll-down-line)
+  (previous-line))
+
+(global-set-key (kbd "M-U") #'my/scroll-up-line-keep-cursor)
+(global-set-key (kbd "M-I") #'my/scroll-down-line-keep-cursor)
