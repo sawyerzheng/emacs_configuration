@@ -1,4 +1,4 @@
-(my/straight-if-use '(popon :type git :repo "https://codeberg.org/akib/emacs-popon.git"))
+(my/straight-if-use 'popon)
 (use-package popon
       :defer t
       )

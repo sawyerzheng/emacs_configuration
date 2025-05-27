@@ -24,7 +24,7 @@
 
 
 (my/straight-if-use 'info-plus)
-(use-package info-plus
+(use-package info+
   :after info)
 
 

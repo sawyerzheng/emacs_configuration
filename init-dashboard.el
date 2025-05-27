@@ -2,7 +2,10 @@
 (use-package dashboard
   :init
   ;; (dashboard-setup-startup-hook)
-  :hook (my/startup . open-dashboard)
+  (setq dashboard-agenda-release-buffers t)
+  :hook ((my/startup . open-dashboard)
+	 )
+  
   ;; :bind ("C-c o d" . open-dashboard)
   :commands (open-dashboard)
   :bind (:map dashboard-mode-map

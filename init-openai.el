@@ -72,12 +72,12 @@
   :defer t
   )
 
-(my/straight-if-use '(plz-event-source :type git :host github :repo "r0man/plz-event-source"))
+(my/straight-if-use 'plz-event-source)
 (use-package plz-event-source
   :defer t
   )
 
-(my/straight-if-use '(plz-media-type :type git :host github :repo "r0man/plz-media-type"))
+(my/straight-if-use 'plz-media-type)
 (use-package plz-media-type
   :defer t
   )
