@@ -47,7 +47,15 @@
   ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
   ;; 手动安装 posframe 包。
   ;; 使用默认配置，兼容 terminal
-  ;; (setq pyim-page-tooltip 'posframe)
+
+  (setq pyim-page-tooltip
+	(cond ((my/running-with-x-forwarding-p)
+	       'popup)
+	      ((and (fboundp #'posframe-workable-p) (posframe-workable-p))
+	       'posframe)
+	      (t
+	       'popup))
+ 	)
   (use-package posframe
     :if (or (daemonp) (display-graphic-p))
     )

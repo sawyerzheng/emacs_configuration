@@ -346,6 +346,12 @@ prepended to the element after the #+HEADER: tag."
   (add-to-list 'org-babel-load-languages '(julia . t) t)
   (add-to-list 'org-babel-load-languages '(python . t) t)
   (add-to-list 'org-babel-load-languages '(jupyter . t) t)
+
+  (with-eval-after-load 'jupyter-org-extensions
+    (define-key jupyter-org-hydra/keymap (kbd "a") (lambda () (interactive) (jupyter-org-insert-src-block nil current-prefix-arg)))
+    (define-key jupyter-org-hydra/keymap (kbd "b") (lambda () (interactive) (jupyter-org-insert-src-block t current-prefix-arg)))
+    )
+
   :mode-hydra
   (org-mode
    (:title "Org Commands")
@@ -378,67 +384,67 @@ prepended to the element after the #+HEADER: tag."
 
 
 
-  (require 'scimax-jupyter)
-  (add-hook 'org-mode-hook #'scimax-jupyter-ansi)
-  (setq my/scimax-ob-src-key-bindings
-        '(
-          ;; ("<return>" . #'newline-and-indent)
-          ("C-<return>" #'org-ctrl-c-ctrl-c #'org-insert-heading-respect-content)
-          ("S-<return>"  #'scimax-ob-execute-and-next-block #'org-table-copy-down)
-          ("M-<return>"  (lambda ()
-		           (interactive)
-		           (scimax-ob-execute-and-next-block t))
-           nil)
-          ("M-S-<return>" #'scimax-ob-execute-to-point #'org-insert-todo-heading)
-          ("C-M-<return>" #'org-babel-execute-buffer nil)
-          ;; ("s-." . #'scimax-ob/body nil)
-          )
-        )
+;;   (require 'scimax-jupyter)
+;;   (add-hook 'org-mode-hook #'scimax-jupyter-ansi)
+;;   (setq my/scimax-ob-src-key-bindings
+;;         '(
+;;           ;; ("<return>" . #'newline-and-indent)
+;;           ("C-<return>" #'org-ctrl-c-ctrl-c #'org-insert-heading-respect-content)
+;;           ("S-<return>"  #'scimax-ob-execute-and-next-block #'org-table-copy-down)
+;;           ("M-<return>"  (lambda ()
+;; 		           (interactive)
+;; 		           (scimax-ob-execute-and-next-block t))
+;;            nil)
+;;           ("M-S-<return>" #'scimax-ob-execute-to-point #'org-insert-todo-heading)
+;;           ("C-M-<return>" #'org-babel-execute-buffer nil)
+;;           ;; ("s-." . #'scimax-ob/body nil)
+;;           )
+;;         )
 
-  (defmacro my/scimax-ob-define-src-key (language key def default-def)
-    "For LANGUAGE (symbol) src blocks, define key sequence KEY as DEF.
-KEY should be a string sequence that will be used in a `kbd' sequence.
-This is like `define-key', except the definition only applies in
-src blocks for a specific LANGUAGE.
+;;   (defmacro my/scimax-ob-define-src-key (language key def default-def)
+;;     "For LANGUAGE (symbol) src blocks, define key sequence KEY as DEF.
+;; KEY should be a string sequence that will be used in a `kbd' sequence.
+;; This is like `define-key', except the definition only applies in
+;; src blocks for a specific LANGUAGE.
 
-If language is nil apply to all src-blocks.
+;; If language is nil apply to all src-blocks.
 
-Adapted from
-http://endlessparentheses.com/define-context-aware-keys-in-emacs.html"
-    (declare (indent 3)
-	     (debug (form form form &rest sexp)))
-    ;; ;; store the key in scimax-src-keys
-    ;; (unless (cdr (assoc language scimax-ob-src-keys))
-    ;;   (cl-pushnew (list language '()) scimax-ob-src-keys))
+;; Adapted from
+;; http://endlessparentheses.com/define-context-aware-keys-in-emacs.html"
+;;     (declare (indent 3)
+;; 	     (debug (form form form &rest sexp)))
+;;     ;; ;; store the key in scimax-src-keys
+;;     ;; (unless (cdr (assoc language scimax-ob-src-keys))
+;;     ;;   (cl-pushnew (list language '()) scimax-ob-src-keys))
 
-    ;; (cl-pushnew (cons key def) (cdr (assoc language scimax-ob-src-keys)))
+;;     ;; (cl-pushnew (cons key def) (cdr (assoc language scimax-ob-src-keys)))
 
-    `(define-key org-mode-map ,(kbd key)
-                 '(menu-item
-                   ,(format "maybe-%s" (or (car (cdr-safe def)) def))
-                   nil
-                   :filter (lambda (&optional _)
-		             ,(if language
-		                  `(when (and (org-in-src-block-p)
-				              (string= ,(symbol-name language)
-					               (car (org-babel-get-src-block-info t))))
-			             ,def)
-		                `(cond ((org-in-src-block-p)
-		                        ,def)
-                                       (t
-                                        ,default-def)))))))
+;;     `(define-key org-mode-map ,(kbd key)
+;;                  '(menu-item
+;;                    ,(format "maybe-%s" (or (car (cdr-safe def)) def))
+;;                    nil
+;;                    :filter (lambda (&optional _)
+;; 		             ,(if language
+;; 		                  `(when (and (org-in-src-block-p)
+;; 				              (string= ,(symbol-name language)
+;; 					               (car (org-babel-get-src-block-info t))))
+;; 			             ,def)
+;; 		                `(cond ((org-in-src-block-p)
+;; 		                        ,def)
+;;                                        (t
+;;                                         ,default-def)))))))
 
-  (defun my/scimax-ob-src-key-bindings ()
-    "context key binding, but still use original command when no in a org src code block"
-    ;; These should work in every src-block IMO.
-    (cl-loop for (key  cmd default-cmd) in my/scimax-ob-src-key-bindings
-	     do
-	     (eval `(my/scimax-ob-define-src-key nil ,key ,cmd ,default-cmd))))
+;;   (defun my/scimax-ob-src-key-bindings ()
+;;     "context key binding, but still use original command when no in a org src code block"
+;;     ;; These should work in every src-block IMO.
+;;     (cl-loop for (key  cmd default-cmd) in my/scimax-ob-src-key-bindings
+;; 	     do
+;; 	     (eval `(my/scimax-ob-define-src-key nil ,key ,cmd ,default-cmd))))
 
-  (add-hook 'org-mode-hook #'my/scimax-ob-src-key-bindings)
+;;   (add-hook 'org-mode-hook #'my/scimax-ob-src-key-bindings)
 
-  (define-key org-mode-map (kbd "M-' M-'") #'scimax-jupyter-org-hydra/body)
-  (define-key org-mode-map (kbd "M-\"") #'scimax-jupyter-org-hydra/body)
+;;   (define-key org-mode-map (kbd "M-' M-'") #'scimax-jupyter-org-hydra/body)
+;;   (define-key org-mode-map (kbd "M-\"") #'scimax-jupyter-org-hydra/body)
 
   ;; (defalias 'org-babel-execute:python 'org-babel-execute:jupyter-python)
 

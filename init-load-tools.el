@@ -96,6 +96,13 @@
   nil
   "whether or not to save and load workspace at starting and quitting emacs")
 
+(defun my/running-with-x-forwarding-p ()
+  "Check if Emacs is running with X forwarding (via SSH -X or SSH -Y).
+Returns t if Emacs is running with X forwarding, nil otherwise."
+  (and (display-graphic-p)             ; Check if we're in a graphical display
+       (getenv "SSH_CONNECTION")       ; Check if SSH_CONNECTION env var exists
+       (getenv "DISPLAY")))	       ; Check if DISPLAY env var exists
+
 (setq my/program-dir
       (cond ((eq system-type 'windows-nt) "d:/programs/")
             (t "~/programs/")))

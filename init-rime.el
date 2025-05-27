@@ -35,7 +35,18 @@
 
   (setq rime-inline-ascii-trigger 'control-l)
   (define-key rime-active-mode-map (kbd "M-j") 'rime-inline-ascii)
-  (setq rime-show-candidate 'popup)
+  (customize-set-variable
+   rime-show-candidate
+   (cond ((my/running-with-x-forwarding-p)
+	  'popup)
+	 ((and (fboundp #'posframe-workable-p) (posframe-workable-p))
+	 'posframe)
+	 (t
+	 'popup)
+	 )
+   )
+
+
   (setq rime-cursor "˰")
   ;; (setq rime-cursor "|")
 

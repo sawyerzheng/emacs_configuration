@@ -156,17 +156,19 @@
     (ellama--replace "^###### " "****** " beg end)
     ;; bold
     ;; (ellama--replace "__\\(.+?\\)__" "*\\1*" beg end)
-    (ellama--replace "\\(^\\|\W\\)__\\(.+?\\)__\\(\W\\|$\\)" "\\1*\\2*\\3" beg end)
+    (ellama--replace "\\(^\\|\W\\)__\\(.+?\\)__\\(\W\\|$\\)" "\\1*\\2*\\3" beg end) ;; --
     (ellama--replace "\\*\\*\\(.+?\\)\\*\\*" "*\\1*" beg end)
     (ellama--replace "<b>\\(.+?\\)</b>" "*\\1*" beg end)
-    ;; italic
-    ;; (ellama--replace "_\\(.+?\\)_" "/\\1/" beg end)
-    (ellama--replace "\\(^\\|\W\\)_\\(.+?\\)_\\(\W\\|$\\)" "\\1/\\2/\\3" beg end)
     (ellama--replace "<i>\\(.+?\\)</i>" "/\\1/" beg end)
     ;; underlined
     (ellama--replace "<u>\\(.+?\\)</u>" "_\\1_" beg end)
     ;; inline code
     (ellama--replace "`\\(.+?\\)`" "~\\1~" beg end)
+    ;; italic
+    (when ellama-translate-italic
+      ;; (ellama--replace "_\\(.+?\\)_" "/\\1/" beg end)
+      (ellama--replace "\\(^\\|\W\\)_\\(.+?\\)_\\(\W\\|$\\)" "\\1/\\2/\\3" beg end) ;; --
+      )
     ;; lists
     (ellama--replace "^\\* " "+ " beg end)
     ;; strikethrough
@@ -178,14 +180,13 @@
     (ellama--replace "\\[\\(.*?\\)\\](\\(.*?\\))" "[[\\2][\\1]]" beg end)
 
     ;; horizontal line
-
     (ellama--replace "^---+$" "-----" beg end)
 
     ;; filling long lines
     (goto-char beg)
-    (let ((fill-column ellama-long-lines-length)
-	  (use-hard-newlines t))
-      (fill-region beg end nil t t)))
+    (when ellama-fill-paragraphs
+      (let ((use-hard-newlines t))
+	(fill-region beg end nil t t))))
 
   (setq my/ellama-summarize-prompt-template "<INSTRUCTIONS>
 你是一名总结者。你按照以下步骤对输入文本进行总结，*使用与原始输入文本相同的语言*：  

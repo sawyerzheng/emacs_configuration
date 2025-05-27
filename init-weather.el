@@ -2,6 +2,9 @@
   :straight t
   :commands (wttrin)
   :config
+  (defun my/show-weather-wttrin ()
+    (interactive)
+    (wttrin "Hefei"))
   (setq wttrin-default-cities '("Hefei")))
 
 (use-package display-wttr
@@ -21,4 +24,12 @@
   (setq sunshine-appid    "df5e1f2dffb1fb7d006a89dfe00e2905")
   (setq sunshine-location "Hefei,CN"))
 
-(provide 'init-wttrin)
+(my/straight-if-use 'noaa)
+(use-package noaa
+  :commands (noaa)
+  :config
+  (setq noaa-longitude 117.22)
+  (setq noaa-latitude 31.82)
+  )
+
+(provide 'init-weather)

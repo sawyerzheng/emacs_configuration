@@ -1,8 +1,8 @@
+(my/straight-if-use 'dashboard)
 (use-package dashboard
-  :straight t
   :init
   ;; (dashboard-setup-startup-hook)
-  ;; :hook (my/startup . open-dashboard)
+  :hook (my/startup . open-dashboard)
   ;; :bind ("C-c o d" . open-dashboard)
   :commands (open-dashboard)
   :bind (:map dashboard-mode-map
@@ -20,6 +20,8 @@
                           (agenda . 5)
                           )
         )
+  (if (require 'nerd-icons nil t)
+      (setq dashboard-icon-type 'nerd-icons))
   (defun open-dashboard ()
     "Open the *dashboard* buffer and jump to the first widget."
     (interactive)
