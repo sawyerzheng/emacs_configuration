@@ -82,7 +82,7 @@
   :defer t
   )
 
-(my/straight-if-use '(llm :type git :host github :repo "ahyatt/llm" :files ("*")))
+(my/straight-if-use 'llm)
 (with-eval-after-load 'llm
   (my/elisp-load-file-existsp "~/org/private/gptel-setup.el"))
 
