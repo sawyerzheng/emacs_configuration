@@ -3,6 +3,12 @@
 (my/straight-if-use 'pyim)
 (my/straight-if-use 'posframe)
 (my/straight-if-use 'popup)
+(my/straight-if-use 'popon)
+
+(with-eval-after-load 'pyim
+  (require 'popon)
+  (require 'popup)
+  )
 
 (defun my/pyim-get-default-scheme ()
   'xiaohe-shuangpin)
@@ -50,7 +56,7 @@
 
   (setq pyim-page-tooltip
 	(cond ((my/running-with-x-forwarding-p)
-	       'popup)
+	       'popon)
 	      ((and (fboundp #'posframe-workable-p) (posframe-workable-p))
 	       'posframe)
 	      (t
