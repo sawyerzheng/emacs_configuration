@@ -25,11 +25,6 @@
 (when (string-equal "root" user-login-name)
   (setq my/install-packages-p nil))
 
-(use-package savehist
-  :init
-  (savehist-mode))
-
-(use-package init-recentf)
 (defvar bootstrap-version)
 
 ;; * for .dz compressed file
@@ -94,6 +89,10 @@
   )
 
 (use-package init-no-littering)
+(use-package savehist
+  :init
+  (savehist-mode))
+(use-package init-recentf)
 (use-package init-hydra)
 (use-package init-xah-fly-keys-core)
 (use-package init-vertico)
@@ -144,7 +143,7 @@
 (use-package init-git)
 (use-package init-zoom)
 (use-package init-line-number)
-;;(use-package init-ws-butler)
+(use-package init-ws-butler)
 (use-package init-key-chord)
 (use-package init-python)
 (use-package init-logview)

@@ -16,6 +16,8 @@
               ;; tramp files
               "/sshx?:.+"
 	      "/sshfs:.+"
+	      "~/win/.+"
+	      "/home/sawyer/win/.+"
               ))
 
   (defun doom--recent-file-truename (file)
@@ -25,7 +27,7 @@
       file))
   (setq recentf-filename-handlers '(doom--recent-file-truename abbreviate-file-name))
   (recentf-mode 1)
-  (run-at-time nil 300 'recentf-save-list)
+  ;; (run-at-time nil 300 'recentf-save-list)
   )
 
 (provide 'init-recentf)
