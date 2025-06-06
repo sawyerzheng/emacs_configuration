@@ -582,6 +582,9 @@ BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
   (interactive)
   (scroll-down-line)
   (previous-line))
+;; * terminal comment line
+(global-set-key (kbd "C-x <escape>") #'comment-line) ;; like C-x C-; in GUI
 
+;; scroll up/down without move cursor
 (global-set-key (kbd "M-U") #'my/scroll-up-line-keep-cursor)
 (global-set-key (kbd "M-I") #'my/scroll-down-line-keep-cursor)
