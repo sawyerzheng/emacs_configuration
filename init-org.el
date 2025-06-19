@@ -45,7 +45,7 @@
     (make-sparse-keymap)
     "local keymap for org mode")
   :config
-  (defun insert-zero-with-space-around-chinese-region ()
+  (defun insert-zero-width-space-around-chinese-region ()
     "If region is selected and has Chinese characters before or after it,
 insert spaces as needed to separate Chinese text from the region."
     (interactive)
@@ -84,7 +84,7 @@ insert spaces as needed to separate Chinese text from the region."
 
 
   (defun my/org-emphasize--adv-fn (&optional CHAR)
-    (insert-zero-with-space-around-chinese-region)
+    (insert-zero-width-space-around-chinese-region)
     )
 
   ;; 让 org-mode ** // ~~ 等，格式支持中文，通过插入 zero with space 实现
@@ -341,6 +341,7 @@ prepended to the element after the #+HEADER: tag."
 (use-package jupyter
   :defer t
   :config
+  (setq jupyter-api-authentication-method 'password)
 
   (add-to-list 'org-babel-load-languages '(emacs-lisp . t) t)
   (add-to-list 'org-babel-load-languages '(julia . t) t)
