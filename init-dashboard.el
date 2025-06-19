@@ -28,7 +28,7 @@
   (defun open-dashboard ()
     "Open the *dashboard* buffer and jump to the first widget."
     (interactive)
-    (dashboard-setup-startup-hook)
+    ;; (dashboard-setup-startup-hook)
     ;; Check if need to recover layout
     (if (length> (window-list-1)
                  ;; exclude `treemacs' window
