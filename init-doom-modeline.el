@@ -153,7 +153,7 @@
   ;; Whether display the environment version.
   (setq doom-modeline-env-version t)
   ;; Or for individual languages
-  (setq doom-modeline-env-enable-python t)
+  (setq doom-modeline-env-enable-python nil)
   (setq doom-modeline-env-enable-ruby t)
   (setq doom-modeline-env-enable-perl t)
   (setq doom-modeline-env-enable-go t)
@@ -161,7 +161,7 @@
   (setq doom-modeline-env-enable-rust t)
 
   ;; Change the executables to use for the language version string
-  (setq doom-modeline-env-python-executable "python") ; or `python-shell-interpreter'
+  (setq doom-modeline-env-python-executable "python3") ; or `python-shell-interpreter'
   ;; (setq doom-modeline-env-ruby-executable "ruby")
   ;; (setq doom-modeline-env-perl-executable "perl")
   (setq doom-modeline-env-go-executable "go")
@@ -248,6 +248,12 @@ Example:
        ;; File name
        (propertize (file-name-nondirectory file-path)
                    'face 'doom-modeline-buffer-file))))
+
+
+
+
+
+  
 
   )
 
