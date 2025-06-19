@@ -45,7 +45,8 @@
     (dashboard-refresh-buffer)
 
     ;; Jump to the first section
-    (dashboard-goto-recent-files))
+    (dashboard-goto-recent-files)
+    (remove-hook 'my/startup-hook #'open-dashboard))
 
   (defun dashboard-goto-recent-files ()
     "Go to recent files."
