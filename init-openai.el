@@ -84,6 +84,7 @@
 
 (my/straight-if-use 'llm)
 (with-eval-after-load 'llm
+  (setq llm-warn-on-nonfree nil)
   (my/elisp-load-file-existsp "~/org/private/gptel-setup.el"))
 
 (my/straight-if-use '(ellama :type git :host github :repo "s-kostyaev/ellama"))
@@ -120,6 +121,9 @@
 			     ("ollama-qwen2.5-coder-office" . my/llm-provider-ollama-qwen2.5-coder-office)
 			     ("ollama-qwen2.5-chat" . my/llm-provider-ollama-qwen2.5-chat)
 			     ("ollama-qwen2.5-chat-office" . my/llm-provider-ollama-qwen2.5-chat-office)
+			     ("openrouter-deepseek-v3-free". my/llm-provider-openrouter-deepseek-v3-free)
+
+			     ("openrouter-deepseek-r1-free". my/llm-provider-openrouter-deepseek-r1-free)
 			     )
 
 	  )
