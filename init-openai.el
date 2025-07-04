@@ -124,6 +124,10 @@
 			     ("openrouter-deepseek-v3-free". my/llm-provider-openrouter-deepseek-v3-free)
 
 			     ("openrouter-deepseek-r1-free". my/llm-provider-openrouter-deepseek-r1-free)
+			     ("openrouter-deepseek-v3". my/llm-provider-openrouter-deepseek-v3)
+
+			     ("openrouter-deepseek-r1". my/llm-provider-openrouter-deepseek-r1)
+			     ("openrouter-gemini-flash" . my/llm-provider-openrouter-gemini-flash)
 			     )
 
 	  )
