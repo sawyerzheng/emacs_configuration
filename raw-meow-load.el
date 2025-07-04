@@ -278,6 +278,8 @@
 (global-set-key (kbd "M-<down>") #'move-text-down)
 (global-set-key (kbd "M-K") #'move-text-up)
 (global-set-key (kbd "M-J") #'move-text-down)
+(global-set-key (kbd "M-p") #'scroll-down-command)
+(global-set-key (kbd "M-n") #'scroll-up-command)
 
 
 ;;; meow config
@@ -452,6 +454,7 @@ Will cancel all other selection, except char selection. "
 
 
 (meow-leader-define-key
+ '("SPC" . execute-extended-command)
  '("r" . vr/query-replace)
  '("f" . switch-to-buffer)
  '("H" . beginning-of-buffer)
@@ -670,7 +673,7 @@ Will cancel all other selection, except char selection. "
  ;; major mode hydra
  '("b" . major-mode-hydra)
  ;; M-x
- '("a" . execute-extended-command)
+ ;; '("a" . execute-extended-command)
  )
 
 (meow-normal-define-key
