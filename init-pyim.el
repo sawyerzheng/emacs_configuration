@@ -1,10 +1,5 @@
 ;; -*- coding: utf-8; -*-
 
-(my/straight-if-use 'pyim)
-(my/straight-if-use 'posframe)
-(my/straight-if-use 'popup)
-(my/straight-if-use 'popon)
-
 (with-eval-after-load 'pyim
   (require 'popon)
   (require 'popup)
@@ -55,13 +50,15 @@
   ;; 使用默认配置，兼容 terminal
 
   (setq pyim-page-tooltip
-	(cond ((my/running-with-x-forwarding-p)
-	       'popon)
+	(cond ((or (my/running-with-x-forwarding-p) (my/emacsclient-ssh-x-forwarding-p))
+	       'popup)			 ;; popon 实测，生成的弹出框，长时间在 org-mode 中使用后会产生显示位置漂移
 	      ((and (fboundp #'posframe-workable-p) (posframe-workable-p))
 	       'posframe)
 	      (t
 	       'popup))
  	)
+  (add-hook 'my/startup-hook (lambda () (when (my/emacsclient-ssh-x-forwarding-p)
+					  (setq pyim-page-tooltip 'popup))))
   (use-package posframe
     :if (or (daemonp) (display-graphic-p))
     )
@@ -145,7 +142,7 @@
 
     (advice-add 'pyim-input-method :around #'rime--enable-key-chord-fun)))
 
-(my/straight-if-use 'pyim-basedict)
+
 (use-package pyim-basedict
   :after pyim
   ;; 激活 basedict 拼音词库，五笔用户请继续阅读 README
@@ -160,10 +157,10 @@
         (if (featurep 'pyim)
             (pyim-extra-dicts-add-dict
              `(:name "Greatdict-elpa"
-                     :file ,file
-                     :coding utf-8-unix
-                     :dict-type pinyin-dict
-                     :elpa t))
+               :file ,file
+               :coding utf-8-unix
+               :dict-type pinyin-dict
+               :elpa t))
           (message "pyim 没有安装，pyim-greatdict 启用失败。"))))))
 
 

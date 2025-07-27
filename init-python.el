@@ -13,7 +13,6 @@
 
 
 ;;; venv
-(my/straight-if-use 'pyvenv)
 (use-package pyvenv
   :commands (pyvenv-activate
 	     pyvenv-workon
@@ -22,44 +21,44 @@
 	     pyvenv-restart-python
 	     my/pdm-activate)
   :config
-  (defun my/pdm-activate ()
-    "choose venv for current project, then activate it"
-    (interactive)
-    (let* ((s (shell-command-to-string "pdm venv list"))
-	   (lines (split-string s "\n"))
-	   (pattern "^[-\\*][ \t]+\\([[:alnum:]_-]+\\):[ \t]*\\(.+\\)$")
-	   (results nil)
-	   selected-venv
-	   selected-path)
-      (dolist (line lines)
-	(when (and (not (string-empty-p line))
-		   (string-match pattern line))
-	  (push (list :name (match-string 1 line)
-                      :path (match-string 2 line))
-		results)))
-      (setq results (nreverse results))
-      (setq results (mapcar (lambda (item)
-                              (cons (plist-get item :name)
-				    (plist-get item :path)))
-			    results))
 
-
-      (if (length= results 1)
-	  (setq selected-venv (car (car results)))
-	(setq selected-venv (completing-read "Choose pdm venv:" (mapcar 'car results))))
-      
-      (setq selected-path (cdr (assoc selected-venv results)))
-      (message "activating pdm venv: %s: %s" selected-venv selected-path)
-      (pyvenv-activate selected-path)
-      (message "activated pdm venv: %s: %s" selected-venv selected-path))
-
-    )
   )
 
+(defun my/pdm-activate ()
+  "choose venv for current project, then activate it"
+  (interactive)
+  (unless (fboundp #'pyvenv-activate))
+  (let* ((s (shell-command-to-string "pdm venv list"))
+	 (lines (split-string s "\n"))
+	 (pattern "^[-\\*][ \t]+\\([[:alnum:]_-]+\\):[ \t]*\\(.+\\)$")
+	 (results nil)
+	 selected-venv
+	 selected-path)
+    (dolist (line lines)
+      (when (and (not (string-empty-p line))
+		 (string-match pattern line))
+	(push (list :name (match-string 1 line)
+                    :path (match-string 2 line))
+	      results)))
+    (setq results (nreverse results))
+    (setq results (mapcar (lambda (item)
+                            (cons (plist-get item :name)
+				  (plist-get item :path)))
+			  results))
 
+
+    (if (length= results 1)
+	(setq selected-venv (car (car results)))
+      (setq selected-venv (completing-read "Choose pdm venv:" (mapcar 'car results))))
+
+    (setq selected-path (cdr (assoc selected-venv results)))
+    (message "activating pdm venv: %s: %s" selected-venv selected-path)
+    (pyvenv-activate selected-path)
+    (message "activated pdm venv: %s: %s" selected-venv selected-path))
+
+  )
 
 ;;; python unittest
-(my/straight-if-use 'pytest)
 (use-package pytest
   :commands (pytest-one
              pytest-all
@@ -89,19 +88,25 @@
     (("r" my-elpy/execute-buffer "execute buffer")
      ("b" my/python-execute-under-cursor "execute buffer")))))
 
+(when my/doom-p
+  (map! :localleader
+	:map python-base-mode-map
+	"r" #'my-elpy/execute-buffer
+	"b" #'my/python-execute-under-cursor
+	))
+
 (major-mode-hydra-define+ python-base-mode
-  (:title "Python Mode" :color blue :quit-key "q")
-  ("Tests"
-   (("t" my/pytest-hydra/body "pytest")
-    )
-   "Debug"
-   (("d d" dap-hydra "dap-hydra"))
-   "Run"
-   (("r" my-elpy/execute-buffer "execute buffer")
-    ("b" my/python-execute-under-cursor "execute buffer"))))
+                          (:title "Python Mode" :color blue :quit-key "q")
+                          ("Tests"
+                           (("t" my/pytest-hydra/body "pytest")
+                            )
+                           "Debug"
+                           (("d d" dap-hydra "dap-hydra"))
+                           "Run"
+                           (("r" my-elpy/execute-buffer "execute buffer")
+                            ("b" my/python-execute-under-cursor "execute buffer"))))
 
 
-(my/straight-if-use 'python-pytest)
 (use-package python-pytest
   :commands (
              python-pytest
@@ -126,7 +131,6 @@
   )
 
 ;;; Code Cells
-(my/straight-if-use 'code-cells)
 (use-package code-cells
   :commands (code-cells-mode-maybe
              code-cells-mode)

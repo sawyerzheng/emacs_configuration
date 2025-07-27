@@ -1,4 +1,4 @@
-(defvar my/use-codeium t
+(defvar my/use-codeium nil
   "if to use codeium"
   )
 ;; (my/straight-if-use '(copilot :host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))

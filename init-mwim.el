@@ -1,4 +1,3 @@
-(my/straight-if-use 'mwim)
 (use-package mwim
   :bind (
          ("M-m" . my/mwim-begin-end-jump)

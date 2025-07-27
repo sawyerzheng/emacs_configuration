@@ -1,9 +1,8 @@
 (provide 'init-regexp)
 
-(my/straight-if-use 'visual-regexp)
 (use-package visual-regexp
   :defer t)
-(my/straight-if-use 'visual-regexp-steroids)
+
 (use-package visual-regexp-steroids
   :init
   (setq vr/engine 'python)

@@ -65,3 +65,5 @@
   (require 'init-markdown)
   :mode (("\\.md" . gfm-mode)
 	 ))
+
+(use-package init-csv)

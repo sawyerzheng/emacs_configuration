@@ -5,6 +5,7 @@
     (define-key map (kbd "p") #'persp-prev)
     (define-key map (kbd "s") #'persp-frame-switch)
     (define-key map (kbd "S") #'persp-window-switch)
+    (define-key map (kbd "S") #'persp-frame-switch)
     (define-key map (kbd "r") #'persp-rename)
     (define-key map (kbd "c") #'persp-copy)
     (define-key map (kbd "C") #'persp-kill)
@@ -27,7 +28,7 @@
   )
 
 
-(global-set-key (kbd "C-c s") my/persp-mode-map)
+(global-set-key (kbd "C-c q") my/persp-mode-map)
 
 (use-package persp-mode
   :unless noninteractive

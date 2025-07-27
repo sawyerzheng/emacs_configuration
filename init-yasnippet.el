@@ -23,7 +23,6 @@
   (yas-reload-all)
   )
 
-(my/straight-if-use 'auto-yasnippet)
 (use-package auto-yasnippet
   :commands (aya-create
              aya-expand

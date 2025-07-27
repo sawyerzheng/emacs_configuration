@@ -5,12 +5,16 @@
 (add-to-list 'load-path (file-name-directory load-file-name))
 (require 'init-load-tools)
 (require 'init-proxy)
+(when (locate-library "init-host")
+  (use-package init-host))
+
 (add-to-list 'load-path my/extra.d-dir)
 (require 'init-logging)
 ;; (require 'init-esup)
 (defvar my/install-packages-p t
   "install packages")
-
+(defvar my/use-flymake-p nil
+  "wheather or not to use flymake")
 ;;; benchmark init
 ;; (require 'init-benchmark-init)
 
@@ -83,6 +87,10 @@
   (add-subdirs-to-load-path (expand-file-name "straight/build/" prefix))
   )
 
+;;; install packages
+(use-package init-straight-packages)
+
+
 (use-package extra.d-autoloads
   :demand t
   :requires (dired dired-x)
@@ -150,8 +158,6 @@
 (use-package init-tabby)
 (use-package init-dap-mode)
 
-(when (locate-library "init-host")
-  (use-package init-host))
 (use-package org
   :init
   (use-package init-org)
@@ -160,6 +166,8 @@
 (use-package init-elfeed)
 (use-package init-org-roam)
 (use-package init-poporg)
+(use-package init-scimax-notebook)
+
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -192,16 +200,30 @@
     (define-key map (kbd "d") #'server-start)
     map))
 
+;; dictionary
+(which-key-add-key-based-replacements
+  "C-c l d" "dictionary"
+  "C-c l w" "elfeed")
+(global-set-key (kbd "C-c l d d") #'fanyi-dwim2)
+(global-set-key (kbd "C-c l d b") #'popweb-dict-bing-pointer)
+(global-set-key (kbd "C-c l d i") #'popweb-dict-bing-input)
+(global-set-key (kbd "C-c l d u") #'my/dictionary-overlay-mark-word-unknown)
+(global-set-key (kbd "C-c l d U") #'my/dictionary-overlay-mark-word-known)
+(global-set-key (kbd "C-c l d t") #'my/dictionary-overlay-toggle)
+
 (defvar my/search-keymap (make-sparse-keymap)
   "keymap for search")
+
+(autoload #'+lookup/online "online.el")
 
 (let ((map my/search-keymap))
   (define-key map (kbd ";") #'blink-search)
 
-  (define-key map (kbd "s") #'+default/search-buffer)
+  ;; (define-key map (kbd "i") #'+default/search-buffer)
+  (define-key map (kbd "b") #'+default/search-buffer)
   (define-key map (kbd "f") '("find file path" . consult-find))
   (define-key map (kbd "p") '("find file content" . consult-ripgrep))
-  (define-key map (kbd "i") #'(lambda ()
+  (define-key map (kbd "s") #'(lambda ()
                                 (interactive)
                                 (cond
                                  ((eq major-mode 'org-mode)
@@ -214,22 +236,14 @@
                                   (consult-imenu)))))
   (define-key map (kbd "I") #'consult-imenu-multi)
 
+  (define-key map (kbd "S") #'persp-frame-switch)
+
   ;; * docsets or devdocs
   (define-key map (kbd "o") #'+lookup/online)
   (define-key map (kbd "d") #'devdocs-dwim)
   ;; (define-key map (kbd "d") #'my/counsel-dash-at-point)
   (define-key map (kbd "D") #'consult-dash)
   (define-key map (kbd "z") #'zeal-at-point)
-
-  ;; * dictionary
-  ;; (define-key map (kbd "y") #'my-youdao-dictionary-search-at-point)
-  (define-key map (kbd "y") #'fanyi-dwim2)
-  (define-key map (kbd "b") #'popweb-dict-bing-pointer)
-  (define-key map (kbd "v") #'popweb-dict-bing-input)
-  (define-key map (kbd "u") #'my/dictionary-overlay-mark-word-unknown)
-  (define-key map (kbd "U") #'my/dictionary-overlay-mark-word-known)
-  (define-key map (kbd "r") #'my/dictionary-overlay-toggle)
-
 
   ;; * char, word jump
   ;; (define-key map (kbd "j") #'ace-pinyin-jump-word)
@@ -382,13 +396,8 @@ Will cancel all other selection, except char selection. "
 
 (setq meow-use-clipboard t)
 
-(defun my/meow-quit (&optional arg)
-  "Quit current window or buffer."
-  (interactive "P")
-  (cond
-   ((derived-mode-p 'lsp-bridge-ref-mode) (lsp-bridge-ref-quit))
-   (t (call-interactively #'meow-quit))))
 
+(use-package init-meow-core)
 (defun my/meow-insert-normal-toggle ()
   (interactive)
   (cond ((meow-insert-mode-p)
@@ -430,8 +439,8 @@ Will cancel all other selection, except char selection. "
 
 ;; * meow-motion
 (meow-motion-overwrite-define-key
- (cons "q" my/search-keymap)
- '("Q" . "H-q")
+ ;; (cons "q" my/search-keymap)
+ ;; '("Q" . "H-q")
  '("j" . meow-next)
  '("k" . meow-prev)
  '("C-M-j" . "H-j")
@@ -441,8 +450,8 @@ Will cancel all other selection, except char selection. "
  '("\\" . my/meow-quit)
  )
 
-(meow-leader-define-key
- (cons "q q"  '("kill emacs" . my/kill-emacs-save-or-server-edit)))
+
+
 
 (global-unset-key (kbd "C-c b"))
 (global-unset-key (kbd "C-c f"))
@@ -451,22 +460,35 @@ Will cancel all other selection, except char selection. "
 (global-unset-key (kbd "C-c w"))
 ;; (global-unset-key (kbd "C-c s"))
 (global-unset-key (kbd "C-x C-0"))
+(global-set-key (kbd "C-c s") my/search-keymap)
+(global-set-key (kbd "C-c q q") #'my/kill-emacs-save-or-server-edit)
 
+(which-key-add-key-based-replacements "C-c f" "file")
+(global-set-key (kbd "C-c f") nil)
+(global-set-key (kbd "C-c f f") #'switch-to-buffer)
+(global-set-key (kbd "C-c f b") #'persp-switch-to-buffer)
 
 (meow-leader-define-key
  '("SPC" . execute-extended-command)
  '("r" . vr/query-replace)
- '("f" . switch-to-buffer)
+ ;; '("f" . switch-to-buffer)
+
  '("H" . beginning-of-buffer)
  '("N" . end-of-buffer)
  '(";" . save-buffer)
- '("w" . xah-shrink-whitespaces)
- '("u" . (lambda () (interactive) (kill-buffer (current-buffer))))
-
+ ;; '("u" . (lambda () (interactive) (kill-buffer (current-buffer))))
 
  ;; jupyter -- buffer
  '("," . beginning-of-buffer)
  '("." . end-of-buffer)
+
+ ;; `f'
+ '("f f" . consult-buffer)
+ '("f b" . persp-switch-to-buffer)
+ '("f k" . kill-current-buffer)
+ '("f i" . revert-buffer)
+ '("f F" . find-file)
+ '("f r" . consult-recent-file)
 
  ;; app`l'ications
  '("l ," . eww)
@@ -484,7 +506,7 @@ Will cancel all other selection, except char selection. "
  '("l a" . org-agenda)
  '("l b" . save-some-buffers)
  '("l c" . flyspell-buffer)
- '("l d" . eshell)
+ ;; '("l d" . eshell) ;; l d use for dictionary
  '("l e" . toggle-frame-maximized)
  '("l f" . shell)
  '("l g" . make-frame-command)
@@ -560,19 +582,19 @@ Will cancel all other selection, except char selection. "
  '("d u" . xah-insert-ascii-double-quote)
  '("d v" . xah-insert-markdown-quote)
  '("d y" . xah-insert-emacs-quote)
- '("e '" . markmacro-mark-lines)
- '("e /" . markmacro-mark-chars)
- '("e ;" . markmacro-mark-words)
- '("e <" . markmacro-apply-all)
- '("e >" . markmacro-apply-all-except-first)
- '("e C" . markmacro-rect-mark-columns)
- '("e D" . markmacro-rect-delete)
- '("e H" . markmacro-secondary-region-mark-cursors)
- '("e I" . markmacro-rect-insert)
- '("e L" . markmacro-mark-imenus)
- '("e M" . markmacro-rect-set)
- '("e R" . markmacro-rect-replace)
- '("e S" . markmacro-rect-mark-symbols)
+ ;; '("e '" . markmacro-mark-lines)
+ ;; '("e /" . markmacro-mark-chars)
+ ;; '("e ;" . markmacro-mark-words)
+ ;; '("e <" . markmacro-apply-all)
+ ;; '("e >" . markmacro-apply-all-except-first)
+ ;; '("e C" . markmacro-rect-mark-columns)
+ ;; '("e D" . markmacro-rect-delete)
+ ;; '("e H" . markmacro-secondary-region-mark-cursors)
+ ;; '("e I" . markmacro-rect-insert)
+ ;; '("e L" . markmacro-mark-imenus)
+ ;; '("e M" . markmacro-rect-set)
+ ;; '("e R" . markmacro-rect-replace)
+ ;; '("e S" . markmacro-rect-mark-symbols)
  '("e a" . ialign)
  '("e d" . isearch-forward-symbol-at-point)
  '("e e" . highlight-symbol-at-point)
@@ -674,10 +696,11 @@ Will cancel all other selection, except char selection. "
  '("b" . major-mode-hydra)
  ;; M-x
  ;; '("a" . execute-extended-command)
+ '("a" . embark-act)
  )
 
 (meow-normal-define-key
- (cons "q" my/search-keymap)
+ ;; (cons "q" my/search-keymap)
  ;; '("0" . delete-window)
  '("9" . meow-expand-9)
  '("8" . meow-expand-8)
@@ -709,7 +732,8 @@ Will cancel all other selection, except char selection. "
  '("B" . meow-back-symbol)
  '("c" . meow-change)
  '("d" . meow-backward-delete)
- '("D" . meow-delete)
+ ;; '("D" . meow-delete)
+ '("D" . recenter-top-bottom)
  '("e" . meow-next-word)
  '("E" . meow-next-symbol)
  '("f" . meow-find)
@@ -734,6 +758,8 @@ Will cancel all other selection, except char selection. "
  '("r" . meow-replace)
  '("R" . meow-swap-grab)
  '("s" . meow-kill)
+ '("q" . meow-quit)
+ '("Q" . meow-goto-line)
  ;; insert new empty line below
  '("S" . open-line)
  '("t" . meow-till)
@@ -741,12 +767,12 @@ Will cancel all other selection, except char selection. "
  ;; '("U" . meow-undo-in-selection)
  '("U" . undo-redo)
  ;; '("v" . my/meow-visit)
- '("v" . recenter-top-bottom)
- '("V" . meow-visit)
+ ;; '("v" . recenter-top-bottom)
+ '("v" . meow-visit)
  '("w" . meow-mark-word)
  '("W" . meow-mark-symbol)
  '("x" . meow-line)
- '("X" . meow-goto-line)
+ '("X" . xah-shrink-whitespaces)
  '("y" . meow-save)
  '("Y" . meow-sync-grab)
  '("z" . meow-pop-selection)
@@ -755,8 +781,8 @@ Will cancel all other selection, except char selection. "
 
  '("\\" . my/meow-quit)
  ;; window
- '("~" . other-frame)
- '("|" . split-window-right)
+ ;; '("~" . other-frame)
+ ;; '("|" . split-window-right)
 
  ;; region
  '(":" . er/expand-region)
@@ -774,13 +800,10 @@ Will cancel all other selection, except char selection. "
  '("<" . scroll-down-command)
  '(">" . scroll-up-command)
 
- ;; line end
- '("X" . mwim-end)
  ;; line start
  '("M" . mwim-beginning)
  ;; insert space
- '("P" . xah-insert-space-after)
- )
+ '("P" . xah-insert-space-after))
 
 (key-chord-define meow-insert-state-keymap "jj" #'meow-insert-exit)
 (key-chord-define meow-insert-state-keymap "JJ" #'meow-insert-exit)
@@ -1135,7 +1158,18 @@ Will cancel all other selection, except char selection. "
     (message "Error: not find executable emacs-lsp-booster"))
   )
 
+(my/straight-if-use 'flycheck)
+(use-package flycheck
+  :unless my/use-flymake-p
+  :hook (eglot-managed-mode . flycheck-mode))
 
+(my/straight-if-use 'flycheck-eglot)
+(use-package flycheck-eglot
+  :after (flycheck eglot)
+  :if (not my/use-flymake-p)
+  :config
+  (add-to-list 'eglot-stay-out-of 'flymake)
+  (global-flycheck-eglot-mode 1))
 
 (defun my-lsp-toggle ()
   (interactive)
@@ -1172,7 +1206,7 @@ Will cancel all other selection, except char selection. "
 
 ;; coding
 (when my/windows-p
- (set-language-environment 'UTF-8)
+  (set-language-environment 'UTF-8)
 
   ;; (set-language-environment 'Chinese-GB)
   ;; default-buffer-file-coding-system变量在emacs23.2之后已被废弃，使用buffer-file-coding-system代替
@@ -1188,6 +1222,8 @@ Will cancel all other selection, except char selection. "
   (prefer-coding-system 'utf-8-dos)
   (prefer-coding-system 'utf-8-unix)
   )
+
+(setq max-lisp-eval-depth 5000)
 
 
 (provide 'raw-meow-load)

@@ -1,7 +1,4 @@
 ;; -*- coding: utf-8; -*-
-(my/straight-if-use 'vertico)
-(my/straight-if-use 'orderless)
-
 (use-package vertico
   :commands (vertico-mode)
   :init

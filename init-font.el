@@ -132,3 +132,5 @@
   :commands (mixed-pitch-mode)
   :config
   (setq mixed-pitch-variable-pitch-cursor nil))
+
+(use-package init-cnfonts)

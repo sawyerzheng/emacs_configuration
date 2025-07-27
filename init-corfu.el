@@ -1,7 +1,7 @@
 (my/straight-if-use 'popon)
 (use-package popon
-      :defer t
-      )
+  :defer t
+  )
 
 (my/straight-if-use 'corfu)
 (my/straight-if-use '(nerd-icons-corfu :source (melpa)))
@@ -9,8 +9,7 @@
   :commands (corfu-mode)
   ;; :hook (my/startup . global-corfu-mode)
   :after orderless
-  :hook ((eglot-managed-mode
-	  eglot--managed-mode) . corfu-mode)
+  :hook ((eglot-managed-mode) . corfu-mode)
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.5)

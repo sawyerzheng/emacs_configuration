@@ -1,7 +1,8 @@
-(my/straight-if-use 'consult)
-
 (use-package consult-flymake
   :commands (consult-flymake))
+
+(use-package consult-flycheck
+  :commands (consult-flycheck))
 
 (use-package consult-xref
   :commands (consult-xref))
@@ -16,7 +17,7 @@
 
 (use-package consult-compile
   :bind (("M-g e" . consult-compile-error)
-))
+         ))
 
 (use-package consult-register
   :bind (;; Custom M-# bindings for fast register access
@@ -81,7 +82,11 @@
    ;; Other custom bindings
    ("M-y" . consult-yank-pop)                ;; orig. yank-pop
    ;; M-g bindings in `goto-map'
-   ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+   ("M-g f" . (lambda ()
+		(interactive)
+		(if  flymake-mode
+		    (funcall-interactively #'consult-flymake)
+		  (funcall-interactively #'consult-flycheck))))               ;; Alternative: consult-flycheck
    ("M-g g" . consult-goto-line)             ;; orig. goto-line
    ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
    ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
@@ -189,25 +194,23 @@ input and search the whole buffer for it."
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
 
-
   )
 
 
+;; (use-package window
+;;   ;; :straight (:type built-in)
+;;   :bind (("C-c b x" . my/switch-to-scratch-fn)
+;;          ("C-c b p" . switch-to-prev-buffer)
+;;          ("C-c b n" . switch-to-next-buffer))
+;;   :init
+;;   (defun my/switch-to-scratch-fn ()
+;;     (interactive) (switch-to-buffer "*scratch*")))
 
-(use-package window
-  ;; :straight (:type built-in)
-  :bind (("C-c b x" . my/switch-to-scratch-fn)
-         ("C-c b p" . switch-to-prev-buffer)
-         ("C-c b n" . switch-to-next-buffer))
-  :init
-  (defun my/switch-to-scratch-fn ()
-    (interactive) (switch-to-buffer "*scratch*")))
-
-(use-package files
-  ;; :straight (:type built-in)
-  :bind
-  ("C-c b r" . revert-buffer)
-  ("C-c b s" . save-buffer))
+;; (use-package files
+;;   ;; :straight (:type built-in)
+;;   :bind
+;;   ("C-c b r" . revert-buffer)
+;;   ("C-c b s" . save-buffer))
 
 ;; (use-package frame
 ;;   :straight (:type built-in)
@@ -215,23 +218,21 @@ input and search the whole buffer for it."
 ;;   ("C-c o f" . make-frame-command))
 
 
-(when (featurep 'straight)
-  (straight-use-package 'consult-yasnippet)
-  (use-package consult-yasnippet
-    ;; :straight t
-    :commands (consult-yasnippet
-               consult-yasnippet-visit-snippet-file))
-  (straight-use-package 'consult-dir)
-  (use-package consult-dir
-    ;;:straight t
-    :bind (("C-x C-d" . consult-dir)
-           :map minibuffer-local-completion-map
-           ("C-x C-d" . consult-dir)
-           ("C-x C-j" . consult-dir-jump-file)))
+(use-package consult-yasnippet
+  ;; :straight t
+  :commands (consult-yasnippet
+             consult-yasnippet-visit-snippet-file))
 
-  (straight-use-package '(consult-tramp :type git :host github :repo "Ladicle/consult-tramp"))
-  (use-package consult-tramp
-    ;;:straight (:type git :host github :repo "Ladicle/consult-tramp")
-    :commands (consult-tramp)))
+(use-package consult-dir
+  ;;:straight t
+  :bind (("C-x C-d" . consult-dir)
+         :map minibuffer-local-completion-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file)))
+
+
+(use-package consult-tramp
+  ;;:straight (:type git :host github :repo "Ladicle/consult-tramp")
+  :commands (consult-tramp))
 
 (provide 'init-consult)

@@ -28,6 +28,12 @@
     ;; (load-theme 'modus-vivendi t)
     ))
 
+;; tokyo night theme
+(my/straight-if-use '(perltidy
+		      :type git
+		      :host github
+		      :repo "rawleyfowler/tokyo-theme.el"
+		      :branch "main"))
 (my/straight-if-use 'kaolin-themes)
 
 
@@ -43,7 +49,8 @@
           'doom-vibrant
         ;; 'modus-vivendi
         ;; 'modus-vivendi-tritanopia
-	'tsdh-dark
+	;; 'tsdh-dark
+	'doom-vibrant
         ))
 
 
@@ -57,6 +64,9 @@
 
 (defun my/load-theme ()
   (interactive)
+  (when (fboundp #'consult-theme)
+    (consult-theme 'default)
+    (mapc #'disable-theme custom-enabled-themes))
   (load-theme my/selected-theme t))
 
 (if (daemonp)

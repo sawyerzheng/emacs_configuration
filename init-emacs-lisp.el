@@ -4,9 +4,6 @@
   (font-lock-add-keywords 'emacs-lisp-mode '(("\\_<[+-]1\\_>" . 'font-lock-keyword-face)
                                              )))
 
-(my/straight-if-use 'elisp-def)
-(my/straight-if-use 'highlight-defined)
-(my/straight-if-use 'highlight-quoted)
 (use-package elisp-def
   :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . elisp-def-mode)
   :config
@@ -19,7 +16,7 @@
   ;; (require 'init-lispy)
   (require 'init-helpful))
 
-(my/straight-if-use 'rainbow-delimiters)
+
 (use-package rainbow-delimiters
   :hook ((emacs-lisp-mode
           ielm-mode

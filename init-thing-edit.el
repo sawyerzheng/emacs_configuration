@@ -18,7 +18,6 @@
               (beginning-of-thing 'symbol)))
     (backward-word)))
 
-(my/straight-if-use '(thing-edit :type git :host github :repo "manateelazycat/thing-edit"))
 (use-package thing-edit
   :commands (thing-edit-hydra/body
              thing-mark-hydra/body)
@@ -28,8 +27,8 @@
     (interactive)
     (let* (start end region)
       (if (member thing '(symbol list sexp defun
-                                 filename existing-filename url email uuid word
-                                 sentence whitespace line number page))
+                          filename existing-filename url email uuid word
+                          sentence whitespace line number page))
           (setq region (bounds-of-thing-at-point thing))
         (setq region
               (cond
@@ -135,20 +134,20 @@
   )
 
 
-(my/straight-if-use '(open-newline :type git :host github :repo "manateelazycat/open-newline"))
 (use-package open-newline
   :commands (open-newline-above
              open-newline-below)
-  :bind (("C-O" . open-newline-above)
+  :bind (("C-S-o" . open-newline-above)
          ("C-o" . open-newline-below))
   )
 
-(my/straight-if-use '(move-text :type git :host github :repo "manateelazycat/move-text"))
 (use-package move-text
   :commands (move-text-up
-             move-text-down))
+             move-text-down)
+  :bind (("M-K" . move-text-up)
+         ("M-J" . move-text-down)))
 
-(my/straight-if-use '(duplicate-line :type git :host github :repo "manateelazycat/duplicate-line"))
+
 (use-package duplicate-line
   :commands
   (duplicate-line-or-region-above
@@ -164,46 +163,46 @@
       (duplicate-line-or-region-above t)))
   :bind ("M-Y" . my/duplicate-line-or-region-below))
 
-(my/straight-if-use '(find-orphan :type git :host github :repo "manateelazycat/find-orphan"))
+
 (use-package find-orphan
   :commands (find-orphan-function-in-buffer
              find-orphan-function-in-directory)
   )
 
-(my/straight-if-use '(drag-stuff :type git :host github :repo "rejeep/drag-stuff.el"))
+
 (use-package drag-stuff
   :commands (drag-stuff-mode
              global-drag-stuff-mode))
 
 
 ;; ref: https://github.com/manateelazycat/markmacro
-(my/straight-if-use '(markmacro :type git :host github :repo "manateelazycat/markmacro"))
-(use-package markmacro
-  :bind
-  (("C-M-m ;" . markmacro-mark-words)
-   ("C-M-m '" . markmacro-mark-lines)
-   ("C-M-m /" . markmacro-mark-chars)
-   ("C-M-m L" . markmacro-mark-imenus)
-   ("C-M-m <" . markmacro-apply-all)
-   ("C-M-m >" . markmacro-apply-all-except-first)
-   ("C-M-m M" . markmacro-rect-set)
-   ("C-M-m D" . markmacro-rect-delete)
-   ("C-M-m R" . markmacro-rect-replace)
-   ("C-M-m I" . markmacro-rect-insert)
-   ("C-M-m C" . markmacro-rect-mark-columns)
-   ("C-M-m S" . markmacro-rect-mark-symbols)
+;; (my/straight-if-use '(markmacro :type git :host github :repo "manateelazycat/markmacro"))
+;; (use-package markmacro
+;;   :bind
+;;   (("C-M-m ;" . markmacro-mark-words)
+;;    ("C-M-m '" . markmacro-mark-lines)
+;;    ("C-M-m /" . markmacro-mark-chars)
+;;    ("C-M-m L" . markmacro-mark-imenus)
+;;    ("C-M-m <" . markmacro-apply-all)
+;;    ("C-M-m >" . markmacro-apply-all-except-first)
+;;    ("C-M-m M" . markmacro-rect-set)
+;;    ("C-M-m D" . markmacro-rect-delete)
+;;    ("C-M-m R" . markmacro-rect-replace)
+;;    ("C-M-m I" . markmacro-rect-insert)
+;;    ("C-M-m C" . markmacro-rect-mark-columns)
+;;    ("C-M-m S" . markmacro-rect-mark-symbols)
 
-   ;; 流程：
-   ;; 1. 选择有效区域region-1(限定外围区域)
-   ;; 2. 设定region-1 有效markmacro-secondary-region-set
-   ;; 3. 选择第二个区域 region-2(设定multi-cursor 位置)
-   ;; 4. 设定 region-2 是编辑的位置
-   ;;
-   ("C-M-m h" . markmacro-secondary-region-set) ;设置二级选中区域
-   ("C-M-m H" . markmacro-secondary-region-mark-cursors) ;标记二级选中区域内的光标对象
-   ))
+;;    ;; 流程：
+;;    ;; 1. 选择有效区域region-1(限定外围区域)
+;;    ;; 2. 设定region-1 有效markmacro-secondary-region-set
+;;    ;; 3. 选择第二个区域 region-2(设定multi-cursor 位置)
+;;    ;; 4. 设定 region-2 是编辑的位置
+;;    ;;
+;;    ("C-M-m h" . markmacro-secondary-region-set) ;设置二级选中区域
+;;    ("C-M-m H" . markmacro-secondary-region-mark-cursors) ;标记二级选中区域内的光标对象
+;;    ))
 
-(my/straight-if-use 'chinese-word-at-point)
+
 (use-package chinese-word-at-point
   :after 'thingatpt
   :config

@@ -41,9 +41,9 @@
   (eq system-type 'gnu/linux))
 
 (defun my/qtile-p ()
-    (let* ((session (getenv "DESKTOP_SESSION")))
-      (or (string= session "qtile")
-	  (not (string= (shell-command-to-string "pgrep qtile") "")))))
+  (let* ((session (getenv "DESKTOP_SESSION")))
+    (or (string= session "qtile")
+	(not (string= (shell-command-to-string "pgrep qtile") "")))))
 
 (defvar my/linux-vm-p
   (eq 0 (call-process-shell-command "grep -q \"^flags.*\ hypervisor\ \"  /proc/cpuinfo")))
@@ -102,6 +102,16 @@ Returns t if Emacs is running with X forwarding, nil otherwise."
   (and (display-graphic-p)             ; Check if we're in a graphical display
        (getenv "SSH_CONNECTION")       ; Check if SSH_CONNECTION env var exists
        (getenv "DISPLAY")))	       ; Check if DISPLAY env var exists
+
+(defun my/emacsclient-ssh-x-forwarding-p ()
+  "Return t if emacsclient is running via SSH X forwarding."
+  (and (display-graphic-p)  ; GUI display
+       ;; (my/ss)      ; SSH session, not work for emacs
+       (let ((display (getenv "DISPLAY")))
+         (and display
+              (or (string-match "^localhost:" display)
+                  (string-match "^127\\.0\\.0\\.1:" display)
+                  (string-match "^::1:" display))))))
 
 (setq my/program-dir
       (cond ((eq system-type 'windows-nt) "d:/programs/")
@@ -424,34 +434,34 @@ Nominally unique, but not enforced."
         (call-interactively #'quit-window)))))
 
 (defun my/browse-url-wsl-advice (url &rest args)
-    "use windows browser in wsl to open urls"
-    (interactive)
+  "use windows browser in wsl to open urls"
+  (interactive)
 
 
-    (if (and (not (eq browse-url-browser-function 'eaf-open-browser))
-             my/wsl-p)
-        (cond
-         (;; open http://demo.com
-          (string-match-p "^https?://" url)
-          (message "23")
-          (shell-command (format "cmd.exe /c start \"%s\"" url)))
+  (if (and (not (eq browse-url-browser-function 'eaf-open-browser))
+           my/wsl-p)
+      (cond
+       (;; open http://demo.com
+        (string-match-p "^https?://" url)
+        (message "23")
+        (shell-command (format "cmd.exe /c start \"%s\"" url)))
 
-         (;; open file:///home/to/my/file
-          (string-match-p "^file://" url)
-          (shell-command (let* (($file (substring url 7))
-                                ($file (shell-command-to-string (format "wslpath -m %s" $file)))
-                                ($file (split-string $file
-                                                     split-string-default-separators
-                                                     t
-                                                     split-string-default-separators))
+       (;; open file:///home/to/my/file
+        (string-match-p "^file://" url)
+        (shell-command (let* (($file (substring url 7))
+                              ($file (shell-command-to-string (format "wslpath -m %s" $file)))
+                              ($file (split-string $file
+                                                   split-string-default-separators
+                                                   t
+                                                   split-string-default-separators))
 
-                                (url (concat "file:" (car $file)))
-                                (command (format "cmd.exe /c start %s" url)))
-                           command)))
-         (t
-          (funcall-interactively browse-url-browser-function url args)))
+                              (url (concat "file:" (car $file)))
+                              (command (format "cmd.exe /c start %s" url)))
+                         command)))
+       (t
+        (funcall-interactively browse-url-browser-function url args)))
 
-      (funcall-interactively browse-url-browser-function url args)))
+    (funcall-interactively browse-url-browser-function url args)))
 
 ;; * 切换默认浏览器工具
 (defun my/toggle-default-browser (&optional selected-choice)
@@ -479,7 +489,7 @@ Nominally unique, but not enforced."
 ;; * 切换默认浏览器工具
 (with-eval-after-load 'browse-url
   (global-set-key (kbd "C-c t w") #'my/toggle-default-browser)
-    (when my/windows-p
+  (when my/windows-p
     (setq browse-url-chrome-program "chrome.exe"))
 
   ;; (setq browse-url-browser-function #'browse-url-default-browser)
@@ -539,11 +549,90 @@ BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
                (window-list)))))
 (add-hook 'my/startup-hook #'my/wsl-enable-wslview)
 
+
+(defmacro my/universal-package-install (recipe-or-package)
+  "Install package using package! (Doom Emacs) or straight.el, whichever is available.
+RECIPE-OR-PACKAGE can be either a symbol (package name) or a recipe list."
+  (let ((quoted-recipe (if (and (listp recipe-or-package)
+                                (eq (car recipe-or-package) 'quote))
+                           (cadr recipe-or-package)  ; Remove the quote
+                         recipe-or-package)))
+    (if (listp quoted-recipe)
+        ;; Handle recipe format - convert to package! syntax
+        (let ((package-name (car quoted-recipe))
+              (recipe-props (cdr quoted-recipe)))
+          `(cond
+            ;; If package! is available (Doom Emacs)
+            ((fboundp 'package!)
+             ,(cond
+               ;; Git recipe
+               ((plist-get recipe-props :type)
+                `(package! ,package-name
+                   :recipe (:host ,(plist-get recipe-props :host)
+                            :repo ,(plist-get recipe-props :repo))))
+               ;; Simple package
+               (t `(package! ,package-name))))
+
+            ;; ;; If straight.el is available
+            ;; ((featurep 'straight)
+            ;;  (straight-use-package ',quoted-recipe))
+
+            ;; Neither available
+            (t
+             (message "Neither package! nor straight.el is available"))))
+      ;; Simple symbol package name
+      `(cond
+        ;; If package! is available (Doom Emacs)
+        ((fboundp 'package!)
+         (package! ,quoted-recipe))
+
+        ;; ;; If straight.el is available
+        ;; ((featurep 'straight)
+        ;;  (straight-use-package ',quoted-recipe))
+
+        ;; Neither available
+        (t
+         (message "Neither package! nor straight.el is available"))))))
+
+(defvar my/doom-p (and (fboundp #'package!) (or (fboundp #'doom-packages) (fboundp #'doom/help-packages)))
+  "if run inside doom sync or start in doom emacs")
+
 (defun my/straight-if-use (recipe-or-package)
   "only when straight is available, then install the given package"
   (when (featurep 'straight)
     (straight-use-package recipe-or-package))
   )
+(defun my/straight-if-use (recipe-or-package)
+  "Install package using package! (Doom Emacs) or straight.el, whichever is available.
+RECIPE-OR-PACKAGE can be either a symbol (package name) or a recipe list.
+
+usages:
+(my/straight-if-use 'visual-regexp)
+(my/straight-if-use '(awesome-tray :type git :host github :repo \"manateelazycat/awesome-tray\"))
+"
+  (cond
+   ;; If we're in Doom Emacs with package! available
+   ((and (boundp 'doom-packages) (fboundp 'package!))
+    (if (listp recipe-or-package)
+        ;; Handle recipe format - convert to package! syntax
+        (let ((package-name (car recipe-or-package))
+              (recipe-props (cdr recipe-or-package)))
+          (cond
+           ;; Git recipe
+           ((plist-get recipe-props :type)
+            (eval `(package! ,package-name
+                     :recipe (:host ,(plist-get recipe-props :host)
+                              :repo ,(plist-get recipe-props :repo)))))
+           ;; Simple package
+           (t (eval `(package! ,package-name)))))
+      ;; Simple symbol package name
+      (eval `(package! ,recipe-or-package))))
+   ;; If straight.el is available
+   ((featurep 'straight)
+    (straight-use-package recipe-or-package))
+   ;; Neither available
+   (t
+    (message "Neither package! nor straight.el is available"))))
 
 (defun my/kill-emacs-save-or-server-edit ()
   " check if server done before save buffers and kill emacs"
@@ -560,7 +649,7 @@ BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
 (when (<= emacs-major-version 29)
   (let ((site-path (expand-file-name "site-lisp" user-emacs-directory)))
     (when (file-exists-p site-path)
-        (add-subdirs-to-load-path site-path)))
+      (add-subdirs-to-load-path site-path)))
 
   (require 'use-package)
   ;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -588,3 +677,10 @@ BUFFER-OR-NAME can be a buffer object or a buffer name (string)."
 ;; scroll up/down without move cursor
 (global-set-key (kbd "M-U") #'my/scroll-up-line-keep-cursor)
 (global-set-key (kbd "M-I") #'my/scroll-down-line-keep-cursor)
+
+(defun my/elisp-load-file-existsp (file)
+  (interactive)
+  (when (file-exists-p file)
+    (load-file file)))
+
+(my/elisp-load-file-existsp "~/org/private/gptel-setup.el")

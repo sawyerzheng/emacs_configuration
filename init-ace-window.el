@@ -1,5 +1,5 @@
 ;; -*- coding: utf-8; -*-
-(my/straight-if-use 'ace-window)
+
 
 (defun my/window-list-visible-frames ()
   (apply #'append (mapcar (lambda (frame) (window-list frame)) (visible-frame-list))))
@@ -11,12 +11,15 @@
   (defun my/ace-window (&optional arg)
     "fix ace-window error which need manually select window when only two window exits at terminal"
     (interactive "P")
-    (if (<= (length (my/window-list-visible-frames)) 3)
-	(if (equal (length (visible-frame-list)) 1)
-	    (call-interactively #'other-window)
-	  (call-interactively #'ace-window))
-        
-      (call-interactively #'ace-window)))
+    (if my/doom-p
+        (call-interactively #'ace-window)
+      (if (<= (length (my/window-list-visible-frames)) 3)
+	  (if (equal (length (visible-frame-list)) 1)
+	      (call-interactively #'other-window)
+	    (call-interactively #'ace-window))
+
+        (call-interactively #'ace-window)))
+    )
   :commands (ace-window)
   :bind (("M-o" . my/ace-window)  ; 1) C-u M-o swap 2) C-u C-u M-o delete
          ("M-O" . ace-swap-window)
@@ -45,9 +48,9 @@
 
   (custom-set-faces
    '(aw-leading-char-face ((t (:foreground "white" :background "red"
-                                           :weight bold :height 2.5 :box (:line-width 10 :color "red")))))))
+                               :weight bold :height 2.0 :box (:line-width 5 :color "red")))))))
 
-  ;; (global-unset-key (kbd "M-o"))
-  ;; (global-set-key (kbd "M-o") 'ace-window)
+;; (global-unset-key (kbd "M-o"))
+;; (global-set-key (kbd "M-o") 'ace-window)
 
 (provide 'init-ace-window)

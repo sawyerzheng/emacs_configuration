@@ -48,6 +48,7 @@
     (setq proxy (get-my-http-proxy))
     (setenv "http_proxy" proxy)
     (setenv "https_proxy" proxy)
+
     (message "env http_proxy is %s now" proxy))
   )
 
@@ -66,7 +67,8 @@
     (setq proxy "http://172.16.10.86:7890")
     (setenv "http_proxy" proxy)
     (setenv "https_proxy" proxy)
-    (message "env http_proxy is %s now" proxy))
+    (message "env http_proxy is %s now" proxy)
+    (setq gptel-proxy proxy))
   )
 
 (defun my/wsl-get-windows-ip ()
@@ -77,14 +79,14 @@
 (defun enable-proxy-windows ()
   (interactive)
   (let ((proxy))
-        
-	(progn
-	  (setq proxy "http://172.16.10.86:7890" )
 
-	  (setenv "http_proxy" proxy)
-	  (setenv "https_proxy" proxy)
-	  (message "env http_proxy is %s now" proxy)
-	  )
+    (progn
+      (setq proxy "http://172.16.10.86:7890" )
+
+      (setenv "http_proxy" proxy)
+      (setenv "https_proxy" proxy)
+      (message "env http_proxy is %s now" proxy)
+      )
     ;; (when my/wsl-p
     ;;   (setq proxy (format "http://%s:%s" (my/wsl-get-windows-ip) my/proxy-port) )
 

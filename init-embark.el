@@ -1,6 +1,3 @@
-(my/straight-if-use 'embark)
-(my/straight-if-use 'marginalia)
-(my/straight-if-use 'embark-consult)
 
 (use-package marginalia
   :demand t
@@ -14,9 +11,9 @@
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :commands (embark-prefix-help-command
-	      embark-dwim
-	      embark-act
-	      embark-bindings)
+	     embark-dwim
+	     embark-act
+	     embark-bindings)
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
