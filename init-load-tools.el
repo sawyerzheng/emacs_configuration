@@ -684,3 +684,5 @@ usages:
     (load-file file)))
 
 (my/elisp-load-file-existsp "~/org/private/gptel-setup.el")
+
+(add-to-list 'load-path (expand-file-name "scimax" my/extra.d-dir))

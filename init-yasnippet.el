@@ -1,7 +1,5 @@
 ;; load snippet tables  -*- coding: utf-8; -*-
 
-(my/straight-if-use 'yasnippet)
-(my/straight-if-use 'yasnippet-snippets)
 (use-package yasnippet
   :init
   (defun my/enable-yas-local-fn ()

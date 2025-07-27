@@ -1,5 +1,42 @@
 (provide 'init-straight-packages)
 
+;;; hydra
+(my/straight-if-use 'major-mode-hydra)
+(my/straight-if-use 'pretty-hydra)
+
+;;; org-mode
+(my/straight-if-use '(org :type built-in))
+(my/straight-if-use 'org-rich-yank)
+(my/straight-if-use 'toc-org)
+;;(my/straight-if-use '(org-mode :type built-in))
+(my/straight-if-use 'ob-go)
+(my/straight-if-use 'ob-async)
+(my/straight-if-use 'org-tree-slide)
+(my/straight-if-use 'org-download)
+(my/straight-if-use 'org-cliplink)
+(my/straight-if-use 'org-rich-yank)
+(my/straight-if-use 'org-fancy-priorities)
+;; (my/straight-if-use '(ox :type built-in))
+(my/straight-if-use 'ox-pandoc)
+(my/straight-if-use 'org-preview-html)
+(my/straight-if-use '(org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent"))
+(my/straight-if-use 'org-modern)
+(my/straight-if-use 'org-transclusion)
+(my/straight-if-use '(org-pandoc-import :type git :host github
+		      :repo "tecosaur/org-pandoc-import"
+		      :files ("*.el" "filters" "preprocessors")))
+(my/straight-if-use 'org-appear)
+(my/straight-if-use 'olivetti)
+(my/straight-if-use '(org-pretty-table :type git :host github :repo "Fuco1/org-pretty-table"))
+(my/straight-if-use 'org-fragtog)
+(my/straight-if-use 'math-preview)
+(my/straight-if-use 'org-latex-impatient)
+(my/straight-if-use 'latex-math-preview) ;; very quick latex preview images generating
+(my/straight-if-use '(org-ol-tree :type git :host github :repo "Townk/org-ol-tree"))
+(my/straight-if-use '(ox-ipynb :type git :host github :repo "jkitchin/ox-ipynb"))
+(my/straight-if-use '(consult-notes :type git :host github :repo "mclear-tools/consult-notes"))
+;; (my/straight-if-use '(org-sliced-image :type git :host github :repo "jcfk/org-sliced-images")) ;; not work well
+
 ;;; vertico
 (my/straight-if-use 'vertico)
 (my/straight-if-use 'orderless)
@@ -40,6 +77,9 @@
 (my/straight-if-use 'pytest)
 (my/straight-if-use 'python-pytest)
 (my/straight-if-use 'code-cells)
+(my/straight-if-use 'conda)
+(my/straight-if-use 'live-py-mode)
+
 
 ;;; init-pyim
 (my/straight-if-use 'pyim)
@@ -137,3 +177,8 @@
 
 ;;; mcp.el
 (my/straight-if-use 'mcp)
+
+
+;; yasnippet
+(my/straight-if-use 'yasnippet)
+(my/straight-if-use 'yasnippet-snippets)

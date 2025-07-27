@@ -19,7 +19,7 @@
 ;;
 ;;; Code:
 
-(org-babel-load-file (expand-file-name "scimax-notebook.org" my/extra.d-dir))
+(org-babel-load-file (expand-file-name "scimax/scimax-notebook.org" my/extra.d-dir))
 
 (add-to-list 'load-path (expand-file-name "scimax/org-show" my/extra.d-dir))
 

@@ -1,11 +1,9 @@
-(my/straight-if-use 'major-mode-hydra)
 (use-package major-mode-hydra
   ;; :defer t
   :config
   (setq major-mode-hydra-invisible-quit-key (kbd "C-g"))
   )
 
-(my/straight-if-use 'pretty-hydra)
 (use-package pretty-hydra
   :defer t
   :commands (pretty-hydra-define pretty-hydra-define+)

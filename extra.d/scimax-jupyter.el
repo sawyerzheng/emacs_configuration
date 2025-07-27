@@ -1,1 +1,0 @@
-./scimax/scimax-jupyter.el

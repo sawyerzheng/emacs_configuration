@@ -27,7 +27,6 @@
   "extra conda env store path"
   :type 'directory)
 
-(my/straight-if-use 'conda)
 (use-package conda
   :init
 
