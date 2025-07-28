@@ -15,7 +15,6 @@
           for r = (format "^\\([^%c\n]+%c\\)\\{%d\\}" separator separator i)
           do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c)))))))))
 
-(my/straight-if-use 'csv-mode)
 (use-package csv-mode
   :commands (csv-mode tsv-mode csv-align-mode)
   :mode (("\\.csv\\'" . csv-mode)

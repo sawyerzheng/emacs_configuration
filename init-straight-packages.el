@@ -186,3 +186,7 @@
 
 ;;; scimax
 (my/straight-if-use '(scimax :type git :host github :repo "sawyerzheng/scimax" :files (:defaults "*")))
+
+
+;;; csv, tsv
+(my/straight-if-use 'csv-mode)
