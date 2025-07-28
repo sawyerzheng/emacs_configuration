@@ -80,7 +80,8 @@
 (use-package scimax-org-table
   :demand t
   :after org
-  :commands (scimax-org-table-export))
+  :commands (scimax-org-table-export/body)
+  )
 
 (provide 'init-scimax-notebook)
 ;;; init-scimax-notebook.el ends here
