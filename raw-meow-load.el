@@ -405,9 +405,37 @@ Will cancel all other selection, except char selection. "
         (t
          (call-interactively #'meow-insert))))
 
+(defvar doom-escape-hook nil)
+
+(defun doom/escape (&optional interactive)
+  "Run `doom-escape-hook'."
+  (interactive (list 'interactive))
+  (let ((inhibit-quit t))
+    (cond ((minibuffer-window-active-p (minibuffer-window))
+           ;; quit the minibuffer if open.
+           (when interactive
+             (setq this-command 'abort-recursive-edit))
+           (abort-recursive-edit))
+          ;; Run all escape hooks. If any returns non-nil, then stop there.
+          ((run-hook-with-args-until-success 'doom-escape-hook))
+          ;; don't abort macros
+          ((or defining-kbd-macro executing-kbd-macro) nil)
+          ;; Back to the default
+          ((unwind-protect (keyboard-quit)
+             (when interactive
+               (setq this-command 'keyboard-quit)))))))
+
+(defun +meow-escape ()
+  "Call `meow-cancel-selection', else fallback to `doom/escape'."
+  (interactive)
+  (if (region-active-p)
+      (meow-cancel-selection)
+    (call-interactively #'doom/escape)))
+
 (defun meow-setup ()
   (interactive)
   )
+
 
 ;; * hooks
 (defun my/enable-delete-active-region ()
@@ -418,6 +446,9 @@ Will cancel all other selection, except char selection. "
 ;; * start meow mode
 
 (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+
+(global-set-key (kbd "ESC ESC") #'+meow-escape)
+(global-set-key (kbd "ESC <escape>") #'+meow-escape)
 
 (meow-leader-define-key
  ;; SPC j/k will run the original command in MOTION state.
