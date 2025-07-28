@@ -20,6 +20,7 @@
 ;;; Code:
 
 (use-package mcp
+  :commands (mcp-hub-start-all-server)
   :init
   (setq mcp-hub-servers
         `(
@@ -40,11 +41,26 @@
           ("datetime" . (:command "uvx" :args ("mcp-datetime")))
 
           ))
-  :config (require 'mcp-hub)
-  :hook (after-init . mcp-hub-start-all-server))
+  :config
+  (require 'mcp-hub)
+  ;; :hook (after-init . mcp-hub-start-all-server)
+  )
 
+(defun my/mcp-hub--server-started ()
+  "Test if the mcp-hub started servers"
+  (interactive)
+  (and (boundp 'mcp-server-connections)
+       (> (hash-table-count mcp-server-connections) 0)))
+
+
+(with-eval-after-load 'llm
+  (unless (my/mcp-hub--server-started)
+      (mcp-hub-start-all-server))
+  )
 (with-eval-after-load 'gptel
-  (require  'gptel-integrations)
+  (require  'gptel-integrations) 
+  (unless (my/mcp-hub--server-started)
+      (mcp-hub-start-all-server))
   )
 
 (provide 'init-mcp)
