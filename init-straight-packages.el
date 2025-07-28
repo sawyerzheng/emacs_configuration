@@ -176,9 +176,13 @@
 (my/straight-if-use '(llm-tool-collections :type git :host github :repo "skissue/llm-tool-collection"))
 
 ;;; mcp.el
-(my/straight-if-use 'mcp)
+(my/straight-if-use '(mcp :type git :host github :repo "lizqwerscott/mcp.el"))
 
 
-;; yasnippet
+;;; yasnippet
 (my/straight-if-use 'yasnippet)
 (my/straight-if-use 'yasnippet-snippets)
+
+
+;;; scimax
+(my/straight-if-use '(scimax :type git :host github :repo "sawyerzheng/scimax" :files (:defaults "*")))
