@@ -26,7 +26,7 @@
 (use-package scimax-notebook
   :config
   (let ((org-confirm-babel-evaluate nil))
-    (locate-library "scimax-notebook.org"))
+    (org-babel-load-file (locate-library "scimax-notebook.org")))
   :commands (
 	     nb-example-main
 	     nb-new
@@ -78,7 +78,6 @@
 
 ;;; org table tools
 (use-package scimax-org-table
-  :demand t
   :after org
   :commands (scimax-org-table-export/body)
   )
