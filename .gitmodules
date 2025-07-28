@@ -4,9 +4,6 @@
 [submodule "extra.d/esup"]
 	path = extra.d/esup
 	url = https://github.com/jschaf/esup
-[submodule "extra.d/scimax"]
-	path = extra.d/scimax
-	url = https://github.com/jkitchin/scimax
 [submodule "extra.d/emacs-web-server"]
 	path = extra.d/emacs-web-server
 	url = https://github.com/skeeto/emacs-web-server
