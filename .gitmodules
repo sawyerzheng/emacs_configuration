@@ -7,6 +7,3 @@
 [submodule "extra.d/emacs-web-server"]
 	path = extra.d/emacs-web-server
 	url = https://github.com/skeeto/emacs-web-server
-[submodule "extra.d/nano-emacs"]
-	path = extra.d/nano-emacs
-	url = https://github.com/rougier/nano-emacs
