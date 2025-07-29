@@ -6,7 +6,6 @@
 ;;   (global-cns-mode))
 
 (use-package deno-bridge-jieba
-  :straight (:type git :host github :repo "ginqi7/deno-bridge-jieba" :files ("*"))
   :commands (my/deno-bridge-jieba-mode)
   :config
   (define-minor-mode my/deno-bridge-jieba-mode
