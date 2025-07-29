@@ -634,6 +634,35 @@ usages:
    (t
     (message "Neither package! nor straight.el is available"))))
 
+(defun my/straight-if-use (recipe-or-package)
+  "Install package using package! (Doom Emacs) or straight.el, whichever is available.
+RECIPE-OR-PACKAGE can be either a symbol (package name) or a recipe list.
+This version uses cl-loop for cleaner property handling."
+  (cond
+   ;; If we're in Doom Emacs with package! available
+   ((and (boundp 'doom-packages) (fboundp 'package!))
+    (if (listp recipe-or-package)
+        (let* ((package-name (car recipe-or-package))
+               (recipe-props (cdr recipe-or-package))
+               ;; Common recipe properties that package! supports
+               (supported-props '(:type :host :repo :files :build :branch :tag :pin :fork))
+               ;; Build recipe plist from supported properties
+               (recipe-plist
+                (cl-loop for prop in supported-props
+                         when (plist-get recipe-props prop)
+                         collect prop and collect (plist-get recipe-props prop))))
+          (if recipe-plist
+              (eval `(package! ,package-name :recipe ,recipe-plist))
+            (eval `(package! ,package-name))))
+      ;; Simple symbol package name
+      (eval `(package! ,recipe-or-package))))
+   ;; If straight.el is available
+   ((featurep 'straight)
+    (straight-use-package recipe-or-package))
+   ;; Neither available
+   (t
+    (message "Neither package! nor straight.el is available"))))
+
 (defun my/kill-emacs-save-or-server-edit ()
   " check if server done before save buffers and kill emacs"
   (interactive)

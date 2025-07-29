@@ -35,7 +35,7 @@
 (my/straight-if-use '(org-ol-tree :type git :host github :repo "Townk/org-ol-tree"))
 (my/straight-if-use '(ox-ipynb :type git :host github :repo "jkitchin/ox-ipynb"))
 (my/straight-if-use '(consult-notes :type git :host github :repo "mclear-tools/consult-notes"))
-;; (my/straight-if-use '(org-sliced-image :type git :host github :repo "jcfk/org-sliced-images")) ;; not work well
+(my/straight-if-use '(org-sliced-image :type git :host github :repo "jcfk/org-sliced-images")) ;; not work well
 
 ;;; vertico
 (my/straight-if-use 'vertico)
@@ -80,20 +80,28 @@
 (my/straight-if-use 'conda)
 (my/straight-if-use 'live-py-mode)
 
-
-;;; init-pyim
+;;; chinese
+;;;; init-pyim
 (my/straight-if-use 'pyim)
 (my/straight-if-use 'posframe)
 (my/straight-if-use 'popup)
 (my/straight-if-use 'popon)
 (my/straight-if-use 'pyim-basedict)
 
+;;;; word segment
+(my/straight-if-use '(deno-bridge :type git :host github :repo "manateelazycat/deno-bridge"))
+;; (if my/doom-p
+;;     (package! deno-bridge-jieba :recipe (:type git :host github :repo "ginqi7/deno-bridge-jieba" :files ("deno-bridge-jieba.el" "deno-bridge-jieba.ts" "*.el" "*.ts")))
+;;   (my/straight-if-use '(deno-bridge-jieba :type git :host github :repo "ginqi7/deno-bridge-jieba" :files (:defaults "*" "*.ts"))))
+(my/straight-if-use '(deno-bridge-jieba :type git :host github :repo "ginqi7/deno-bridge-jieba" :files ("*.el" "*.ts" "deno-jieba") :build (:not compile)))
+;; (package! deno-bridge-jieba :recipe (:type git :host github :repo "ginqi7/deno-bridge-jieba" :files ("*.el" "*.ts" "deno-jieba")))
+;;;; cnfonts
+(my/straight-if-use 'cnfonts)
+
+
 ;;; major hydra
 (my/straight-if-use 'major-mode-hydra)
 
-
-;;; cnfonts
-(my/straight-if-use 'cnfonts)
 
 ;;; init-emacs-lisp elisp
 (my/straight-if-use 'elisp-def)
@@ -190,3 +198,7 @@
 
 ;;; csv, tsv
 (my/straight-if-use 'csv-mode)
+
+;;; mermaid
+(my/straight-if-use 'mermaid-mode)
+(my/straight-if-use 'ob-mermaid)
