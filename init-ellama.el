@@ -58,6 +58,7 @@
 
 			     ("openrouter-deepseek-r1". my/llm-provider-openrouter-deepseek-r1)
 			     ("openrouter-gemini-flash" . my/llm-provider-openrouter-gemini-flash)
+			     ("openrouter-kimi-k2" . my/llm-provider-openrouter-kimi-k2)
 			     )
 
 	  )
