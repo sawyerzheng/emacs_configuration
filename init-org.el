@@ -653,16 +653,7 @@ prepended to the element after the #+HEADER: tag."
   :commands (org-ol-tree))
 
 ;; hugo-blog
-(defun my/hugo-org-update-timestamp ()
-  (interactive)
-  (when (derived-mode-p 'org-mode)
-    (let ((time-stamp-active t)
-          (time-stamp-start "#\\+lastmod:[ \t]*")
-          (time-stamp-end "$")
-          (time-stamp-format "[%04Y-%02m-%02d %a]"))
-      (time-stamp))))
-(with-eval-after-load 'org
-  (add-hook 'after-save-hook #'my/hugo-org-update-timestamp nil))
+(use-package init-hugo-blog)
 
 (use-package ox-ipynb
   :after ox)
@@ -687,11 +678,8 @@ prepended to the element after the #+HEADER: tag."
   ;; search only for text files in denote dir
   (setq consult-notes-denote-files-function (function denote-directory-text-only-files)))
 
-;; ;;; 支持 org-mode 中，`图片按行滚动',而不出一次滚动整个图片大幅度滚动
-;; ;; ref: https://github.com/jcfk/org-sliced-images
-;; (use-package
-;;   :if nil ;; 测试发现，切分后的图片有黑条，停止使用
-;;   :after org
-;;   (org-sliced-images-mode 1))
+;;; 支持 org-mode 中，`图片按行滚动',而不出一次滚动整个图片大幅度滚动
+;; ref: https://github.com/jcfk/org-sliced-images
+(use-package init-org-image-slice)
 
 (provide 'init-org)

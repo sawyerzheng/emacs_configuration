@@ -191,9 +191,9 @@ the `jupyter-current-client' local to the buffer."
   (use-package ob-jupyter
     :after ob-core
     :init
-    (with-eval-after-load 'ob-async)
-    (dolist (elt ("jupyter-python" "jupyter-julia" "jupyter-R"))
-      (pushnew elt ob-async-no-async-languages-alist)))
+    (with-eval-after-load 'ob-async
+      (dolist (elt ("jupyter-python" "jupyter-julia" "jupyter-R"))
+        (pushnew elt ob-async-no-async-languages-alist))))
 
   ;; add jupyter-python, ...
   (with-eval-after-load 'org-src
