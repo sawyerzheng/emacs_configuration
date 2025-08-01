@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: src-block-mermaid
+# key: <sm
+# contributor: Sawyer Zheng <kmxsz@qq.com>
+# --
+#+BEGIN_SRC mermaid $0
+
+#+END_SRC

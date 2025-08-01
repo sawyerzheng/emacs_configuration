@@ -95,6 +95,8 @@
 ;;   (my/straight-if-use '(deno-bridge-jieba :type git :host github :repo "ginqi7/deno-bridge-jieba" :files (:defaults "*" "*.ts"))))
 (my/straight-if-use '(deno-bridge-jieba :type git :host github :repo "ginqi7/deno-bridge-jieba" :files ("*.el" "*.ts" "deno-jieba") :build (:not compile)))
 ;; (package! deno-bridge-jieba :recipe (:type git :host github :repo "ginqi7/deno-bridge-jieba" :files ("*.el" "*.ts" "deno-jieba")))
+(my/straight-if-use 'chinese-word-at-point)
+
 ;;;; cnfonts
 (my/straight-if-use 'cnfonts)
 
@@ -202,3 +204,6 @@
 ;;; mermaid
 (my/straight-if-use 'mermaid-mode)
 (my/straight-if-use 'ob-mermaid)
+
+;;; elisp page line break
+(my/straight-if-use 'page-break-lines)

@@ -36,7 +36,7 @@
           (define-key map (kbd "C-c C-d o") 'mermaid-open-browser)
           (define-key map (kbd "C-c C-d d") 'mermaid-open-doc)
           map))
-
+  :commands (mermaid-mode)
   ;; docker
   ;; (setq mermaid-mmdc-location "docker")
   ;; (setq mermaid-flags "run -u 1000 -v /tmp:/tmp ghcr.io/mermaid-js/mermaid-cli/mermaid-cli:9.1.6")

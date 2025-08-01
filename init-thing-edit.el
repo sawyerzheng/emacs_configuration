@@ -203,16 +203,24 @@
 ;;    ))
 
 
+;;;uv tool install git+https://github.com/sawyerzheng/jieba.git@feat-add-console-entry-point
 (use-package chinese-word-at-point
   :after 'thingatpt
+  :demand t
   :config
+  ;; (setq chinese-word-split-command
+  ;;       (concat "echo %s | "
+  ;;               (cond (my/linux-p "/usr/bin/python3")
+  ;;                     (t "python"))
+  ;;               " -m jieba -q -d ' '")
+
+  ;;       )
   (setq chinese-word-split-command
         (concat "echo %s | "
-                (cond (my/linux-p "/usr/bin/python")
-                      (t "python"))
-                " -m jieba -q -d ' '")
-
-        ))
+                ;; "uvx --from git+https://github.com/sawyerzheng/jieba.git@feat-add-console-entry-point jieba "
+                "jieba"
+                " -q -d ' '"))
+  )
 
 
 

@@ -1,5 +1,4 @@
 ;; -*- coding: utf-8; -*-
-(my/straight-if-use 'page-break-lines)
 (use-package page-break-lines
   :hook ((
 	  lisp-mode
