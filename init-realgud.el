@@ -2,7 +2,6 @@
 
 
 (use-package realgud
-  :straight (:files ("*"))
   :defer t
   :config
   (defun my/realgud-set-default-directory-fn (old-fun &rest args)

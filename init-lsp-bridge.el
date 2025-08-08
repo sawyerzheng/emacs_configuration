@@ -1,12 +1,4 @@
 ;; -*- coding: utf-8; -*-
-(when (featurep 'straight)
-  (straight-use-package '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile)
-				     ))
-  (straight-use-package '(acm-terminal :type git :host github :repo "twlz0ne/acm-terminal"))
-  (straight-use-package 'popon)
-  (straight-use-package '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge"))
-  )
-
 (add-to-list 'load-path  (expand-file-name "acm" (file-name-directory (locate-library "lsp-bridge"))))
 (use-package acm-terminal
   ;; :if (and (daemonp) (not (display-graphic-p)))
@@ -55,7 +47,7 @@
   :commands (lsp-bridge-rename lsp-bridge-mode global-lsp-bridge-mode)
   ;; :hook (my/startup . global-lsp-bridge-mode)
   ;; :hook ((emacs-lisp-mode
-          ;; lisp-interaction-mode) . lsp-bridge-mode)
+  ;; lisp-interaction-mode) . lsp-bridge-mode)
   :bind (:map lsp-bridge-mode-map
               ("M-." . lsp-bridge-find-def)
               ("M-," . lsp-bridge-find-def-return)
@@ -265,7 +257,12 @@
     ;; (define-key map (kbd "ec") #'lsp-bridge-diagnostic-copy)
 
 
-    (define-key map (kbd "ee") #'consult-flymake)
+    (define-key map (kbd "ee") #'(lambda ()
+                                   (interactive)
+                                   (cond ((flymake-mode
+                                           (call-interactively #'consult-flymake))
+                                          (t
+                                           (call-interactively #'consult-flycheck))))))
     (define-key map (kbd "el") '("list errors" .
                                  (lambda ()
                                    (interactive)
@@ -371,7 +368,6 @@
              tabnine-bridge-kill-process
              tabnine-bridge-restart-server))
 
-
 (use-package lsp-bridge-ref
   :commands (lsp-bridge-ref-mode
              )
@@ -382,12 +378,13 @@
   :bind (:map lsp-bridge-ref-mode-edit-map
               ("C-c C-c" . lsp-bridge-ref-apply-changed)))
 
-
-(my/straight-if-use '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge"))
 (use-package flymake-bridge
   :after lsp-bridge
   :hook (lsp-bridge-mode . flymake-bridge-setup))
 
+(use-package fate-flycheck-bridge
+  :after lsp-bridge
+  :hook (lsp-bridge-mode . flycheck-lsp-bridge-setup))
 
 (defun my/lsp-bridge-clean-inlay ()
   (with-eval-after-load 'lsp-bridge

@@ -166,8 +166,8 @@ input and search the whole buffer for it."
 
   :config
   ;; enable consult ripgrep at point
-  (consult-customize consult-ripgrep
-                     :initial (consult--async-split-initial (thing-at-point 'symbol)))
+  ;; (consult-customize consult-ripgrep
+  ;;                    :initial (consult--async-split-initial (thing-at-point 'symbol)))
   (setq consult-async-min-input 2)
 
   ;; Optionally configure preview. The default value

@@ -165,37 +165,39 @@
 
 
 ;; 使 vertico consult 等支持 pyim-isearch-mode 类似的中文搜索
-(with-eval-after-load 'orderless
-  (defun my-orderless-regexp (orig-func component)
-    (unless (fboundp #'pyim-cregexp-build)
-      (require 'pyim-cregexp))
-    (let ((result (funcall orig-func component))
-          (pyim-default-scheme (my/pyim-get-default-scheme)))
-      (pyim-cregexp-build result)))
+(unless my/doom-p
+  (with-eval-after-load 'orderless
+    (defun my-orderless-regexp (orig-func component)
+      (unless (fboundp #'pyim-cregexp-build)
+        (require 'pyim-cregexp))
+      (let ((result (funcall orig-func component))
+            (pyim-default-scheme (my/pyim-get-default-scheme)))
+        (pyim-cregexp-build result)))
 
-  (advice-add 'orderless-regexp :around #'my-orderless-regexp))
+    (advice-add 'orderless-regexp :around #'my-orderless-regexp))
 
-;; avy + pyim cregexp
-(with-eval-after-load 'avy
-  (defun my-avy--regex-candidates (fun regex &optional beg end pred group)
-    (unless (fboundp #'pyim-cregexp-build)
-      (require 'pyim-cregexp))
-    (let ((regex (pyim-cregexp-build regex))
-          (pyim-default-scheme (my/pyim-get-default-scheme)))
-      (funcall fun regex beg end pred group)))
-  (advice-add 'avy--regex-candidates :around #'my-avy--regex-candidates))
+  ;; avy + pyim cregexp
+  (with-eval-after-load 'avy
+    (defun my-avy--regex-candidates (fun regex &optional beg end pred group)
+      (unless (fboundp #'pyim-cregexp-build)
+        (require 'pyim-cregexp))
+      (let ((regex (pyim-cregexp-build regex))
+            (pyim-default-scheme (my/pyim-get-default-scheme)))
+        (funcall fun regex beg end pred group)))
+    (advice-add 'avy--regex-candidates :around #'my-avy--regex-candidates))
 
-;; ivy + pyim cregexp
-(with-eval-after-load 'ivy
-  (defun my-pyim-cregexp-ivy (str)
-    (unless (fboundp #'pyim-cregexp-build)
-      (require 'pyim-cregexp))
-    (unless (fboundp #'pyim-cregexp-ivy)
-      (require 'pyim-cregexp-utils))
-    (let ((pyim-default-scheme (my/pyim-get-default-scheme)))
-      (pyim-cregexp-ivy str)))
-  (setq ivy-re-builders-alist
-        '((t . my-pyim-cregexp-ivy))))
+  ;; ivy + pyim cregexp
+  (with-eval-after-load 'ivy
+    (defun my-pyim-cregexp-ivy (str)
+      (unless (fboundp #'pyim-cregexp-build)
+        (require 'pyim-cregexp))
+      (unless (fboundp #'pyim-cregexp-ivy)
+        (require 'pyim-cregexp-utils))
+      (let ((pyim-default-scheme (my/pyim-get-default-scheme)))
+        (pyim-cregexp-ivy str)))
+    (setq ivy-re-builders-alist
+          '((t . my-pyim-cregexp-ivy))))
 
+  )
 
 (provide 'init-pyim)

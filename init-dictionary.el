@@ -1,9 +1,10 @@
 ;; -*- coding: utf-8; -*-
-(my/straight-if-use 'fanyi)
+
 (use-package fanyi
-  :bind (("C-c s d f" . fanyi-dwim)
-         ("C-c s d d" . fanyi-dwim2)
-         ("C-c s d h" . fanyi-from-history))
+  :commands (fanyi-dwim)
+  ;; :bind (("C-c s d f" . fanyi-dwim)
+  ;;        ("C-c s d d" . fanyi-dwim2)
+  ;;        ("C-c s d h" . fanyi-from-history))
   :config
   (custom-set-variables
    '(fanyi-providers '(fanyi-youdao-thesaurus-provider
@@ -27,7 +28,6 @@
                          ;; fanyi-longman-provider
                          )))))
 
-(my/straight-if-use 'bing-dict)
 (use-package bing-dict
   :commands (bing-dict-brief
              my/bing-dict-brief)
@@ -76,12 +76,13 @@
 
 
 ;; part of codes from centuar-emacs
-(my/straight-if-use 'youdao-dictionary)
 (use-package youdao-dictionary
-  :commands youdao-dictionary-play-voice-of-current-word
-  :bind (("C-c s y y" . my-youdao-dictionary-search-at-point))
-  :bind (("C-c s y i" . youdao-dictionary-search-from-input)
-         ("C-c s y v" . youdao-dictionary-play-voice-at-point)
+  :commands (youdao-dictionary-play-voice-of-current-word
+             my-youdao-dictionary-search-at-point)
+  ;; :bind (("C-c s y y" . my-youdao-dictionary-search-at-point))
+  :bind (
+         ;; ("C-c s y i" . youdao-dictionary-search-from-input)
+         ;; ("C-c s y v" . youdao-dictionary-play-voice-at-point)
          :map youdao-dictionary-mode-map
          ("h" . my-youdao-dictionary-help)
          ("?" . my-youdao-dictionary-help))
@@ -130,13 +131,12 @@
 
 ;;===================== outline ---> foldout ===============
 ;; (with-eval-after-load "outline"
-  ;; (require 'foldout))
+;; (require 'foldout))
 
 ;;===================== dictionary  package ================
 ;; (setq dictionary-server "localhost")
 
 ;;================ search through en.wikipedia.org ===========
-(my/straight-if-use '(browse-url :type built-in))
 (use-package browse-url
   :config
   ;; Actually, it just search the word by opening a new tab
@@ -159,7 +159,6 @@ This command switches to browser."
   :bind ("C-c s w" . my-lookup-wikipedia))
 
 ;;========================== end ===== wikipedia =====================
-(my/straight-if-use '(popweb :type git :host github :repo "manateelazycat/popweb" :files (:defaults "extension/dict" "extension/latex" "extension/org-roam" "extension/url-preview" "*")))
 (use-package popweb
   :init
   (my/add-extra-folder-to-load-path "popweb" '("extension/dict" "extension/latex" "extension/org-roam" "extension/url-preview"))
@@ -176,8 +175,8 @@ This command switches to browser."
              popweb-org-roam-node-preview-select
              popweb-url-input
              popweb-url-preview-pointer)
-  :bind (("C-c s d b" . popweb-dict-bing-pointer)
-         ("C-c s d y" . popweb-dict-youdao-pointer))
+  ;; :bind (("C-c s d b" . popweb-dict-bing-pointer)
+  ;;        ("C-c s d y" . popweb-dict-youdao-pointer))
   ;; :demand t
   ;; :hook ((org-mode latex-mode) . popweb-latex-mode)
   :config
@@ -190,11 +189,9 @@ This command switches to browser."
 
 (setq popweb-python-command my/epc-python-command)
 
-(my/straight-if-use '(websocket-bridge :type git :host github :repo "ginqi7/websocket-bridge"))
 (use-package websocket-bridge
   :defer t)
 
-(my/straight-if-use '(dictionary-overlay :type git :host github :repo "ginqi7/dictionary-overlay" :files ("*")))
 (use-package dictionary-overlay
   :commands (dictionary-overlay-start
              dictionary-overlay-mark-word-unknown
@@ -237,7 +234,6 @@ This command switches to browser."
 ;; (autoload 'dictionary-overlay-start "dictionary-overlay" nil t)
 ;; (autoload 'dictionary-overlay-render-buffer "dictionary-overlay" nil t)
 
-(my/straight-if-use '(baidu-translate :type git :host github :repo "suxiaogang223/baidu-translate"))
 (use-package baidu-translate
   :commands (baidu-translate-en-mark
              baidu-translate-zh-mark

@@ -36,6 +36,8 @@
 (my/straight-if-use '(ox-ipynb :type git :host github :repo "jkitchin/ox-ipynb"))
 (my/straight-if-use '(consult-notes :type git :host github :repo "mclear-tools/consult-notes"))
 (my/straight-if-use '(org-sliced-image :type git :host github :repo "jcfk/org-sliced-images")) ;; not work well
+;;;; hugo blog
+(my/straight-if-use 'ox-hugo)
 
 ;;; vertico
 (my/straight-if-use 'vertico)
@@ -207,3 +209,53 @@
 
 ;;; elisp page line break
 (my/straight-if-use 'page-break-lines)
+
+
+;;; devcontainers
+(my/straight-if-use '(devcontainer :type git :host github :repo "johannes-mueller/devcontainer.el"))
+
+
+;;; major modes
+(my/straight-if-use 'yaml-mode)
+(my/straight-if-use 'web-mode)
+(my/straight-if-use 'js2-mode)
+(my/straight-if-use 'lua-mode)
+(my/straight-if-use 'json-mode)
+(my/straight-if-use 'powershell)
+(my/straight-if-use 'yaml-mode)
+(my/straight-if-use 'typescript-mode)
+(my/straight-if-use '(dockerfile-mode :type git :host github :repo "spotify/dockerfile-mode"))
+(my/straight-if-use 'markdown-mode)
+
+;;; logview
+(my/straight-if-use 'logview)
+(my/straight-if-use 'datetime)
+(my/straight-if-use 'extmap)
+
+;;; ui
+;;;; breadcrumb
+(my/straight-if-use 'breadcrumb)
+;;;; flyover
+(my/straight-if-use '(flyover :type git :host github :repo "konrad1977/flyover"))
+
+;;; debug
+(my/straight-if-use 'dape)
+(my/straight-if-use 'realgud)
+
+;;; dictionary
+(my/straight-if-use 'fanyi)
+(my/straight-if-use 'bing-dict)
+;; (my/straight-if-use '(youdao-dictionary :type git :host github :repo "xuchunyang/youdao-dictionary.el"))
+(my/straight-if-use '(browse-url :type built-in))
+(my/straight-if-use '(popweb :type git :host github :repo "manateelazycat/popweb" :files (:defaults "extension/dict" "extension/latex" "extension/org-roam" "extension/url-preview" "*")))
+(my/straight-if-use '(websocket-bridge :type git :host github :repo "ginqi7/websocket-bridge"))
+(my/straight-if-use '(dictionary-overlay :type git :host github :repo "ginqi7/dictionary-overlay" :files ("*")))
+(my/straight-if-use '(baidu-translate :type git :host github :repo "suxiaogang223/baidu-translate"))
+
+
+;;; lsp-bridge
+(my/straight-if-use '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile)
+		      ))
+(my/straight-if-use '(acm-terminal :type git :host github :repo "twlz0ne/acm-terminal"))
+(my/straight-if-use 'popon)
+(my/straight-if-use '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge"))

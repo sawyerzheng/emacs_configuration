@@ -15,25 +15,8 @@
 (use-package nerd-icons-ibuffer
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
-(my/straight-if-use 'breadcrumb)
-(use-package breadcrumb
-  :commands (breadcrumb-mode breadcrumb-local-mode)
-  :config
-  (setq breadcrumb-imenu-max-length 100)
-  :hook (breadcrumb-local-mode . (lambda ()
-                                   (setq header-line-format '(:eval (breadcrumb-imenu-crumbs)))))
-  :hook ((rust-mode
-          rust-ts-mode
-          python-mode
-          python-ts-mode
-          c-mode
-          c-ts-mode
-          c++-mode
-          c++-ts-mode
-          emacs-lisp-mode
-          emacs-lisp-ts-mode
-          java-mode
-          java-ts-mode) . breadcrumb-local-mode))
+(require 'init-breakcrumb)
+
 
 (my/straight-if-use 'yascroll)
 (use-package yascroll
