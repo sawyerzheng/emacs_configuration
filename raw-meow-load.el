@@ -157,6 +157,8 @@
 (use-package init-logview)
 (use-package init-tabby)
 (use-package init-dap-mode)
+(use-package init-envrc)
+
 
 (use-package org
   :init
@@ -172,12 +174,12 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 
-(if (display-graphic-p)
-    ;; (load-theme 'modus-vivendi t)
-    (load-theme 'doom-vibrant t)
-  (load-theme 'tsdh-dark t)
-  ;; (load-theme 'doom-vibrant t)
-  )
+;; (if (display-graphic-p)
+;;     ;; (load-theme 'modus-vivendi t)
+;;     (load-theme 'doom-vibrant t)
+;;   (load-theme 'tsdh-dark t)
+;;   ;; (load-theme 'doom-vibrant t)
+;;   )
 
 (global-auto-revert-mode 1)
 
@@ -962,7 +964,7 @@ Will cancel all other selection, except char selection. "
                  (cape-capf-super
                   #'eglot-completion-at-point
                   ))))
-    
+
   (defun my/eglot-completion-fix ()
     (use-package cape)
     (add-to-list 'completion-at-point-functions #'cape-file)

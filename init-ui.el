@@ -15,7 +15,7 @@
 (use-package nerd-icons-ibuffer
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
-(require 'init-breakcrumb)
+(require 'init-breadcrumb)
 
 
 (my/straight-if-use 'yascroll)

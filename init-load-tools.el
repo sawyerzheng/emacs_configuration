@@ -488,7 +488,7 @@ Nominally unique, but not enforced."
 
 ;; * 切换默认浏览器工具
 (with-eval-after-load 'browse-url
-  (global-set-key (kbd "C-c t w") #'my/toggle-default-browser)
+  (global-set-key (kbd "C-c u W") #'my/toggle-default-browser)
   (when my/windows-p
     (setq browse-url-chrome-program "chrome.exe"))
 
@@ -660,6 +660,48 @@ This version uses cl-loop for cleaner property handling."
    ((featurep 'straight)
     (straight-use-package recipe-or-package))
    ;; Neither available
+   (t
+    (message "Neither package! nor straight.el is available"))))
+
+(defun my/straight-if-use-fixed-v2 (recipe-or-package)
+  "Install package with smart build property translation between straight.el and Doom."
+  (cond
+   ;; Doom Emacs
+   ((and (boundp 'doom-packages) (fboundp 'package!))
+    (if (listp recipe-or-package)
+        (let* ((package-name (car recipe-or-package))
+               (recipe-props (cdr recipe-or-package))
+               (build-prop (plist-get recipe-props :build))
+               ;; Transform build properties for Doom compatibility
+               (doom-props
+                (cl-loop for (key value) on recipe-props by #'cddr
+                         collect key and collect
+                         (cond
+                          ;; Convert straight.el build specs to Doom equivalents
+                          ((and (eq key :build) (equal value '(:not compile)))
+                           ;; For Doom, we might want to disable compilation differently
+                           ;; or just omit the build property entirely
+                           nil)
+                          (t value))))
+               ;; Filter out nil values
+               (clean-props (cl-loop for (key value) on doom-props by #'cddr
+                                    when value
+                                    collect key and collect value))
+               (supported-props '(:type :host :repo :files :build :branch :tag :pin :fork))
+               (recipe-plist
+                (cl-loop for prop in supported-props
+                         when (plist-get clean-props prop)
+                         collect prop and collect (plist-get clean-props prop))))
+          (message "Installing %s with Doom package! (build handling: %s)"
+                   package-name
+                   (if (equal build-prop '(:not compile)) "disabled compilation" "default"))
+          (if recipe-plist
+              (eval `(package! ,package-name :recipe ,recipe-plist))
+            (eval `(package! ,package-name))))
+      (eval `(package! ,recipe-or-package))))
+   ;; straight.el
+   ((featurep 'straight)
+    (straight-use-package recipe-or-package))
    (t
     (message "Neither package! nor straight.el is available"))))
 

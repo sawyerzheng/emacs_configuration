@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: __utf8
+# key: __utf8
+# condition: t
+# --
+# -*- coding: utf-8; -*-
+$0

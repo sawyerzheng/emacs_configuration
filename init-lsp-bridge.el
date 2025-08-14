@@ -84,19 +84,38 @@
   (define-key lsp-bridge-peek-keymap (kbd "M-t") #'lsp-bridge-peek-through)
   ;; inlay hint
   (set-face-attribute 'lsp-bridge-inlay-hint-face nil :height 0.8)
-  ;; doom-modeline compatible
-  (defun lsp-bridge--mode-line-format ()
+
+
+;;;; doom-modeline integrate
+  (defvar doom-modeline--lsp-bridge nil)
+  (defun doom-modeline-update-lsp-bridge ()
     "Compose the LSP-bridge's mode-line."
     (setq-local mode-face
                 (if (lsp-bridge-process-live-p)
                     'lsp-bridge-alive-mode-line
                   'lsp-bridge-kill-mode-line))
-
-    (when lsp-bridge-server
-      (if (and (boundp 'doom-modeline-mode) doom-modeline-mode)
-          ;; (doom-modeline-lsp-icon lsp-bridge-mode-lighter mode-face)
-          (doom-modeline-icon 'octicon "nf-oct-rocket" " 🚀" lsp-bridge-mode-lighter :face mode-face)
-        (propertize lsp-bridge-mode-lighter 'face mode-face))))
+    (setq doom-modeline--lsp-bridge
+          (doom-modeline-icon 'octicon "nf-oct-rocket" " 🚀" lsp-bridge-mode-lighter :face mode-face))
+    (when doom-modeline-mode
+      (setq lsp-bridge-enable-mode-line nil)))
+  (doom-modeline-def-segment lsp
+    "The LSP server state."
+    (when doom-modeline-lsp
+      (when-let* ((icon (cond ((bound-and-true-p lsp-mode)
+                               doom-modeline--lsp)
+                              ((bound-and-true-p eglot--managed-mode)
+                               doom-modeline--eglot)
+                              ((bound-and-true-p lsp-bridge-mode)
+                               doom-modeline--lsp-bridge)
+                              ((bound-and-true-p citre-mode)
+                               doom-modeline--tags)))
+                  (sep (doom-modeline-spc)))
+        (concat
+         sep
+         (doom-modeline-display-icon icon)
+         sep))))
+  (advice-add #'doom-modeline-update-lsp-icon :after #'lsp-bridge--mode-line-format)
+  (add-hook 'lsp-bridge-mode-hook #'doom-modeline-update-lsp-bridge)
 
   ;; (require 'lsp-bridge)
   ;; (require 'cl)
@@ -104,7 +123,7 @@
   (setq acm-enable-doc nil)
   (setq acm-enable-jupyter nil)
   (setq lsp-bridge-toggle-sdcv-helper t)
-  (setq acm-enable-codeium t)
+  (setq acm-enable-codeium nil)
   (setq acm-enable-preview t)
   (setq lsp-bridge-enable-org-babel t)
   (setq lsp-bridge-enable-inlay-hint t) ;; for rust type annotation

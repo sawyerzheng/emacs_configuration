@@ -25,6 +25,12 @@
   (setq mcp-hub-servers
         `(
           ;; ("everything" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-everything")))
+          ;; ("brave_search" . (:command "npx" :args ("-y" "@brave/brave-search-mcp-server" "--brave-api-key" ,my/brave-search-web-api-key "--transport" "stdio")))
+          ;; 可用
+          ("brave_search" . (:command "npx" :args ("-y" "brave-search-mcp") :env (:BRAVE_API_KEY ,my/brave-search-web-api-key)))
+          ;; 不可用
+          ;; ("brave_search" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-brave-search") :env (:BRAVE_API_KEY ,my/brave-search-web-api-key)))
+
           ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/home/sawyer/npu-3-sawyer/source/")))
           ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
           ;; ("qdrant" . (:url "http://localhost:38113/sse"))
@@ -55,12 +61,12 @@
 
 (with-eval-after-load 'llm
   (unless (my/mcp-hub--server-started)
-      (mcp-hub-start-all-server))
+    (mcp-hub-start-all-server))
   )
 (with-eval-after-load 'gptel
   (require  'gptel-integrations) 
   (unless (my/mcp-hub--server-started)
-      (mcp-hub-start-all-server))
+    (mcp-hub-start-all-server))
   )
 
 (provide 'init-mcp)

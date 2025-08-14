@@ -254,8 +254,11 @@
 
 
 ;;; lsp-bridge
-(my/straight-if-use '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile)
-		      ))
+(unless my/doom-p
+  (my/straight-if-use '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile))))
 (my/straight-if-use '(acm-terminal :type git :host github :repo "twlz0ne/acm-terminal"))
 (my/straight-if-use 'popon)
 (my/straight-if-use '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge"))
+
+;;; envrc direnv
+(my/straight-if-use 'envrc)
