@@ -90,14 +90,22 @@
   (defvar doom-modeline--lsp-bridge nil)
   (defun doom-modeline-update-lsp-bridge ()
     "Compose the LSP-bridge's mode-line."
-    (setq-local mode-face
-                (if (lsp-bridge-process-live-p)
-                    'lsp-bridge-alive-mode-line
-                  'lsp-bridge-kill-mode-line))
-    (setq doom-modeline--lsp-bridge
-          (doom-modeline-icon 'octicon "nf-oct-rocket" " 🚀" lsp-bridge-mode-lighter :face mode-face))
-    (when doom-modeline-mode
-      (setq lsp-bridge-enable-mode-line nil)))
+    (if (and doom-modeline-mode (bound-and-true-p lsp-bridge-mode))
+        (progn
+          (setcar (cdr (assq 'lsp-bridge-mode minor-mode-alist)) "")
+          (setcar (cdr (assq 'lsp-bridge-mode mode-line-misc-info)) ""))
+      (setcar (cdr (assq 'lsp-bridge-mode minor-mode-alist)) lsp-bridge-mode-lighter))
+    (let* ((mode-face
+            (if (lsp-bridge-process-live-p)
+                'lsp-bridge-alive-mode-line
+              'lsp-bridge-kill-mode-line))
+           (lighter " 橋")
+           (icon (doom-modeline-lsp-icon lighter mode-face))
+           )
+      (setq doom-modeline--lsp-bridge
+            (propertize icon
+                        'mouse-face 'doom-modeline-highlight))))
+
   (doom-modeline-def-segment lsp
     "The LSP server state."
     (when doom-modeline-lsp
@@ -136,7 +144,7 @@
   (setq lsp-bridge-complete-manually nil)
   (defvar my/lsp-bridge-auto-complete-delay 0.5
     "delay time for auto completion")
-  
+
   ;; (defun lsp-bridge-try-completion ()
   ;;   (cond (lsp-bridge-prohibit-completion
   ;;          (setq-local lsp-bridge-prohibit-completion nil))
@@ -165,12 +173,12 @@
           (t
            ;; Don't popup completion menu when `lsp-bridge-last-change-position' (cursor before send completion request) is not equal current cursor position.
            (when (equal lsp-bridge-last-change-position
-			(list (current-buffer) (buffer-chars-modified-tick) (point)))
+		        (list (current-buffer) (buffer-chars-modified-tick) (point)))
              ;; Try popup completion frame.
              (if (cl-every (lambda (pred)
                              (lsp-bridge-check-predicate pred "lsp-bridge-try-completion"))
                            lsp-bridge-completion-popup-predicates)
-		 (progn
+	         (progn
                    (acm-template-candidate-init)
                    (acm-update)
 
