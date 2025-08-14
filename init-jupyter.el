@@ -24,7 +24,11 @@
   :commands (scimax-ob/body))
 
 (use-package scimax-jupyter
-  :commands (scimax-jupyter-org-hydra/body))
+  :init
+  (require 'jupyter-org-client)
+  :commands (scimax-jupyter-org-hydra/body)
+  :bind (:map jupyter-org-interaction-mode-map
+              ("C-c C-h" . scimax-jupyter-org-hydra/body)))
 
 (use-package jupyter
   :after ob-core
