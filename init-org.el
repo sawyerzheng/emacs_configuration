@@ -549,44 +549,7 @@ prepended to the element after the #+HEADER: tag."
         org-appear-inside-latex t)
   )
 
-(use-package olivetti
-  :init
-  (setq olivetti-body-width 0.67)
-  :config
-  (setq my/olivetti-scale-ratio 1.2)
-  (defun distraction-free ()
-    "Distraction-free writing environment"
-    (interactive)
-    (if (equal olivetti-mode nil)
-        (progn
-          (window-configuration-to-register 1)
-          (delete-other-windows)
-          (text-scale-increase my/olivetti-scale-ratio)
-          (olivetti-mode t))
-      (progn
-        (jump-to-register 1)
-        (olivetti-mode 0)
-        (text-scale-decrease my/olivetti-scale-ratio)))
-    (defalias 'focus-mode #'distraction-free)
-    (defalias 'writing-mode #'distraction-free)
-    )
-
-  :commands (olivetti-mode
-             distraction-free))
-
-(define-minor-mode centaur-read-mode
-  "Minor Mode for better reading experience."
-  :init-value nil
-  :group centaur
-  (if centaur-read-mode
-      (progn
-        (and (fboundp 'olivetti-mode) (olivetti-mode 1))
-        (and (fboundp 'mixed-pitch-mode) (mixed-pitch-mode 1))
-        (text-scale-set +1))
-    (progn
-      (and (fboundp 'olivetti-mode) (olivetti-mode -1))
-      (and (fboundp 'mixed-pitch-mode) (mixed-pitch-mode -1))
-      (text-scale-set 0))))
+(require 'init-reading)
 
 (use-package org-pretty-table
   :commands (org-pretty-table-mode))
