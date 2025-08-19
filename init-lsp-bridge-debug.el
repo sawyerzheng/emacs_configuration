@@ -1,7 +1,7 @@
 (add-to-list 'load-path "~/.conf.d")
 (require 'init-load-tools)
 (require 'init-proxy)
-(defvar my/install-packages-p nil
+(defvar my/install-packages-p t
   "install packages")
 (when my/install-packages-p
   (require 'package)
@@ -13,7 +13,7 @@
   (setq my/install-packages-p nil))
 
 (defvar my/install-packages
-  '(meow vertico consult orderless cape embark embark-consult marginalia treesit-auto compat doom-modeline markdown-mode lsp-bridge acm-terminal popon flymake-bridge nerd-icons shrink-path dash s f eglot-booster projectile project-x yasnippet yasnippet-snippets auto-yasnippet))
+  '(meow vertico consult orderless cape embark embark-consult marginalia treesit-auto compat doom-modeline markdown-mode  acm-terminal popon flymake-bridge nerd-icons shrink-path dash s f eglot-booster projectile project-x yasnippet yasnippet-snippets auto-yasnippet))
 
 (use-package savehist
   :init
@@ -52,6 +52,12 @@
   (expand-file-name (symbol-name package)
 		    (expand-file-name "straight/build" prefix)) ;; package build prefix
   )
+(unless my/doom-p
+  (my/straight-if-use '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile))))
+(my/straight-if-use '(acm-terminal :type git :host github :repo "twlz0ne/acm-terminal"))
+(my/straight-if-use 'popon)
+(my/straight-if-use '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge"))
+
 (let* ((prefix   (if my/linux-p
                      "/home/sawyer/.emacs.d.raw"
                    "d:/home/.emacs.d"
@@ -128,9 +134,9 @@
 ;;      (jupyter . t))))
 
 (my/straight-if-use 'yasnippet)
-(my/straight-if-use 'markdown)
+(my/straight-if-use 'markdown-mode)
 (my/straight-if-use 'posframe)
-(require 'init-lsp-bridge)
+;; (require 'init-lsp-bridge)
 (require 'lsp-bridge)
 (global-lsp-bridge-mode)
 (fido-vertical-mode)

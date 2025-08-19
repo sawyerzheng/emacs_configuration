@@ -24,8 +24,6 @@
 ;;   ;;   (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))
 ;;   )
 
-(my/straight-if-use 'elfeed)
-(my/straight-if-use 'elfeed-org)
 (use-package elfeed
   :config
   (use-package elfeed-org
@@ -41,7 +39,7 @@
 
   :pretty-hydra
   ((:title (pretty-hydra-title "Elfeed" 'devicon "nf-fa-rss_square" :face 'nerd-icons-orange)
-           :color amaranth :quit-key ("q" "C-g"))
+    :color amaranth :quit-key ("q" "C-g"))
    ("Search"
     (("c" elfeed-db-compact "compact db")
      ("g" elfeed-search-update--force "refresh")
@@ -88,8 +86,8 @@
   ;; Ignore db directory in recentf
   (push elfeed-db-directory recentf-exclude)
 
-  ;; Add icons via tags
-  (when (icons-displayable-p)
+;;;; Add icons via tags
+  (when (display-graphic-p)
     (defun nerd-icon-for-tags (tags)
       "Generate Nerd Font icon based on tags.
   Returns default if no match."
@@ -137,7 +135,7 @@
 
     (setq elfeed-search-print-entry-function #'lucius/elfeed-search-print-entry--better-default))
 
-  ;; Use xwidget if possible
+;;;; Use xwidget if possible
   (with-no-warnings
     (defun my-elfeed-show-visit (&optional use-generic-p)
       "Visit the current entry in your browser using `browse-url'.
@@ -178,7 +176,6 @@ browser defined by `browse-url-generic-program'."
   (advice-add #'elfeed-show-entry :after #'my/elfeed-show-entry-advice-fn)
   )
 
-(my/straight-if-use 'elfeed-goodies)
 (use-package elfeed-goodies
   :after elfeed
   :commands (elfeed-goodies/split-show-next

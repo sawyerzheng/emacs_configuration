@@ -49,6 +49,12 @@
 (my/straight-if-use 'consult-yasnippet)
 (my/straight-if-use 'consult-dir)
 (my/straight-if-use '(consult-tramp :type git :host github :repo "Ladicle/consult-tramp"))
+(my/straight-if-use '(consult-omni :type git :host github :repo "armindarvish/consult-omni" :files ("*.el" "sources/*.el")))
+
+;;; counsel
+(my/straight-if-use 'counsel-jq)
+(my/straight-if-use 'ivy)
+(my/straight-if-use 'swiper)
 
 ;;; embark
 (my/straight-if-use 'embark)
@@ -255,10 +261,20 @@
 
 ;;; lsp-bridge
 (unless my/doom-p
-  (my/straight-if-use '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile))))
+  ;; (my/straight-if-use '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile)))
+  (my/straight-if-use '(lsp-bridge :type git :local-repo "~/programs/lsp-bridge" :files (:defaults "*") :build  (:not compile)))
+  )
 (my/straight-if-use '(acm-terminal :type git :host github :repo "twlz0ne/acm-terminal"))
 (my/straight-if-use 'popon)
 (my/straight-if-use '(flymake-bridge :type git :host github :repo "liuyinz/flymake-bridge"))
 
 ;;; envrc direnv
 (my/straight-if-use 'envrc)
+
+;;; elfeed
+(my/straight-if-use 'elfeed)
+(my/straight-if-use 'elfeed-org)
+(my/straight-if-use 'elfeed-goodies)
+
+;;; minuet
+(my/straight-if-use 'minuet)
