@@ -320,36 +320,6 @@ prepended to the element after the #+HEADER: tag."
   :init (cl-pushnew '(go . t) my/org-babel-language-alist)
   :defer t)
 
-(use-package ob-async
-  :defer t
-  :config
-  (setq ob-async-no-async-languages-alist '("jupyter-python" "jupyter-julia")))
-
-(when (boundp 'native-comp-jit-compilation-deny-list)
-  (add-to-list 'native-comp-jit-compilation-deny-list ".*jupyter.*"))
-
-(use-package init-jupyter)
-
-
-(defun my/org-babel-lazy-load-language-advice (orig-fun &rest args)
-  (let* ((info (nth 1 args))
-	 (lang (nth 0 info))
-	 (alist))
-    (message "language: %s, args: %s, orig-fun: %s" lang args orig-fun)
-    (unless (assoc lang org-babel-load-languages)
-      (if (or (eq lang 'jupyter-python) (eq lang 'jupyter-julia))
-	  (setq alist '((julia . t)
-			(python . t)
-			(jupyter . t)))
-	(list (cons lang t))))
-    (org-babel-do-load-languages
-     'org-babel-load-in-session
-     alist))
-  (apply orig-fun args))
-
-(with-eval-after-load 'ob-core
-  (advice-add 'org-babel-execute-src-block :around #'my/org-babel-lazy-load-language-advice))
-
 (defun my/ob-load-lanuage (lang)
   (with-eval-after-load 'org
     (let ((lang (if (symbolp lang) lang (intern lang)))
