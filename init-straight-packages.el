@@ -45,6 +45,7 @@
 
 ;;; consult
 (my/straight-if-use 'consult)
+(my/straight-if-use 'consult-eglot)
 (my/straight-if-use 'consult-flycheck)
 (my/straight-if-use 'consult-yasnippet)
 (my/straight-if-use 'consult-dir)
@@ -87,6 +88,8 @@
 (my/straight-if-use 'code-cells)
 (my/straight-if-use 'conda)
 (my/straight-if-use 'live-py-mode)
+(my/straight-if-use 'pet)
+(my/straight-if-use 'tomlparse)
 
 ;;; chinese
 ;;;; init-pyim
@@ -208,6 +211,7 @@
 
 ;;; csv, tsv
 (my/straight-if-use 'csv-mode)
+(my/straight-if-use '(rainbow-csv :type git :host github :repo "emacs-vs/rainbow-csv"))
 
 ;;; mermaid
 (my/straight-if-use 'mermaid-mode)
@@ -243,6 +247,23 @@
 (my/straight-if-use 'breadcrumb)
 ;;;; flyover
 (my/straight-if-use '(flyover :type git :host github :repo "konrad1977/flyover"))
+;;;; icons
+(my/straight-if-use 'nerd-icons)
+(my/straight-if-use 'nerd-icons-completion)
+(my/straight-if-use 'nerd-icons-ibuffer)
+;;;; yascroll
+(my/straight-if-use 'yascroll)
+
+(my/straight-if-use 'anzu)
+(my/straight-if-use '(awesome-tray :type git :host github :repo "manateelazycat/awesome-tray"))
+(my/straight-if-use '(hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe"))
+(my/straight-if-use '(holo-layer :type git :host github :repo "manateelazycat/holo-layer" :files ("*")))
+(my/straight-if-use 'nav-flash)
+(my/straight-if-use 'solaire-mode)
+(my/straight-if-use '(sort-tab :type git :host github :repo "manateelazycat/sort-tab"))
+
+;;;; centaur-tabs
+(my/straight-if-use 'centaur-tabs)
 
 ;;; debug
 (my/straight-if-use 'dape)
@@ -278,3 +299,32 @@
 
 ;;; minuet
 (my/straight-if-use 'minuet)
+
+;;; indent-bars
+(my/straight-if-use '(indent-bars :type git :host github :repo "jdtsmith/indent-bars"))
+
+;;; claude-code-ide
+(my/straight-if-use '(claude-code-ide :type git :host github :repo "manzaltu/claude-code-ide.el"))
+
+;;; persp-mode
+(my/straight-if-use 'persp-mode)
+(my/straight-if-use 'persp-mode-project-bridge)
+
+;;; web server
+;; conflict with simple-httpd, as simple-httpd.el's repo name is also emacs-web-server
+;; (my/straight-if-use '(web-server :type git :host github :repo "eschulte/emacs-web-server"))
+
+;;; dired
+(my/straight-if-use 'dired-sidebar)
+(my/straight-if-use 'ztree)
+(my/straight-if-use '(dired-rsync-transient :type git :host github :repo "stsquad/dired-rsync"))
+
+;;; treemacs
+(my/straight-if-use '(treemacs :type git :files (:defaults "Changelog.org" "icons" "src/elisp/treemacs*.el" "src/scripts/treemacs*.py" "src/extra/*" "treemacs-pkg.el") :host github :repo "Alexander-Miller/treemacs"))
+(my/straight-if-use 'treemacs-evil)
+(my/straight-if-use 'treemacs-magit)
+(my/straight-if-use 'treemacs-projectile)
+(my/straight-if-use 'treemacs-nerd-icons)
+
+;;; everywhere
+(my/straight-if-use 'emacs-everywhere)

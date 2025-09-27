@@ -20,7 +20,7 @@
 ;;; Code:
 ;;; 支持 org-mode 中，`图片按行滚动',而不出一次滚动整个图片大幅度滚动
 ;; ;; ref: https://github.com/jcfk/org-sliced-images
-(use-package
+(use-package org-sliced-images
   :if t ;; 测试发现，切分后的图片有黑条，停止使用
   ;; :after org
   ;; (org-sliced-images-mode 1)

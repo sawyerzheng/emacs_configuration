@@ -1,4 +1,3 @@
-(my/straight-if-use 'nav-flash)
 (use-package nav-flash
   :autoload (nav-flash-show)
   :hook ((imenu-after-jump

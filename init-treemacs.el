@@ -1,9 +1,13 @@
 ;; -*- coding: utf-8-unix; -*-
 ;; https://github.com/Alexander-Miller/treemacs
 (use-package treemacs
-  :straight t
   :commands (treemacs-mode treemacs treemacs-select-window)
   ;; :bind ("C-c o p" . +treemacs/toggle)
+  :config
+  (with-eval-after-load 'persp-mode
+    :config
+    (use-package treemacs-persp)
+    )
   :init
   ;; code free doom emacs
   (defun doom-project-p (&optional dir)
@@ -49,7 +53,6 @@ Use `treemacs' command for old functionality."
         ("C-x t M-t" . treemacs-find-tag))
   :config
   (use-package treemacs-evil
-    :straight t
     :after treemacs evil
     :hook (treemacs-mode . (lambda ()
                              (with-eval-after-load "treemacs"
@@ -58,20 +61,17 @@ Use `treemacs' command for old functionality."
                 ("n" . nil)))
 
   (use-package treemacs-magit
-    :straight t
     :after treemacs magit
     :hook (magit-mode . (lambda ()
                           (with-eval-after-load "treemacs"
                             (require 'treemacs-magit)))))
 
   (use-package treemacs-projectile
-    :straight t
     :after treemacs projectile
     :hook (treemacs-mode . (lambda ()
                              (with-eval-after-load "treemacs"
                                (require 'treemacs-projectile))))))
 (use-package treemacs-nerd-icons
-  :straight (:type git :host github :repo "rainstormstudio/treemacs-nerd-icons")
   :after treemacs
   :config
   (treemacs-load-theme "nerd-icons"))
