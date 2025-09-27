@@ -106,7 +106,65 @@ Respects `diff-hl-disable-on-remote'."
   ;; (setq diff-hl-fringe-bmp-function (lambda (type pos) 'my:diff-hl-bitmap))
 
   ;;; from doom emacs, modules/ui/vc-gutter
-   (let* ((scale (if (and (boundp 'text-scale-mode-amount)
+  ;; (let* ((scale (if (and (boundp 'text-scale-mode-amount)
+  ;;                        (numberp text-scale-mode-amount))
+  ;;                   (expt text-scale-mode-step text-scale-mode-amount)
+  ;;                 1))
+  ;;        (spacing (or (and (display-graphic-p) (default-value 'line-spacing)) 0))
+  ;;        (h (+ (ceiling (* (frame-char-height) scale))
+  ;;              (if (floatp spacing)
+  ;;                  (truncate (* (frame-char-height) spacing))
+  ;;                spacing)))
+  ;;        (w (min (frame-parameter nil (intern (format "%s-fringe" diff-hl-side)))
+  ;;                diff-hl-bmp-max-width))
+  ;;        (_ (if (zerop w) (setq w diff-hl-bmp-max-width)
+  ;; 	      )))
+
+  ;;   (define-fringe-bitmap 'diff-hl-bmp-middle
+  ;;     (make-vector
+  ;;      h (string-to-number (let ((half-w (1- (/ w 2))))
+  ;;                            (concat (make-string half-w ?1)
+  ;;                                    (make-string (- w half-w) ?0)))
+  ;;                          2))
+  ;;     nil nil 'center))
+
+
+
+  ;; (defun +vc-gutter-type-at-pos-fn (type _pos)
+  ;;   (if (eq type 'delete)
+  ;;       'diff-hl-bmp-delete
+  ;;     'diff-hl-bmp-middle))
+  ;; (setq diff-hl-fringe-bmp-function #'+vc-gutter-type-at-pos-fn)
+  ;; (setq diff-hl-draw-borders nil)
+
+  ;; ;; HACK: diff-hl won't be visible in TTY frames, but there's no simple way to
+  ;; ;;   use the fringe in GUI Emacs *and* use the margin in the terminal *AND*
+  ;; ;;   support daemon users, so we need more than a static `display-graphic-p'
+  ;; ;;   check at startup.
+  ;; (if (not (daemonp))
+  ;;     (unless (display-graphic-p)
+  ;;       (add-hook 'global-diff-hl-mode-hook #'diff-hl-margin-mode))
+  ;;   (when my/terminal-p
+  ;;     (put 'diff-hl-mode 'last t)
+  ;;       (defun +vc-gutter-use-margins-in-tty-h ()
+  ;;         (when (bound-and-true-p global-diff-hl-mode)
+  ;;           (let ((graphic? (display-graphic-p)))
+  ;;             (unless (eq (get 'diff-hl-mode 'last) graphic?)
+  ;;               (diff-hl-margin-mode (if graphic? -1 +1))
+  ;;               (put 'diff-hl-mode 'last graphic?)))))
+  ;; 	(add-hook 'window-selection-change-functions #'+vc-gutter-use-margins-in-tty-h)))
+
+
+
+;; STYLE: Redefine fringe bitmaps to be sleeker by making them solid bars (with
+;;   no border) that only take up half the horizontal space in the fringe. This
+;;   approach lets us avoid robbing fringe space from other packages/modes that
+;;   may need benefit from it (like magit, flycheck, or flyspell).
+  (if (fboundp 'fringe-mode) (fringe-mode '8))
+  (setq-default fringes-outside-margins t)
+
+  (defun +vc-gutter-define-thin-bitmaps-a (&rest _)
+    (let* ((scale (if (and (boundp 'text-scale-mode-amount)
                            (numberp text-scale-mode-amount))
                       (expt text-scale-mode-step text-scale-mode-amount)
                     1))
@@ -115,18 +173,20 @@ Respects `diff-hl-disable-on-remote'."
                  (if (floatp spacing)
                      (truncate (* (frame-char-height) spacing))
                    spacing)))
+
            (w (min (frame-parameter nil (intern (format "%s-fringe" diff-hl-side)))
                    diff-hl-bmp-max-width))
-           (_ (if (zerop w) (setq w diff-hl-bmp-max-width)
-		)))
-
+           (_ (if (zerop w) (setq w diff-hl-bmp-max-width))))
       (define-fringe-bitmap 'diff-hl-bmp-middle
         (make-vector
          h (string-to-number (let ((half-w (1- (/ w 2))))
                                (concat (make-string half-w ?1)
                                        (make-string (- w half-w) ?0)))
                              2))
-        nil nil 'center))
+        nil nil 'center)))
+  (advice-add #'diff-hl-define-bitmaps :after #'+vc-gutter-define-thin-bitmaps-a)
+
+
   (defun +vc-gutter-type-at-pos-fn (type _pos)
     (if (eq type 'delete)
         'diff-hl-bmp-delete
@@ -134,22 +194,12 @@ Respects `diff-hl-disable-on-remote'."
   (setq diff-hl-fringe-bmp-function #'+vc-gutter-type-at-pos-fn)
   (setq diff-hl-draw-borders nil)
 
-  ;; HACK: diff-hl won't be visible in TTY frames, but there's no simple way to
-  ;;   use the fringe in GUI Emacs *and* use the margin in the terminal *AND*
-  ;;   support daemon users, so we need more than a static `display-graphic-p'
-  ;;   check at startup.
-  (if (not (daemonp))
-      (unless (display-graphic-p)
-        (add-hook 'global-diff-hl-mode-hook #'diff-hl-margin-mode))
-    (when my/terminal-p
-      (put 'diff-hl-mode 'last t)
-        (defun +vc-gutter-use-margins-in-tty-h ()
-          (when (bound-and-true-p global-diff-hl-mode)
-            (let ((graphic? (display-graphic-p)))
-              (unless (eq (get 'diff-hl-mode 'last) graphic?)
-                (diff-hl-margin-mode (if graphic? -1 +1))
-                (put 'diff-hl-mode 'last graphic?)))))
-	(add-hook 'window-selection-change-functions #'+vc-gutter-use-margins-in-tty-h)))
+  (defun +vc-gutter-make-diff-hl-faces-transparent-h ()
+    (mapc (doom-rpartial #'set-face-background nil)
+          '(diff-hl-insert
+            diff-hl-delete
+            diff-hl-change)))
+  ;; (add-hook 'diff-hl-mode-hook #'+vc-gutter-make-diff-hl-faces-transparent-h)
 
   ;;; 和 flycheck 同时使用，indicator 冲突解决
   (with-eval-after-load 'flycheck
