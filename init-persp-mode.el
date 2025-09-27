@@ -1,4 +1,3 @@
-(my/straight-if-use 'persp-mode)
 (defvar my/persp-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "n") #'persp-next)
@@ -17,7 +16,8 @@
     (define-key map (kbd "I") #'persp-import-win-conf)
     (define-key map (kbd "k") #'persp-remove-buffer)
     (define-key map (kbd "K") #'persp-kill-buffer)
-    (define-key map (kbd "w") #'persp-save-state-to-file)
+    (define-key map (kbd "f") #'persp-save-state-to-file)
+    (define-key map (kbd "w") #'persp-switch)
     (define-key map (kbd "W") #'persp-save-to-file-by-names)
     (define-key map (kbd "l") #'persp-load-state-from-file)
     (define-key map (kbd "L") #'persp-load-from-file-by-names)
@@ -28,7 +28,7 @@
   )
 
 
-(global-set-key (kbd "C-c q") my/persp-mode-map)
+(global-set-key (kbd "C-c w") my/persp-mode-map)
 
 (use-package persp-mode
   :unless noninteractive
@@ -69,7 +69,7 @@
   :hook (window-setup . persp-mode)
   :bind (:map my/persp-mode-map
 	      ("TAB" . persp-switch)
-	      ("s" . persp-switch)
+	      ("w" . persp-switch)
 	      ("f" . persp-frame-switch)
 	      )
 
@@ -156,22 +156,21 @@
     )
 )
 
-(defun my/persp-mode-project-bridge-fix-fn ()
-  (interactive)
-  (mapcar (lambda (buff-name)
-	    (when (buffer-live-p (get-buffer buff-name))
-	      (kill-buffer buff-name)))
-	  '(" *pyim-page--posframe-buffer*" " *acm-buffer*")))
+;; (defun my/persp-mode-project-bridge-fix-fn ()
+;;   (interactive)
+;;   (mapcar (lambda (buff-name)
+;; 	    (when (buffer-live-p (get-buffer buff-name))
+;; 	      (kill-buffer buff-name)))
+;; 	  '(" *pyim-page--posframe-buffer*" " *acm-buffer*")))
 
-(defun my/persp-mode-project-bridge-fix-advice-fn (orig-fn &rest args)
-  (my/persp-mode-project-bridge-fix-fn)
-  (apply orig-fn args))
+;; (defun my/persp-mode-project-bridge-fix-advice-fn (orig-fn &rest args)
+;;   (my/persp-mode-project-bridge-fix-fn)
+;;   (apply orig-fn args))
 
-(advice-add #'make-frame-command :around #'my/persp-mode-project-bridge-fix-advice-fn)
-(advice-add #'ediff :around #'my/persp-mode-project-bridge-fix-advice-fn)
-(advice-add #'ediff3 :around #'my/persp-mode-project-bridge-fix-advice-fn)
+;; (advice-add #'make-frame-command :around #'my/persp-mode-project-bridge-fix-advice-fn)
+;; (advice-add #'ediff :around #'my/persp-mode-project-bridge-fix-advice-fn)
+;; (advice-add #'ediff3 :around #'my/persp-mode-project-bridge-fix-advice-fn)
 
-(my/straight-if-use 'persp-mode-project-bridge)
 (use-package persp-mode-project-bridge
   :config
   :hook
