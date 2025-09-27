@@ -286,10 +286,10 @@
 
     (define-key map (kbd "ee") #'(lambda ()
                                    (interactive)
-                                   (cond ((flymake-mode
-                                           (call-interactively #'consult-flymake))
-                                          (t
-                                           (call-interactively #'consult-flycheck))))))
+                                   (cond (flymake-mode
+                                          (call-interactively #'consult-flymake))
+                                         (t
+                                          (call-interactively #'consult-flycheck)))))
     (define-key map (kbd "el") '("list errors" .
                                  (lambda ()
                                    (interactive)
@@ -405,9 +405,9 @@
   :bind (:map lsp-bridge-ref-mode-edit-map
               ("C-c C-c" . lsp-bridge-ref-apply-changed)))
 
-(use-package flymake-bridge
-  :after lsp-bridge
-  :hook (lsp-bridge-mode . flymake-bridge-setup))
+;; (use-package flymake-bridge
+;;   :after lsp-bridge
+;;   :hook (lsp-bridge-mode . flymake-bridge-setup))
 
 (use-package fate-flycheck-bridge
   :after lsp-bridge
