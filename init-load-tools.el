@@ -146,16 +146,23 @@ Returns t if Emacs is running with X forwarding, nil otherwise."
 
 (defun my/get-project-root ()
   "use different tools to find project root"
-  (cond ;; ((boundp 'elpy-project-root)
-   ;;  (elpy-project-root))
-   ((and (project-current) ;; (project-current nil (buffer-file-name))
-         )
-    (project-root (project-current)))
-   ((boundp 'projectile-mode)
-    (require 'projectile)
-    (projectile-project-root))
-   (t
-    (vc-root-dir))))
+  ;; projectile and project.el will get wrong project-root inside Doom Emacs
+  (let* ((default-root (vc-root-dir)))
+    (cond ;; ((boundp 'elpy-project-root)
+     ;;  (elpy-project-root))
+     (default-root
+      default-root)
+     ((fboundp #'lsp-bridge--get-project-path-func)
+      (lsp-bridge--get-project-path-func buffer-file-truename))
+     ((and (project-current) ;; (project-current nil (buffer-file-name))
+           )
+      (project-root (project-current)))
+     ((boundp 'projectile-mode)
+      (require 'projectile)
+      (projectile-project-root))
+     (t
+      (vc-root-dir))))
+  )
 
 
 (defun setq-hook (hook var val)
@@ -685,8 +692,8 @@ This version uses cl-loop for cleaner property handling."
                           (t value))))
                ;; Filter out nil values
                (clean-props (cl-loop for (key value) on doom-props by #'cddr
-                                    when value
-                                    collect key and collect value))
+                                     when value
+                                     collect key and collect value))
                (supported-props '(:type :host :repo :files :build :branch :tag :pin :fork))
                (recipe-plist
                 (cl-loop for prop in supported-props
