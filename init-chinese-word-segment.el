@@ -8,11 +8,27 @@
 (use-package deno-bridge-jieba
   :commands (my/deno-bridge-jieba-mode)
   :config
+  (defun my/deno-bridge-jieba-backward-word ()
+    "Send request to deno for backward chinese word."
+    (interactive)
+    (cond
+     ((= (line-beginning-position) (point))
+      (backward-word))
+     ((deno-bridge-jieba-blank-before-cursor-p)
+      (search-backward-regexp "\\s-+" nil (point-at-bol))
+      (search-backward-regexp "^\\s-+" nil (point-at-bol))
+      )
+     ((deno-bridge-jieba-punctuation-char-before-cursor-p)
+      (search-backward-regexp "[[:punct:]]+" nil (point-at-eol)))
+     ((deno-bridge-jieba-single-char-before-cursor-p)
+      (backward-word))
+     (t (deno-bridge-call-jieba-on-current-line "backward-word"))))
+
   (define-minor-mode my/deno-bridge-jieba-mode
     "minor mode for deno-bridge-jieba word jumping key bindings"
     :keymap (let ((map (make-sparse-keymap)))
               (define-key map [remap forward-word] 'deno-bridge-jieba-forward-word)
-              (define-key map [remap backward-word] 'deno-bridge-jieba-backward-word)
+              (define-key map [remap backward-word] 'my/deno-bridge-jieba-backward-word)
               (define-key map [remap forward-kill-word] 'deno-bridge-jieba-kill-word)
               (define-key map [remap backward-kill-word] 'deno-bridge-jieba-backward-kill-word)
               map)
