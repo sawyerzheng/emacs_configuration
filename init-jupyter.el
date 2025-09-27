@@ -31,10 +31,10 @@
               ("C-c C-h" . scimax-jupyter-org-hydra/body)))
 
 (use-package jupyter
-  :after ob-core
+  :after (org ob-core)
   :init
-  (require 'scimax-jupyter)
   :config
+  (require 'scimax-jupyter)
   (setq jupyter-api-authentication-method 'password)
 
   (add-to-list 'org-babel-load-languages '(emacs-lisp . t) t)
@@ -255,6 +255,35 @@ inside a Jupyter src-block, return nil."
         ((and `(,x . ,_) (guard (not (eq x 'invalid))))
          (push 'invalid jupyter-org--src-block-cache)))
       nil)))
+
+
+(use-package ob-async
+  :defer t
+  :config
+  (setq ob-async-no-async-languages-alist '("jupyter-python" "jupyter-julia")))
+
+(when (boundp 'native-comp-jit-compilation-deny-list)
+  (add-to-list 'native-comp-jit-compilation-deny-list ".*jupyter.*"))
+
+(defun my/org-babel-lazy-load-language-advice (orig-fun &rest args)
+  (let* ((info (nth 1 args))
+	 (lang (nth 0 info))
+	 (alist))
+    (message "language: %s, args: %s, orig-fun: %s" lang args orig-fun)
+    (unless (assoc lang org-babel-load-languages)
+      (if (or (eq lang 'jupyter-python) (eq lang 'jupyter-julia))
+	  (setq alist '((julia . t)
+			(python . t)
+			(jupyter . t)))
+	(list (cons lang t))))
+    (org-babel-do-load-languages
+     'org-babel-load-in-session
+     alist))
+  (apply orig-fun args))
+
+(with-eval-after-load 'ob-core
+  (advice-add 'org-babel-execute-src-block :around #'my/org-babel-lazy-load-language-advice))
+
 
 (provide 'init-jupyter)
 ;;; init-jupyter.el ends here
