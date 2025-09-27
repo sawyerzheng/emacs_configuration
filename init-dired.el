@@ -142,9 +142,9 @@ Version 2018-09-29"
 
   :config
   ;; * extra packages
-  (use-package dired-x
-    :after dired
-    :hook (dired-mode . dired-omit-mode))
+  ;; (use-package dired-x ;; WARNING: this will make dired slow
+  ;;   :after dired
+  ;;   :hook (dired-mode . dired-omit-mode))
 
   (use-package dired-k
     :after dired
@@ -185,7 +185,6 @@ Version 2018-09-29"
 ;;   (require 'dirvish-subtree)
 ;;   (require 'dirvish-vc))
 
-(my/straight-if-use 'dired-sidebar)
 (use-package dired-sidebar
   :commands (dired-sidebar-show-sidebar
              dired-sidebar-toggle-sidebar)
@@ -194,16 +193,40 @@ Version 2018-09-29"
             (lambda ()
               (unless (file-remote-p default-directory)
                 (auto-revert-mode))))
+  (setq dired-sidebar-subtree-line-prefix "  ")
+  (defun my/dired-sidebar--fold-subtree ()
+    (interactive)
+    (when (dired-subtree--is-expanded-p)
+      (dired-next-line 1)
+      (dired-subtree-remove)
+      ;; #175 fixes the case of the first line in dired when the
+      ;; cursor jumps to the header in dired rather then to the
+      ;; first file in buffer
+      (when (bobp)
+        (dired-next-line 1))))
+  (defun my/dired-sidebar--expand-subtree ()
+    (interactive)
+    (unless (dired-subtree--is-expanded-p)
+      (save-excursion (dired-subtree-insert))))
+  :bind (:map dired-sidebar-mode-map
+	      ("h" . my/dired-sidebar--fold-subtree)
+	      ("l" . my/dired-sidebar--expand-subtree))
   :config
+  (advice-add 'my/dired-sidebar--expand-subtree
+              :around 'dired-sidebar-omit-after-dired-subtree-cycle)
+  (advice-add 'my/dired-sidebar--fold-subtree
+              :around 'dired-sidebar-omit-after-dired-subtree-cycle)
+
+  (advice-add 'my/dired-sidebar--expand-subtree :around #'nerd-icons-dired--refresh-advice)
+  (advice-add 'my/dired-sidebar--fold-subtree :around #'nerd-icons-dired--refresh-advice)
+
   (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
   (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
 
-  (setq dired-sidebar-subtree-line-prefix "__")
-  (setq dired-sidebar-theme 'icons)
+  (setq dired-sidebar-theme 'nerd-icons)
   (setq dired-sidebar-use-term-integration t)
   (setq dired-sidebar-use-custom-font t))
 
-(my/straight-if-use 'ztree)
 (use-package ztree
   :commands (ztree-dir
              ztree-diff)
@@ -218,7 +241,6 @@ Version 2018-09-29"
               ("C-c C-r" . dired-rsync)
               ("r r" . dired-rsync)))
 
-(my/straight-if-use '(dired-rsync-transient :type git :host github :repo "stsquad/dired-rsync"))
 (use-package dired-rsync-transient
 
   :bind (:map dired-mode-map
