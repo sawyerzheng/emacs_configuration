@@ -3,15 +3,15 @@
   :config
   (font-lock-add-keywords 'emacs-lisp-mode '(("\\_<[+-]1\\_>" . 'font-lock-keyword-face)
                                              )))
+(use-package highlight-quoted
+  :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . highlight-quoted-mode))
+
+(use-package highlight-defined
+  :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . highlight-quoted-mode))
 
 (use-package elisp-def
   :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . elisp-def-mode)
   :config
-  (use-package highlight-quoted
-    :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . highlight-quoted-mode))
-
-  (use-package highlight-defined
-    :hook ((emacs-lisp-mode ielm-mode lisp-interaction-mode) . highlight-quoted-mode))
 
   ;; (require 'init-lispy)
   (require 'init-helpful))
