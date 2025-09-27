@@ -106,7 +106,10 @@
   (interactive)
   (setq eaf-proxy-host "localhost"
         eaf-proxy-type "http"
-        eaf-proxy-port "7890")
+        eaf-proxy-port "7890"
+        eaf-browser-aria2-proxy-host "localhost"
+        eaf-browser-aria2-proxy-port "7890"
+        )
   (message "env http_proxy is %s now" (concat eaf-proxy-type "://" eaf-proxy-host ":" eaf-proxy-port)))
 
 (defun enable-proxy-eaf-lan ()
@@ -114,7 +117,10 @@
   (interactive)
   (setq eaf-proxy-host "172.16.10.86"
         eaf-proxy-type "http"
-        eaf-proxy-port "7890")
+        eaf-proxy-port "7890"
+        eaf-browser-aria2-proxy-host "172.16.10.86"
+        eaf-browser-aria2-proxy-port "7890"
+        )
   (message "env http_proxy is %s now" (concat eaf-proxy-type "://" eaf-proxy-host ":" eaf-proxy-port)))
 
 (defun enable-proxy-windows-eaf ()
