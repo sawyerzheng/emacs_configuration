@@ -125,6 +125,7 @@
 (use-package init-emacs-lisp)
 (use-package init-page-break-lines)
 (use-package init-project)
+(use-package init-treemacs)
 (use-package init-doom-modeline)
 (use-package init-ui)
 (use-package init-ace-window)
@@ -169,6 +170,7 @@
 (use-package init-org-roam)
 (use-package init-poporg)
 (use-package init-scimax-notebook)
+(use-package init-everywhere)
 
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -194,6 +196,34 @@
       (when-let ((server-already-done (string-equal "No server buffers remain to edit" (server-edit))))
         (save-buffers-kill-terminal))
     (save-buffers-kill-terminal)))
+
+(defun my/delete-frame-with-prompt ()
+  "Delete the current frame, but ask for confirmation if it isn't empty."
+  (interactive)
+  (if (cdr (frame-list))
+      (when (y-or-n-p "Close frame?")
+        (delete-frame))
+    (save-buffers-kill-emacs)))
+
+(defun +default/restart-server ()
+  "Restart the Emacs server."
+  (interactive)
+  (server-force-delete)
+  (while (server-running-p)
+    (sleep-for 1))
+  (server-start))
+
+(defvar my/quit-keymap (make-sparse-keymap)
+    "my keymap for `quit'")
+
+(let ((map my/quit-keymap))
+  (define-key map (kbd "q") #'my/kill-emacs-save-or-server-edit)
+  (define-key map (kbd "e") #'delete-window)
+  (define-key map (kbd "f") #'my/delete-frame-with-prompt)
+  (define-key map (kbd "d") #'+default/restart-server)
+  (define-key map (kbd "w") #'quit-window)
+  (define-key map (kbd "a") #'ace-delete-window)
+  map)
 
 (defvar my/server-keymap
   (let ((map (make-sparse-keymap)))
@@ -490,11 +520,12 @@ Will cancel all other selection, except char selection. "
 (global-unset-key (kbd "C-c f"))
 (global-unset-key (kbd "C-c j"))
 (global-unset-key (kbd "C-c k"))
-(global-unset-key (kbd "C-c w"))
+;; (global-unset-key (kbd "C-c w"))
 ;; (global-unset-key (kbd "C-c s"))
 (global-unset-key (kbd "C-x C-0"))
 (global-set-key (kbd "C-c s") my/search-keymap)
-(global-set-key (kbd "C-c q q") #'my/kill-emacs-save-or-server-edit)
+(global-set-key (kbd "C-c q") my/quit-keymap)
+
 
 (which-key-add-key-based-replacements "C-c f" "file")
 (global-set-key (kbd "C-c f") nil)
@@ -522,6 +553,20 @@ Will cancel all other selection, except char selection. "
  '("f i" . revert-buffer)
  '("f F" . find-file)
  '("f r" . consult-recent-file)
+ '("f d" . dired)
+ '("f D" . (lambda (&optional trash)
+	     (interactive)
+	     (let* ((file buffer-file-name)
+		    (file (if (and file (file-exists-p file))
+			  file
+			nil))
+		    )
+	       (if file
+		   (progn
+		     (delete-file file trash)
+		     (kill-current-buffer))
+		 (when (y-or-n-p "Kill buffer? ")
+		   (kill-buffer))))))
 
  ;; app`l'ications
  '("l ," . eww)
@@ -744,7 +789,7 @@ Will cancel all other selection, except char selection. "
  '("3" . meow-expand-3)
  '("2" . meow-expand-2)
  '("1" . meow-expand-1)
- '("-" . negative-argument)
+ '("-" . negative-argumnt)
  '(";" . meow-reverse)
  ;; '(";" . move-end-of-line)
  ;; '(":" . meow-reverse)
@@ -765,8 +810,8 @@ Will cancel all other selection, except char selection. "
  '("B" . meow-back-symbol)
  '("c" . meow-change)
  '("d" . meow-backward-delete)
- ;; '("D" . meow-delete)
- '("D" . recenter-top-bottom)
+ '("D" . meow-delete)
+ '("V" . recenter-top-bottom)
  '("e" . meow-next-word)
  '("E" . meow-next-symbol)
  '("f" . meow-find)
@@ -872,7 +917,7 @@ Will cancel all other selection, except char selection. "
                                        (cond (flymake-mode
                                               (consult-flymake))
                                              (flycheck-mode
-                                              (consult-lsp-diagnostics))
+                                              (consult-flycheck))
                                              (lsp-bridge-mode
                                               (lsp-bridge-list-diagnostics))
                                              (t
@@ -1070,7 +1115,7 @@ Will cancel all other selection, except char selection. "
                                        (cond (flymake-mode
                                               (consult-flymake))
                                              (flycheck-mode
-                                              (consult-lsp-diagnostics))
+                                              (consult-flycheck))
                                              (lsp-bridge-mode
                                               (lsp-bridge-list-diagnostics))
                                              (t
@@ -1256,7 +1301,16 @@ Will cancel all other selection, except char selection. "
   (prefer-coding-system 'utf-8-unix)
   )
 
-(setq max-lisp-eval-depth 5000)
+(setq max-lisp-eval-depth 50000)
 
+(use-package server
+  :when (display-graphic-p)
+  ;; :after-call doom-first-input-hook doom-first-file-hook focus-out-hook
+  :defer 2
+  :config
+  (when-let (name (getenv "EMACS_SERVER_NAME"))
+    (setq server-name name))
+  (unless (server-running-p)
+    (server-start)))
 
 (provide 'raw-meow-load)
