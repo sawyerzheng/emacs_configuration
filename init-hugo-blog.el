@@ -18,16 +18,26 @@
 ;;  Description
 ;;
 ;;; Code:
+;; (defun my/hugo-org-update-timestamp ()
+;;   (interactive)
+;;   (when (derived-mode-p 'org-mode)
+;;     (let* ((time-stamp-active t)
+;;            (time-stamp-start "#\\+lastmod:[ \t]*")
+;;            (time-stamp-end "$")
+;;            (time-stamp-format "[%Y-%02m-%02d %a %02H:%02M:%02S]")
+;;            )
+;;       (time-stamp))))
+
 (defun my/hugo-org-update-timestamp ()
+  "Update timestamp in Hugo org files using direct string replacement."
   (interactive)
   (when (derived-mode-p 'org-mode)
-    (let ((time-stamp-active t)
-          (time-stamp-start "#\\+lastmod:[ \t]*")
-          (time-stamp-end "$")
-          (time-stamp-format "[%04Y-%02m-%02d %a]")
-          (time-stamp-format "[%Y-%02m-%02d %a %02H:%02M:%02S]")
-          )
-      (time-stamp))))
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "^#\\+lastmod:[ \t]*\\(.*\\)$" nil t)
+        (let ((timestamp (format-time-string "[%Y-%02m-%02d %a %02H:%02M:%02S]")))
+          (replace-match timestamp nil nil nil 1))))))
+
 (with-eval-after-load 'org
   (add-hook 'after-save-hook #'my/hugo-org-update-timestamp nil))
 
