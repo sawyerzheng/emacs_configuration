@@ -64,6 +64,9 @@
   ;; Ensure prompts are updated if prompt files change
   (gptel-prompts-add-update-watchers))
 
+(use-package gptel-magit
+  :commands (gptel-magit-generate-message))
+
 ;;; tools
 (use-package init-mcp)
 

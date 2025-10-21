@@ -139,6 +139,8 @@
 (my/straight-if-use '(gptel :type git :host github :repo "karthink/gptel"))
 (my/straight-if-use '(gptel-quick :type git :host github :repo "karthink/gptel-quick"))
 (my/straight-if-use '(gptel-prompts :type git :host github :repo "jwiegley/gptel-prompts"))
+(my/straight-if-use 'gptel-magit)
+
 (my/straight-if-use 'yaml)
 (my/straight-if-use 'templatel)
 
