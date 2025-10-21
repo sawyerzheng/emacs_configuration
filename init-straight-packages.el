@@ -328,3 +328,6 @@
 
 ;;; everywhere
 (my/straight-if-use 'emacs-everywhere)
+
+
+(my/straight-if-use '(comingle :type git :host github :repo "jeff-phil/comingle.el"))

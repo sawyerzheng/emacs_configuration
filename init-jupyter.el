@@ -30,6 +30,9 @@
   :bind (:map jupyter-org-interaction-mode-map
               ("C-c C-h" . scimax-jupyter-org-hydra/body)))
 
+(use-package ob-jupyter
+  :after jupyter)
+
 (use-package jupyter
   :after (org ob-core)
   :init
