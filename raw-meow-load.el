@@ -547,10 +547,11 @@ Will cancel all other selection, except char selection. "
  '("." . end-of-buffer)
 
  ;; `f'
- '("f f" . consult-buffer)
+ '("f f" . find-file)
  '("f b" . persp-switch-to-buffer)
- '("f k" . kill-current-buffer)
  '("f i" . revert-buffer)
+ '("f m" . doom/move-this-file)
+ '("f l" . consult-locate)
  '("f F" . find-file)
  '("f r" . consult-recent-file)
  '("f d" . dired)
@@ -567,6 +568,13 @@ Will cancel all other selection, except char selection. "
 		     (kill-current-buffer))
 		 (when (y-or-n-p "Kill buffer? ")
 		   (kill-buffer))))))
+ '("f n" . xah-new-empty-buffer)
+ ;; buffer operations
+ '("b k" . kill-current-buffer)
+ '("b n" . xah-new-empty-buffer)
+ '("b b" . persp-switch-to-buffer)
+ '("b B" . consult-buffer)
+ '("b r" . revert-buffer)
 
  ;; app`l'ications
  '("l ," . eww)
@@ -771,7 +779,7 @@ Will cancel all other selection, except char selection. "
  '("o w" .		apply-macro-to-region-lines)
 
  ;; major mode hydra
- '("b" . major-mode-hydra)
+ '("m" . major-mode-hydra)
  ;; M-x
  ;; '("a" . execute-extended-command)
  '("a" . embark-act)
