@@ -145,25 +145,31 @@ Returns t if Emacs is running with X forwarding, nil otherwise."
 ;; (global-set-key (kbd "M-Y") #'duplicate-line)
 
 (defun my/get-project-root ()
-  "use different tools to find project root"
-  ;; projectile and project.el will get wrong project-root inside Doom Emacs
-  (let* ((default-root (vc-root-dir)))
-    (cond ;; ((boundp 'elpy-project-root)
-     ;;  (elpy-project-root))
-     (default-root
-      default-root)
-     ((fboundp #'lsp-bridge--get-project-path-func)
-      (lsp-bridge--get-project-path-func buffer-file-truename))
-     ((and (project-current) ;; (project-current nil (buffer-file-name))
-           )
-      (project-root (project-current)))
-     ((boundp 'projectile-mode)
-      (require 'projectile)
-      (projectile-project-root))
-     (t
-      (vc-root-dir))))
-  )
+  "Use different tools to find project root."
+  (or
+   ;; Try vc-root-dir first (fast and reliable)
+   (vc-root-dir)
+   
+   ;; Try lsp-bridge if available
+   (when (fboundp 'lsp-bridge--get-project-path-func)
+     (lsp-bridge--get-project-path-func 
+      (or buffer-file-truename buffer-file-name default-directory)))
+   
+   ;; Try project.el
+   (when-let ((proj (project-current)))
+     (project-root proj))
+   
+   ;; Try projectile as fallback
+   (when (and (boundp 'projectile-project-root) 
+              (fboundp 'projectile-project-root))
+     (projectile-project-root))))
 
+(defun my/cd-project-root ()
+  "cd project root, usable to fix doom emacs workspace project root"
+  (interactive)
+  (when (and (my/get-project-root) (file-exists-p (my/get-project-root)))
+    (cd (my/get-project-root))
+    (message "cd project root: %s" (my/get-project-root))))
 
 (defun setq-hook (hook var val)
   (add-hook 'hook #'(lambda () (setq-local var val))))
