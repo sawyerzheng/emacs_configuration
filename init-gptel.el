@@ -28,7 +28,7 @@
          ;; auto scroll
          (gptel-post-stream . gptel-auto-scroll))
   :config
-  (require 'gptel-curl)
+  ;; (require 'gptel-curl)
   (require 'gptel-rewrite)
   ;; (load-file "~/org/private/openai.el.gpg")
   (setq gptel-default-mode #'org-mode)
@@ -56,8 +56,11 @@
 
 (use-package gptel-prompts
   :after (gptel)
+  :if nil
   :init
   (setq gptel-prompts-directory (expand-file-name "custom.d/prompts" my/conf-distro-dir))
+  (require 'yaml)
+  (require 'templatel)
   :demand t
   :config
   (gptel-prompts-update)
