@@ -130,17 +130,19 @@
    )
 
   :config
+  
   (with-eval-after-load 'key-chord
     (defun rime--enable-key-chord-fun (orig key)
       "如果这样也无法解决问题，可以的处理方法：先输入一个字符如 j, 点击 M-j 再输入后续输入字符，如 k, 这样可以避免 key-chord 快捷键 `jk' 无法作为小鹤拼音输入的问题"
       (if (key-chord-lookup-key (vector 'key-chord key))
-	  (let ((result (key-chord-input-method key)))
+          (let ((result (key-chord-input-method key)))
             (if (eq (car result) 'key-chord)
-		result
+                result
               (funcall orig key)))
-	(funcall orig key)))
+        (funcall orig key)))
+    (advice-add 'pyim-input-method :around #'rime--enable-key-chord-fun))
 
-    (advice-add 'pyim-input-method :around #'rime--enable-key-chord-fun)))
+  )
 
 
 (use-package pyim-basedict
@@ -165,7 +167,7 @@
 
 
 ;; 使 vertico consult 等支持 pyim-isearch-mode 类似的中文搜索
-(unless my/doom-p
+(unless nil ;; my/doom-p
   (with-eval-after-load 'orderless
     (defun my-orderless-regexp (orig-func component)
       (unless (fboundp #'pyim-cregexp-build)
