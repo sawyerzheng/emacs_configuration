@@ -1,5 +1,6 @@
 (provide 'init-meow-core)
 
+;;;###autoload
 (defun my/meow-quit (&optional arg)
   "Quit current window or buffer."
   (interactive "P")
