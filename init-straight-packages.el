@@ -307,6 +307,8 @@
 
 ;;; claude-code-ide
 (my/straight-if-use '(claude-code-ide :type git :host github :repo "manzaltu/claude-code-ide.el"))
+(my/straight-if-use '(claudemacs :type git :host github :repo "cpoile/claudemacs"))
+(my/straight-if-use 'eat)
 
 ;;; persp-mode
 (my/straight-if-use 'persp-mode)
@@ -333,3 +335,5 @@
 
 
 (my/straight-if-use '(comingle :type git :host github :repo "jeff-phil/comingle.el"))
+
+(my/straight-if-use '(tabbymacs :type git :host github :repo "Bastillan/tabbymacs"))
