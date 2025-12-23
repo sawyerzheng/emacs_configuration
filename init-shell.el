@@ -32,19 +32,8 @@
 
 (my/straight-if-use '(eat :type git :host codeberg :repo "akib/emacs-eat" :files ("*.el" ("term" "term/*.el") "*.texi"
 										  "*.ti" ("terminfo/e" "terminfo/e/*")
-										  ("terminfo/65" "terminfo/65/*")
+                                                                                  (require 'init-eat)										  ("terminfo/65" "terminfo/65/*")
 										  ("integration" "integration/*")
 										  (:exclude ".dir-locals.el" "*-tests.el"))))
-(use-package eat
-  :commands (eat eat-other-window)
-  :config
-  ;; * hack for doom theme
-  ;; ** doom-vibrant
-  ;; change base0 first element to #555f70
-  (with-eval-after-load 'ace-window
-    (define-key eat-semi-char-mode-map (kbd "M-o") #'ace-window)
-    (define-key eat-semi-char-mode-map (kbd "M-O") #'ace-swap-window)
-    )
-  )
 
 (provide 'init-shell)
