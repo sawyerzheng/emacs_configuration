@@ -101,7 +101,7 @@
         (eaf-jupyter-dark-mode nil)
         :config
         (require 'eaf-browser)
-        (require 'eaf-netease-cloud-music)
+        ;; (require 'eaf-netease-cloud-music)
         (require 'eaf-markdown-previewer)
         (require 'eaf-pdf-viewer)
         (require 'eaf-org-previewer)
@@ -168,17 +168,17 @@
         (require 'eaf-terminal)
         (require 'eaf-camera)
         (require 'eaf-jupyter)
-        (use-package netease-cloud-music
-          :straight t
-          :config
-          ;; Require it
-          (setq netease-cloud-music-api-repo "https://github.com/sawyerzheng/NeteaseCloudMusicApi.git")
-          (require 'netease-cloud-music)
-          ;; (require 'netease-cloud-music-ui)
-                                        ;If you want to use the default TUI, you should add this line in your configuration.
-          (require 'netease-cloud-music-comment) ;If you want comment feature
-          )
-        (require 'eaf-netease-cloud-music)
+        ;; (use-package netease-cloud-music
+        ;;   :straight t
+        ;;   :config
+        ;;   ;; Require it
+        ;;   (setq netease-cloud-music-api-repo "https://github.com/sawyerzheng/NeteaseCloudMusicApi.git")
+        ;;   (require 'netease-cloud-music)
+        ;;   ;; (require 'netease-cloud-music-ui)
+        ;;                                 ;If you want to use the default TUI, you should add this line in your configuration.
+        ;;   (require 'netease-cloud-music-comment) ;If you want comment feature
+        ;;   )
+        ;; (require 'eaf-netease-cloud-music)
         (require 'eaf-music-player)
         (require 'eaf-system-monitor)
         (require 'eaf-file-manager)
