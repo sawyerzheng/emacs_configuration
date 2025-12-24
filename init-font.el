@@ -57,6 +57,10 @@
      ((and my/linux-p (my/4k-p) (string= (getenv "DESKTOP_SESSION") "cinnamon"))
       (set-face-attribute 'default nil :family "Source Code Pro" :foundry "ADBO" :slant 'normal :weight 'normal :height 120 :width 'normal))
 
+     ;; hyprland
+     ((and my/linux-p  (my/4k-p) (string= (getenv "DESKTOP_SESSION") "hyprland") (featurep 'pgtk))
+      (set-face-attribute 'default nil :family "Cascadia Code" :foundry "ADBO" :slant 'normal :weight 'normal :height 128 :width 'normal))
+
      ;; ;; ** linux + 4k + gnome + daemon
      ((and my/linux-p (my/4k-p) (null (getenv "DESKTOP_SESSION")) (daemonp))
       (set-face-attribute 'default nil :family "Source Code Pro" :foundry "ADBO" :slant 'normal :weight 'normal :height 128 :width 'normal))
