@@ -1,7 +1,7 @@
 (use-package separedit
-  :init
-  (require 'init-helpful)
-  (require 'helpful)
+  ;; :init
+  ;; (require 'init-helpful)
+  ;; (require 'helpful)
   :bind (
          :map prog-mode-map
          ("C-c '" . separedit)

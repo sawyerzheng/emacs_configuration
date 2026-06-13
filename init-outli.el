@@ -35,7 +35,8 @@
           yaml-mode
           yaml-ts-mode) . outli-mode)
   :init
-  (require 'org))
+  ;; (require 'org)
+  )
 
 
 (provide 'init-outli)

@@ -23,8 +23,8 @@
 (my/straight-if-use 'org-modern)
 (my/straight-if-use 'org-transclusion)
 (my/straight-if-use '(org-pandoc-import :type git :host github
-		      :repo "tecosaur/org-pandoc-import"
-		      :files ("*.el" "filters" "preprocessors")))
+		                                :repo "tecosaur/org-pandoc-import"
+		                                :files ("*.el" "filters" "preprocessors")))
 (my/straight-if-use 'org-appear)
 (my/straight-if-use 'olivetti)
 (my/straight-if-use '(org-pretty-table :type git :host github :repo "Fuco1/org-pretty-table"))
@@ -190,12 +190,12 @@
 
 
 ;;; scimax-notebook
-(my/straight-if-use 'ggtags)
-(my/straight-if-use 'projectile)
-(my/straight-if-use 'ibuffer-projectile)
-(my/straight-if-use 'ag)
-(my/straight-if-use 'org-ql)
-(my/straight-if-use 'ivy-xref)
+;; (my/straight-if-use 'ggtags)
+;; (my/straight-if-use 'projectile)
+;; (my/straight-if-use 'ibuffer-projectile)
+;; (my/straight-if-use 'ag)
+;; (my/straight-if-use 'org-ql)
+;; (my/straight-if-use 'ivy-xref)
 
 
 ;;; ox-ipynb
@@ -217,7 +217,7 @@
 
 
 ;;; scimax
-(my/straight-if-use '(scimax :type git :host github :repo "sawyerzheng/scimax" :files (:defaults "*")))
+;; (my/straight-if-use '(scimax :type git :host github :repo "sawyerzheng/scimax" :files (:defaults "*")))
 
 
 ;;; csv, tsv
@@ -376,9 +376,9 @@
 
 ;;; cns-mode
 (my/straight-if-use '(cns :type git :host github :repo "kanglmf/emacs-chinese-word-segmentation"
-                      :pre-build (("git" "submodule" "update" "--init" "--recursive"))
-                      :post-build (("make"))
-                      :files ("*" "cnws")))
+                          :pre-build (("git" "submodule" "update" "--init" "--recursive"))
+                          :post-build (("make"))
+                          :files ("*" "cnws")))
 
 ;;; pi coding agent
 (my/straight-if-use 'pi-coding-agent)
