@@ -69,6 +69,15 @@
 ;;; outli
 (my/straight-if-use '(outli :type git :host github :repo "jdtsmith/outli"))
 
+;;; poporg
+(my/straight-if-use 'poporg)
+
+;;; outorg
+(my/straight-if-use 'outshine)
+(my/straight-if-use 'outorg)
+
+;;; separedit
+(my/straight-if-use 'separedit)
 
 ;;; ace-window
 (my/straight-if-use 'ace-window)
@@ -238,6 +247,7 @@
 (my/straight-if-use 'typescript-mode)
 (my/straight-if-use '(dockerfile-mode :type git :host github :repo "spotify/dockerfile-mode"))
 (my/straight-if-use 'markdown-mode)
+(my/straight-if-use 'grip-mode)
 
 ;;; logview
 (my/straight-if-use 'logview)
@@ -284,8 +294,8 @@
 
 ;;; lsp-bridge
 (unless my/doom-p
-  ;; (my/straight-if-use '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile)))
-  (my/straight-if-use '(lsp-bridge :type git :local-repo "~/programs/lsp-bridge" :files (:defaults "*") :build  (:not compile)))
+  (my/straight-if-use '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge" :files (:defaults "*") :build  (:not compile)))
+  ;; (my/straight-if-use '(lsp-bridge :type git :local-repo "~/programs/lsp-bridge" :files (:defaults "*") :build  (:not compile)))
   )
 (my/straight-if-use '(acm-terminal :type git :host github :repo "twlz0ne/acm-terminal"))
 (my/straight-if-use 'popon)
@@ -310,9 +320,18 @@
 (my/straight-if-use '(claudemacs :type git :host github :repo "cpoile/claudemacs"))
 (my/straight-if-use 'eat)
 
+;;; opencode
+(my/straight-if-use '(opencode :host codeberg :repo "sczi/opencode.el"))
+
 ;;; persp-mode
 (my/straight-if-use 'persp-mode)
 (my/straight-if-use 'persp-mode-project-bridge)
+
+;;; ement
+(my/straight-if-use 'ement)
+
+;;; telegram
+(my/straight-if-use 'telega)
 
 ;;; web server
 ;; conflict with simple-httpd, as simple-httpd.el's repo name is also emacs-web-server
@@ -337,3 +356,34 @@
 (my/straight-if-use '(comingle :type git :host github :repo "jeff-phil/comingle.el"))
 
 (my/straight-if-use '(tabbymacs :type git :host github :repo "Bastillan/tabbymacs"))
+
+;;; eca
+(my/straight-if-use '(eca :type git :host github :repo "editor-code-assistant/eca-emacs" :files ("*.el")))
+
+;;; ltex-plus
+(my/straight-if-use '(eglot-ltex-plus :type git :host github :repo "emacs-languagetool/eglot-ltex-plus"))
+
+;;; ghostel
+(my/straight-if-use 'ghostel)
+
+;;; emacs-tramp-rpc
+(my/straight-if-use 'msgpack)
+(my/straight-if-use  '(tramp-rpc  :host github :repo "ArthurHeymans/emacs-tramp-rpc" :files ("lisp/*.el")))
+
+
+;;; codex
+(my/straight-if-use '(codex-ide :type git :host github :repo "dgillis/emacs-codex-ide"))
+
+;;; cns-mode
+(my/straight-if-use '(cns :type git :host github :repo "kanglmf/emacs-chinese-word-segmentation"
+                      :pre-build (("git" "submodule" "update" "--init" "--recursive"))
+                      :post-build (("make"))
+                      :files ("*" "cnws")))
+
+;;; pi coding agent
+(my/straight-if-use 'pi-coding-agent)
+(my/straight-if-use 'md-ts-mode)
+(my/straight-if-use 'markdown-table-wrap)
+
+;;; valign tables
+(my/straight-if-use 'valign)

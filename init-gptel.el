@@ -71,7 +71,7 @@
   :commands (gptel-magit-generate-message))
 
 ;;; tools
-(use-package init-mcp)
+;; (use-package init-mcp)
 
 (provide 'init-gptel)
 ;;; init-gptel.el ends here

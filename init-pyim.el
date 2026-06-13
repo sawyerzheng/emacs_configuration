@@ -5,6 +5,8 @@
   (require 'popup)
   )
 
+(defvar my/pyim-convert-key "M-[")
+
 (defun my/pyim-get-default-scheme ()
   'xiaohe-shuangpin)
 
@@ -72,8 +74,8 @@
 
   (add-hook 'c-mode-common-hook
 	    #'(lambda ()
-	        (local-unset-key (kbd "M-j"))
-	        (local-set-key (kbd "M-j") 'pyim-convert-string-at-point))
+	        (local-unset-key (kbd "M-["))
+	        (local-set-key (kbd "M-[") 'pyim-convert-string-at-point))
 	    )
 
 
@@ -126,7 +128,7 @@
 
 
   :bind
-  (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+  (("M-[" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
    )
 
   :config
@@ -176,7 +178,27 @@
             (pyim-default-scheme (my/pyim-get-default-scheme)))
         (pyim-cregexp-build result)))
 
-    (advice-add 'orderless-regexp :around #'my-orderless-regexp))
+    (defun my-orderless-pyim-enable ()
+      "Enable pyim-enhanced orderless matching."
+      (interactive)
+      (advice-add 'orderless-regexp :around #'my-orderless-regexp)
+      (message "orderless: pyim matching enabled"))
+
+    (defun my-orderless-pyim-disable ()
+      "Disable pyim-enhanced orderless matching."
+      (interactive)
+      (advice-remove 'orderless-regexp #'my-orderless-regexp)
+      (message "orderless: pyim matching disabled"))
+
+    (defun my-orderless-pyim-toggle ()
+      "Toggle pyim-enhanced orderless matching."
+      (interactive)
+      (if (advice-member-p #'my-orderless-regexp 'orderless-regexp)
+          (my-orderless-pyim-disable)
+        (my-orderless-pyim-enable)))
+
+    ;; Enable by default
+    (my-orderless-pyim-enable))
 
   ;; avy + pyim cregexp
   (with-eval-after-load 'avy

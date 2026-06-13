@@ -1,5 +1,4 @@
 (use-package separedit
-  :straight t
   :init
   (require 'init-helpful)
   (require 'helpful)

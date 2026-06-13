@@ -26,25 +26,25 @@
         `(
           ;; ("everything" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-everything")))
           ;; ("brave_search" . (:command "npx" :args ("-y" "@brave/brave-search-mcp-server" "--brave-api-key" ,my/brave-search-web-api-key "--transport" "stdio")))
-          ;; 可用
-          ("brave_search" . (:command "npx" :args ("-y" "brave-search-mcp") :env (:BRAVE_API_KEY ,my/brave-search-web-api-key)))
-          ;; 不可用
-          ;; ("brave_search" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-brave-search") :env (:BRAVE_API_KEY ,my/brave-search-web-api-key)))
+          ;; ;; 可用
+          ;; ("brave_search" . (:command "npx" :args ("-y" "brave-search-mcp") :env (:BRAVE_API_KEY ,my/brave-search-web-api-key)))
+          ;; ;; 不可用
+          ;; ;; ("brave_search" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-brave-search") :env (:BRAVE_API_KEY ,my/brave-search-web-api-key)))
 
-          ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/home/sawyer/npu-3-sawyer/source/")))
-          ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
-          ;; ("qdrant" . (:url "http://localhost:38113/sse"))
-          ;; ("graphlit" . (
-          ;;                :command "npx"
-          ;;                :args ("-y" "graphlit-mcp-server")
-          ;;                :env (
-          ;;                      :GRAPHLIT_ORGANIZATION_ID "your-organization-id"
-          ;;                      :GRAPHLIT_ENVIRONMENT_ID "your-environment-id"
-          ;;                      :GRAPHLIT_JWT_SECRET "your-jwt-secret")))
+          ;; ("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/home/sawyer/npu-3-sawyer/source/")))
+          ;; ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
+          ;; ;; ("qdrant" . (:url "http://localhost:38113/sse"))
+          ;; ;; ("graphlit" . (
+          ;; ;;                :command "npx"
+          ;; ;;                :args ("-y" "graphlit-mcp-server")
+          ;; ;;                :env (
+          ;; ;;                      :GRAPHLIT_ORGANIZATION_ID "your-organization-id"
+          ;; ;;                      :GRAPHLIT_ENVIRONMENT_ID "your-environment-id"
+          ;; ;;                      :GRAPHLIT_JWT_SECRET "your-jwt-secret")))
 
-          ("code_runner" . (:command "docker" :args ("run" "--rm" "-i" "docker.1ms.run/formulahendry/mcp-server-code-runner")))
-          ("duckduckgo_search" . (:command "uvx" :args ("duckduckgo-mcp-server")))
-          ("datetime" . (:command "uvx" :args ("mcp-datetime")))
+          ;; ("code_runner" . (:command "docker" :args ("run" "--rm" "-i" "docker.1ms.run/formulahendry/mcp-server-code-runner")))
+          ;; ("duckduckgo_search" . (:command "uvx" :args ("duckduckgo-mcp-server")))
+          ;; ("datetime" . (:command "uvx" :args ("mcp-datetime")))
 
           ))
   :config

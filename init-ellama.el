@@ -28,6 +28,13 @@
 	     ellama-chat-translation-enable)
   :config
   (setenv "OLLAMA_HOST" "http://172.16.10.86:11434")
+  (setq ellama-generate-commit-message-template
+        (with-temp-buffer
+          (let ((coding-system-for-read 'utf-8))
+            (insert-file-contents
+             (expand-file-name "./custom.d/prompts/ellama-commit-prompt-template.md"
+                               my/conf-distro-dir))
+            (buffer-string))))
 
   (require 'llm)
   (if my/doom-p

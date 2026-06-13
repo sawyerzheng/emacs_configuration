@@ -48,7 +48,22 @@
 
   (custom-set-faces
    '(aw-leading-char-face ((t (:foreground "white" :background "red"
-                               :weight bold :height 2.0 :box (:line-width 5 :color "red")))))))
+                               :weight bold :height 2.0 :box (:line-width 5 :color "red"))))))
+  (defun my/ace-window--not-ignore-treemacs-mode-help-fn ()
+    "delete treemacs-mode from `aw-ignored-buffers'"
+    (setq aw-ignored-buffers (delq 'treemacs-mode aw-ignored-buffers)))
+
+  ;; (add-hook 'treemacs-mode-hook #'my/ace-window--not-ignore-treemacs-mode-help-fn)  
+  ;; (add-hook 'ace-window-mode-hook #'my/ace-window--not-ignore-treemacs-mode-help-fn)  
+  )
+
+(with-eval-after-load 'ace-window
+  (with-eval-after-load 'treemacs-compatibility
+    (my/ace-window--not-ignore-treemacs-mode-help-fn)))
+
+(with-eval-after-load 'treemacs-compatibility
+  (with-eval-after-load 'ace-window
+    (my/ace-window--not-ignore-treemacs-mode-help-fn)))
 
 ;; (global-unset-key (kbd "M-o"))
 ;; (global-set-key (kbd "M-o") 'ace-window)

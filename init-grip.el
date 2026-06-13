@@ -4,6 +4,7 @@
   :after markdown-mode
   :bind (:map markdown-mode-command-map
               ("g" . grip-mode))
+  :bind ([remap markdown-preview] . grip-mode)
   :config
   (setq grip-command 'go-grip)
   (setq grip-preview-use-webkit nil)

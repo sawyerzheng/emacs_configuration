@@ -17,8 +17,10 @@
   ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
   ;; (setq vertico-cycle t)
   :bind (:map vertico-map
-              ("M-p" . #'vertico-previous)
-              ("M-n" . #'vertico-next)
+              ;; ("M-p" . #'vertico-previous)
+              ;; ("M-n" . #'vertico-next)
+              ("M-k" . #'vertico-previous)
+              ("M-j" . #'vertico-next)
               ("M-I" . #'vertico-scroll-down)
               ("M-K" . #'vertico-scroll-up)
               ("M-P" . #'previous-history-element)
