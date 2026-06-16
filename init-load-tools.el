@@ -402,8 +402,10 @@ using this command."
 (defvar my/startup-hook nil
   "hook for after-init hook and server-after-make-frame-hook"
   )
-(add-hook 'after-init-hook (lambda () (run-hooks 'my/startup-hook)))
-(add-hook 'server-after-make-frame-hook (lambda () (run-hooks 'my/startup-hook)))
+(if (featurep 'doom)
+    (add-hook 'doom-after-init-hook (lambda () (run-hooks 'my/startup-hook)))
+  (add-hook 'after-init-hook (lambda () (run-hooks 'my/startup-hook)))
+  (add-hook 'server-after-make-frame-hook (lambda () (run-hooks 'my/startup-hook))))
 
 (defun my/clean-overlay ()
   "clean overlays in current buffer"
