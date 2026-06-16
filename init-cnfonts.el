@@ -17,7 +17,7 @@
 
   (defun my-line-spacing-setup (fontsizes-list)
     (let ((fontsize (car fontsizes-list))
-          (line-spacing-alist (copy-list my-line-spacing-alist)))
+          (line-spacing-alist (copy-alist my-line-spacing-alist)))
       (dolist (list line-spacing-alist)
 	(when (= fontsize (car list))
           (setq line-spacing-alist nil)
@@ -32,7 +32,8 @@
 	  (require 'cnfonts))
         (cnfonts-mode 1))))
 
-  :hook (my/startup . my/enable-cnfonts)
+  :hook ((my/startup . my/enable-cnfonts)
+         (my/startup . cnfonts-set-font))
   )
 
 (provide 'init-cnfonts)

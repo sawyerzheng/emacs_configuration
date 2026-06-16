@@ -76,7 +76,11 @@
      (my/linux-p
       (cond
        ((member "Cascadia Code" (font-family-list))
-        (set-face-attribute 'default nil :family "Cascadia Code" :foundry "outline" :slant 'normal :weight 'normal :height 128 :width 'normal))
+        (set-face-attribute 'default nil :family "Cascadia Code" :foundry "outline" :slant 'normal :weight 'normal :height 130  :width 'normal)
+        (dolist (charset '(kana han symbol cjk-misc bopomofo))
+	  (set-fontset-font (frame-parameter nil 'font) charset
+                            (font-spec :family "文泉驿等宽微米黑" :height 150 :width 'normal :weight 'normal)))
+        )
        ((member "Source Code Pro" (font-family-list))
         (set-face-attribute 'default nil :family "Source Code Pro" :foundry "ADBO" :slant 'normal :weight 'normal :height 120 :width 'normal))
        ((member "Ubuntu Mono" (font-family-list))
