@@ -23,8 +23,8 @@
 (my/straight-if-use 'org-modern)
 (my/straight-if-use 'org-transclusion)
 (my/straight-if-use '(org-pandoc-import :type git :host github
-		                                :repo "tecosaur/org-pandoc-import"
-		                                :files ("*.el" "filters" "preprocessors")))
+		      :repo "tecosaur/org-pandoc-import"
+		      :files ("*.el" "filters" "preprocessors")))
 (my/straight-if-use 'org-appear)
 (my/straight-if-use 'olivetti)
 (my/straight-if-use '(org-pretty-table :type git :host github :repo "Fuco1/org-pretty-table"))
@@ -38,6 +38,9 @@
 (my/straight-if-use '(org-sliced-image :type git :host github :repo "jcfk/org-sliced-images")) ;; not work well
 ;;;; hugo blog
 (my/straight-if-use 'ox-hugo)
+
+;;;; org-roam
+(my/straight-if-use 'org-roam-ui)
 
 ;;; vertico
 (my/straight-if-use 'vertico)
@@ -376,9 +379,9 @@
 
 ;;; cns-mode
 (my/straight-if-use '(cns :type git :host github :repo "kanglmf/emacs-chinese-word-segmentation"
-                          :pre-build (("git" "submodule" "update" "--init" "--recursive"))
-                          :post-build (("make"))
-                          :files ("*" "cnws")))
+                      :pre-build (("git" "submodule" "update" "--init" "--recursive"))
+                      :post-build (("make"))
+                      :files ("*" "cnws")))
 
 ;;; pi coding agent
 (my/straight-if-use 'pi-coding-agent)
