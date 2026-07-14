@@ -1,12 +1,15 @@
 (provide 'init-cns)
 
 (use-package cns
-  :commands (cns-auto-enable)
+  :commands (cns-auto-enable
+             cns-mode
+             global-cns-mode)
   ;; :hook (my/startup-hook . (lambda ()
   ;;                            (if (file-exists-p cns-prog)
   ;;                                (global-cns-mode))))
-  ;;
-  :hook (after-change-major-mode . cns-auto-enable)
+  ;; 暂时禁用，因为再 org-mode 等 modes 中会拖累光标移动性能
+  ;; :hook (after-change-major-mode . cns-auto-enable)
+  :hook (org-mode . cns-auto-enable)
   :after (files)
   ;; :hook (find-file . cns-auto-enable)
   :config
