@@ -102,20 +102,19 @@
         :config
         (require 'eaf-browser)
         ;; (require 'eaf-netease-cloud-music)
-        (require 'eaf-markdown-previewer)
+        ;; (require 'eaf-markdown-previewer)
         (require 'eaf-pdf-viewer)
-        (require 'eaf-org-previewer)
-        (require 'eaf-jupyter)
-        (require 'eaf-file-manager)
-        (require 'eaf-rss-reader)
-        (require 'eaf-terminal)
-        (require 'eaf-system-monitor)
-        (require 'eaf-file-browser)
-        (require 'eaf-file-sender)
-        (require 'eaf-airshare)
+        ;; (require 'eaf-org-previewer)
+        ;; (require 'eaf-jupyter)
+        ;; (require 'eaf-file-manager)
+        ;; (require 'eaf-rss-reader)
+        ;; (require 'eaf-terminal)
+        ;; (require 'eaf-system-monitor)
+        ;; (require 'eaf-file-browser)
+        ;; (require 'eaf-file-sender)
+        ;; (require 'eaf-airshare)
 
-        (use-package eaf-pyqterminal
-          :config
+        (with-eval-after-load 'eaf-pyqterminal
           (eaf-bind-key nil  "M-p" eaf-pyqterminal-keybinding)
           (setq eaf-pyqterminal-keybinding (append eaf-pyqterminal-keybinding
                                                    '(("M-p" . "eaf-send-key-sequence")
@@ -157,17 +156,19 @@
           (eaf-bind-key scroll_down_page "<" eaf-browser-keybinding)
           (eaf-bind-key scroll_up_page ">" eaf-browser-keybinding))
 
-        (require 'eaf-browser)
-        (require 'eaf-pdf-viewer)
-        (require 'eaf-markdown-previewer)
-        (require 'eaf-video-player)
-        (require 'eaf-image-viewer)
-        (require 'eaf-org-previewer)
-        (require 'eaf-mindmap)
-        (require 'eaf-mail)
-        (require 'eaf-terminal)
-        (require 'eaf-camera)
-        (require 'eaf-jupyter)
+        ;; (require 'eaf-browser)
+        ;; (require 'eaf-pdf-viewer)
+        ;; (require 'eaf-markdown-previewer)
+        ;; (require 'eaf-video-player)
+        ;; (require 'eaf-image-viewer)
+        ;; (require 'eaf-org-previewer)
+        ;; (require 'eaf-mindmap)
+        ;; (require 'eaf-mail)
+        ;; (require 'eaf-terminal)
+        ;; (require 'eaf-camera)
+        ;; (require 'eaf-jupyter)
+
+
         ;; (use-package netease-cloud-music
         ;;   :straight t
         ;;   :config
@@ -179,12 +180,12 @@
         ;;   (require 'netease-cloud-music-comment) ;If you want comment feature
         ;;   )
         ;; (require 'eaf-netease-cloud-music)
-        (require 'eaf-music-player)
-        (require 'eaf-system-monitor)
-        (require 'eaf-file-manager)
-        (require 'eaf-file-browser)
-        (require 'eaf-demo)
-        (require 'eaf-git)
+        ;; (require 'eaf-music-player)
+        ;; (require 'eaf-system-monitor)
+        ;; (require 'eaf-file-manager)
+        ;; (require 'eaf-file-browser)
+        ;; (require 'eaf-demo)
+        ;; (require 'eaf-git)
 
 
 ;;; Code:
