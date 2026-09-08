@@ -40,7 +40,9 @@
 (my/straight-if-use 'ox-hugo)
 
 ;;;; org-roam
-(my/straight-if-use 'org-roam-ui)
+;; (my/straight-if-use 'org-roam-ui)
+;; (my/straight-if-use '(org-roam-ui :local-repo "~/programs/org-roam-ui" :branch "main" :files ("*.el" "out")))
+(my/straight-if-use '(org-roam-ui :host github :repo "sawyerzheng/org-roam-ui" :branch "main" :files ("*.el" "out")))
 
 ;;; vertico
 (my/straight-if-use 'vertico)
