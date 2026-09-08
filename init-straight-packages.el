@@ -175,8 +175,8 @@
 (my/straight-if-use '(minuet-ai :type git :host github :repo "milanglacier/minuet-ai.el"))
 
 ;;;; aider
-(my/straight-if-use '(aidermacs :host github :repo "MatthewZMD/aidermacs" :files ("*.el")))
-(my/straight-if-use '(aider :type git :host github :repo "tninja/aider.el" :files ("*.el")))
+; (my/straight-if-use '(aidermacs :host github :repo "MatthewZMD/aidermacs" :files ("*.el")))
+; (my/straight-if-use '(aider :type git :host github :repo "tninja/aider.el" :files ("*.el")))
 
 ;;;; emigo
 (my/straight-if-use '(emigo :type git :host github :repo "MatthewZMD/emigo" :files ("*")))
