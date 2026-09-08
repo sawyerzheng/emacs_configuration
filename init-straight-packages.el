@@ -390,5 +390,8 @@
 (my/straight-if-use 'md-ts-mode)
 (my/straight-if-use 'markdown-table-wrap)
 
+;;; agent shell
+(my/straight-if-use 'agent-shell)
+
 ;;; valign tables
 (my/straight-if-use 'valign)
