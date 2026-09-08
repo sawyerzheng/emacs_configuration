@@ -9,8 +9,8 @@
   (progn (setq eaf-path-prefix (expand-file-name "~/programs/eaf/"))
          ;; (setq eaf-python-command "~/miniconda3/envs/eaf/bin/python")
          (if my/wsl-p
-             (setq eaf-python-command (expand-file-name "~/programs/eaf/venv/bin/python"))
-           (setq eaf-python-command (expand-file-name "~/programs/eaf/venv/bin/python")))
+             (setq eaf-python-command (expand-file-name "~/programs/eaf/.venv/bin/python"))
+           (setq eaf-python-command (expand-file-name "~/programs/eaf/.venv/bin/python")))
 
          ))
 

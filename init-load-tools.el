@@ -62,7 +62,9 @@
                                 "E:/soft/envs/win-conda/envs/tools/python.exe"
 
                               ;; "d:/soft/miniconda3/envs/tools/python.exe"
-                              (expand-file-name "~/miniconda3/envs/tools/bin/python")))
+                              ;; (expand-file-name "~/miniconda3/envs/tools/bin/python")
+                              (expand-file-name "~/programs/eaf/.venv/bin/python")
+                              ))
 ;; (defun my/get-linux-distro ()
 ;;   "from lsb_release"
 ;;   (interactive)
