@@ -46,7 +46,13 @@ snap: `doom-local-dir' 下的稳定路径 (非 snap 环境不受影响).
                             "~/.emacs.d.doom/.local/"))))
            (module (+liberime-module-file-path)))
       (when (and libdir module)
-        (when (or force (not (file-exists-p module)))
+        (when (or force
+                  (not (file-exists-p module))
+                  ;; 新鲜度: checkout 的 C 源码比稳定 .so 新 → 自动重建
+                  ;; (升级 liberime 后避免陈旧二进制静默服务新 elisp)
+                  (let ((src (expand-file-name "src/liberime-core.c" libdir)))
+                    (and (file-exists-p src)
+                         (file-newer-than-file-p src module))))
           (message "+liberime: snap Emacs detected, building liberime-core ...")
           (let ((status (call-process "make" nil "*liberime build*" nil
                                       "-C" (directory-file-name libdir)
