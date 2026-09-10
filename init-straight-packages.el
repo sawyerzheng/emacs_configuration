@@ -107,11 +107,13 @@
 
 ;;; chinese
 ;;;; init-pyim
-(my/straight-if-use 'pyim)
+(unless (or (bound-and-true-p my/doom-p) (fboundp 'package!)) ; Doom 侧由 :input rimel 的 disable-packages! 排除 pyim
+  (my/straight-if-use 'pyim))
 (my/straight-if-use 'posframe)
 (my/straight-if-use 'popup)
 (my/straight-if-use 'popon)
-(my/straight-if-use 'pyim-basedict)
+(unless (or (bound-and-true-p my/doom-p) (fboundp 'package!))
+  (my/straight-if-use 'pyim-basedict))
 
 ;;;; word segment
 (my/straight-if-use '(deno-bridge :type git :host github :repo "manateelazycat/deno-bridge"))
@@ -386,7 +388,12 @@
                       :files ("*" "cnws")))
 
 ;;; pi coding agent
-(my/straight-if-use 'pi-coding-agent)
+;; MELPA 已把 pi-coding-agent 改名为 pilish (:old-names (pi-coding-agent));
+;; Doom 侧未使用此包 (init-pi-coding-agent.el 未被 config.el 加载),
+;; 注册会令 doom sync/doctor 的包解析失败, 故仅在非 Doom 侧注册.
+;; 双保险: my/doom-p 在 CLI 进程早期可能被求值为 nil, 故同时看 package!.
+(unless (or (bound-and-true-p my/doom-p) (fboundp 'package!))
+  (my/straight-if-use 'pi-coding-agent))
 (my/straight-if-use 'md-ts-mode)
 (my/straight-if-use 'markdown-table-wrap)
 
