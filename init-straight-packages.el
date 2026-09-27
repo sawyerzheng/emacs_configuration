@@ -384,7 +384,9 @@
                       :files ("*" "cnws")))
 
 ;;; pi coding agent
-(my/straight-if-use 'pi-coding-agent)
+;; 2026-09-06: MELPA 把 pi-coding-agent 的 recipe 改名为 pilish（dnouri/pi-coding-agent → dnouri/pilish）。
+;; straight.el 不支持 MELPA 的 :old-names，所以旧名字已无法解析。见 https://github.com/dnouri/pilish
+(my/straight-if-use 'pilish)
 (my/straight-if-use 'md-ts-mode)
 (my/straight-if-use 'markdown-table-wrap)
 

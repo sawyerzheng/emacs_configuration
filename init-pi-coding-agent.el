@@ -19,8 +19,8 @@
 ;;
 ;;; Code:
 
-(use-package pi-coding-agent
-  :commands (pi-coding-agent)
+(use-package pilish
+  :commands (pilish)
   :config
   (require 'md-ts-mode)
   
