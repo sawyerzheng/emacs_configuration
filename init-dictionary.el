@@ -184,7 +184,10 @@ This command switches to browser."
   (require 'popweb-url)
   (require 'popweb-latex)
   (require 'popweb-org-roam-link)
-  (setq popweb-zoom-factor 0.5)
+  (setq popweb-zoom-factor 1)
+  (setq popweb-url-web-window-size-use-absolute t)
+  (setq popweb-url-web-window-width-scale 0.8)
+  (setq popweb-url-web-window-height-scale 0.45)
   (setq popweb-python-command my/epc-python-command))
 
 (setq popweb-python-command my/epc-python-command)

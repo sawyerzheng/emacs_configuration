@@ -40,7 +40,9 @@
 (my/straight-if-use 'ox-hugo)
 
 ;;;; org-roam
-(my/straight-if-use 'org-roam-ui)
+;; (my/straight-if-use 'org-roam-ui)
+;; (my/straight-if-use '(org-roam-ui :local-repo "~/programs/org-roam-ui" :branch "main" :files ("*.el" "out")))
+(my/straight-if-use '(org-roam-ui :host github :repo "sawyerzheng/org-roam-ui" :branch "main" :files ("*.el" "out")))
 
 ;;; vertico
 (my/straight-if-use 'vertico)
@@ -105,11 +107,13 @@
 
 ;;; chinese
 ;;;; init-pyim
-(my/straight-if-use 'pyim)
+(unless (or (bound-and-true-p my/doom-p) (fboundp 'package!)) ; Doom 侧由 :input rimel 的 disable-packages! 排除 pyim
+  (my/straight-if-use 'pyim))
 (my/straight-if-use 'posframe)
 (my/straight-if-use 'popup)
 (my/straight-if-use 'popon)
-(my/straight-if-use 'pyim-basedict)
+(unless (or (bound-and-true-p my/doom-p) (fboundp 'package!))
+  (my/straight-if-use 'pyim-basedict))
 
 ;;;; word segment
 (my/straight-if-use '(deno-bridge :type git :host github :repo "manateelazycat/deno-bridge"))
@@ -173,8 +177,8 @@
 (my/straight-if-use '(minuet-ai :type git :host github :repo "milanglacier/minuet-ai.el"))
 
 ;;;; aider
-(my/straight-if-use '(aidermacs :host github :repo "MatthewZMD/aidermacs" :files ("*.el")))
-(my/straight-if-use '(aider :type git :host github :repo "tninja/aider.el" :files ("*.el")))
+;; (my/straight-if-use '(aidermacs :host github :repo "MatthewZMD/aidermacs" :files ("*.el")))
+;; (my/straight-if-use '(aider :type git :host github :repo "tninja/aider.el" :files ("*.el")))
 
 ;;;; emigo
 (my/straight-if-use '(emigo :type git :host github :repo "MatthewZMD/emigo" :files ("*")))
@@ -384,11 +388,23 @@
                       :files ("*" "cnws")))
 
 ;;; pi coding agent
-;; 2026-09-06: MELPA 把 pi-coding-agent 的 recipe 改名为 pilish（dnouri/pi-coding-agent → dnouri/pilish）。
-;; straight.el 不支持 MELPA 的 :old-names，所以旧名字已无法解析。见 https://github.com/dnouri/pilish
-(my/straight-if-use 'pilish)
+;; MELPA 已把 pi-coding-agent 改名为 pilish (:old-names (pi-coding-agent));
+;; straight.el 不支持 MELPA 的 :old-names，故旧名字已无法解析。
+;; Doom 侧未使用此包 (init-pi-coding-agent.el 未被 config.el 加载),
+;; 注册会令 doom sync/doctor 的包解析失败, 故仅在非 Doom 侧注册.
+;; 双保险: my/doom-p 在 CLI 进程早期可能被求值为 nil, 故同时看 package!.
+(unless (or (bound-and-true-p my/doom-p) (fboundp 'package!))
+  (my/straight-if-use 'pilish))
+
 (my/straight-if-use 'md-ts-mode)
 (my/straight-if-use 'markdown-table-wrap)
 
+;;; agent shell
+(my/straight-if-use 'agent-shell)
+
 ;;; valign tables
 (my/straight-if-use 'valign)
+
+;;; org-table-widget
+;; (my/straight-if-use '(textui :host github :repo "yibie/textui"))
+;; (my/straight-if-use '(org-table-widget :host github :repo "yibie/org-table-widget"))
