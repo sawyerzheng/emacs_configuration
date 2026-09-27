@@ -402,3 +402,7 @@
 
 ;;; valign tables
 (my/straight-if-use 'valign)
+
+;;; org-table-widget
+;; (my/straight-if-use '(textui :host github :repo "yibie/textui"))
+;; (my/straight-if-use '(org-table-widget :host github :repo "yibie/org-table-widget"))
