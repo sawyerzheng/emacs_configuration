@@ -389,11 +389,13 @@
 
 ;;; pi coding agent
 ;; MELPA 已把 pi-coding-agent 改名为 pilish (:old-names (pi-coding-agent));
+;; straight.el 不支持 MELPA 的 :old-names，故旧名字已无法解析。
 ;; Doom 侧未使用此包 (init-pi-coding-agent.el 未被 config.el 加载),
 ;; 注册会令 doom sync/doctor 的包解析失败, 故仅在非 Doom 侧注册.
 ;; 双保险: my/doom-p 在 CLI 进程早期可能被求值为 nil, 故同时看 package!.
 (unless (or (bound-and-true-p my/doom-p) (fboundp 'package!))
-  (my/straight-if-use 'pi-coding-agent))
+  (my/straight-if-use 'pilish))
+
 (my/straight-if-use 'md-ts-mode)
 (my/straight-if-use 'markdown-table-wrap)
 
