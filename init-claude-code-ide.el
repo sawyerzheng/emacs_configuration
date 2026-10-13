@@ -20,9 +20,12 @@
 ;;; Code:
 
 (use-package claude-code-ide
-  :bind ("C-c i c" . claude-code-ide-menu) ; Set your favorite keybinding
+  :bind ("C-c i c" . claude-code-ide-menu) ;; Set your favorite keybinding
   :config
-  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+  (claude-code-ide-emacs-tools-setup) ;; Optionally enable Emacs MCP tools
+  (when my/linux-p
+    (setq claude-code-ide-terminal-backend 'ghostel))
+  )
 
 (provide 'init-claude-code-ide)
 ;;; init-claude-code-ide.el ends here
