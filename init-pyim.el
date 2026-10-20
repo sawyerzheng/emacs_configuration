@@ -5,7 +5,8 @@
   (require 'popup)
   )
 
-(defvar my/pyim-convert-key "M-[")
+;; TTY 下 Alt+[ 与 CSI 前缀 ESC[ 同字节，故用 M-' (与 rimel 栈一致).
+(defvar my/pyim-convert-key "M-'")
 
 (defun my/pyim-get-default-scheme ()
   'xiaohe-shuangpin)
@@ -74,8 +75,8 @@
 
   (add-hook 'c-mode-common-hook
 	    #'(lambda ()
-	        (local-unset-key (kbd "M-["))
-	        (local-set-key (kbd "M-[") 'pyim-convert-string-at-point))
+	        (local-unset-key (kbd my/pyim-convert-key))
+	        (local-set-key (kbd my/pyim-convert-key) 'pyim-convert-string-at-point))
 	    )
 
 
@@ -128,7 +129,7 @@
 
 
   :bind
-  (("M-[" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+  (("M-'" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合; TTY 安全键位
    )
 
   :config

@@ -22,7 +22,9 @@
 (use-package consult-register
   :bind (;; Custom M-# bindings for fast register access
 	 ("M-#" . consult-register-load)
-	 ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+	 ;; M-' 留给 rimel-convert-string-at-point；store 走标准 C-x r s
+	 ;; ([remap copy-to-register] 同时覆盖 C-x r s / C-x r x).
+	 ([remap copy-to-register] . consult-register-store)
 	 ("C-M-#" . consult-register)))
 
 (use-package consult-kmacro
