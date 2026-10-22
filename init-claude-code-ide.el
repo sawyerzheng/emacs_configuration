@@ -27,5 +27,13 @@
     (setq claude-code-ide-terminal-backend 'ghostel))
   )
 
+;; ghostel 的 semi-char 模式默认把 M-<可打印字符>（含 M-o）绑定为
+;; `ghostel--send-event'，会遮蔽全局的 `my/ace-window'。把 M-o 放进
+;; exceptions，让它落回 global-map；char 模式仍会发送给终端。
+(with-eval-after-load 'ghostel
+  (unless (member "M-o" ghostel-keymap-exceptions)
+    (customize-set-variable 'ghostel-keymap-exceptions
+                            (cons "M-o" ghostel-keymap-exceptions))))
+
 (provide 'init-claude-code-ide)
 ;;; init-claude-code-ide.el ends here
