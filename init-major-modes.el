@@ -55,9 +55,11 @@
              '(".envrc\\'" . conf-mode))
 
 (use-package markdown-mode
+  :if (not my/doom-p)
   :config
   (require 'init-markdown)
   :mode (("\\.md" . gfm-mode)
 	 ))
 
-(use-package init-csv)
+(use-package init-csv
+  :unless my/doom-p)
