@@ -1,7 +1,26 @@
 ;; -*- coding: utf-8; -*-
+;; indent-bars 开启 treesit 支持后，会 buffer-locally 把
+;; `font-lock-fontify-region-function' 换成 `indent-bars--fontify'，并用
+;; `indent-bars--font-lock-inhibit' 做门禁：只有带 `indent-bars-font-lock-pending'
+;; 属性的区域才真正调用 font-lock。该属性只由 jit-lock 的变更路径
+;; （`indent-bars-ts--mark-change' / `indent-bars-ts--flush' /
+;; `indent-bars-ts--fontify-buffer'）写入。
+;;
+;; org-src 在隐藏缓冲 " *org-src-fontification:*" 里 erase-buffer + insert 后
+;; 直接调 `font-lock-ensure'，既无变更事件也无该属性，门禁判定为「抑制」，
+;; 于是 treesit 语法高亮从不执行 —— 表现为 org 代码块只剩余 `org-block' 底色。
+;; 这些内部缓冲不显示缩进导引，直接不启用 indent-bars 即可。
+(defun my/indent-bars-maybe ()
+  "Enable `indent-bars-mode', except in internal (space-named) buffers.
+Buffers whose name starts with a space are font-lock's internal buffers
+\(e.g. org-src's ` *org-src-fontification:*'), where indent-bars would
+hijack `font-lock-fontify-region-function' and suppress real fontification."
+  (unless (string-prefix-p " " (buffer-name))
+    (indent-bars-mode 1)))
+
 (use-package indent-bars
   ;; :hook ((python-mode yaml-mode) . indent-bars-mode)
-  :hook (prog-mode . indent-bars-mode)
+  :hook (prog-mode . my/indent-bars-maybe)
   :bind ("C-c u i" . indent-bars-mode)
   :config
   (require 'indent-bars-ts) 		; not needed with straight
@@ -36,8 +55,8 @@
   ;;				      list list_comprehension
   ;;				      dictionary dictionary_comprehension
   ;;				      parenthesized_expression subscript)))
-  :hook ((python-base-mode yaml-mode) . indent-bars-mode)
-  :hook (prog-mode . indent-bars-mode)
+  :hook ((python-base-mode yaml-mode) . my/indent-bars-maybe)
+  :hook (prog-mode . my/indent-bars-maybe)
   )
 
 
