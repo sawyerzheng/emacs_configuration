@@ -22,9 +22,12 @@
 (use-package claudemacs
   :init
   (require 'init-eat)
-  :bind ("C-c i m" . claudemacs-transient-menu) ; Set your favorite keybinding
+  :bind ("C-c i d" . claudemacs-transient-menu) ; Set your favorite keybinding
   :commands (claudemacs-transient-menu))
 
+(when my/doom-p
+  (map! :leader
+        "i d" #'claudemacs-transient-menu))
 ;; Set a big buffer so we can search our history.
 (with-eval-after-load 'eat
   (setq eat-term-scrollback-size 400000))
