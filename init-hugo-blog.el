@@ -39,7 +39,7 @@
           (replace-match timestamp nil nil nil 1))))))
 
 (with-eval-after-load 'org
-  (add-hook 'after-save-hook #'my/hugo-org-update-timestamp nil))
+  (add-hook 'before-save-hook #'my/hugo-org-update-timestamp nil))
 
 
 (provide 'init-hugo-blog)
