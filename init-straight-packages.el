@@ -36,6 +36,9 @@
 (my/straight-if-use '(ox-ipynb :type git :host github :repo "jkitchin/ox-ipynb"))
 (my/straight-if-use '(consult-notes :type git :host github :repo "mclear-tools/consult-notes"))
 (my/straight-if-use '(org-sliced-image :type git :host github :repo "jcfk/org-sliced-images")) ;; not work well
+;; markdown and org-mode preview
+(my/straight-if-use 'grip-mode)
+
 ;;;; hugo blog
 (my/straight-if-use 'ox-hugo)
 
